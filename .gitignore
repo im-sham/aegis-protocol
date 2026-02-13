@@ -1,0 +1,26 @@
+# Compiler files
+cache/
+out/
+
+# Ignores development broadcast logs
+!/broadcast
+/broadcast/*/31337/
+/broadcast/**/dry-run/
+
+# Docs
+docs/
+
+# Dotenv file
+.env
+
+# OS files
+.DS_Store
+
+# Original Claude Chat exports (scaffolded into project structure)
+files/
+files.zip
+filescode/
+filescode.zip
+
+# Foundry lock
+foundry.lock
