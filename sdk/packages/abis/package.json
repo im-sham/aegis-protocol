@@ -20,7 +20,7 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup",
-    "generate": "tsx scripts/generate-abis.ts",
+    "generate": "tsx scripts/generate.ts",
     "lint": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
