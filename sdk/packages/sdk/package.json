@@ -1,0 +1,99 @@
+{
+  "name": "@aegis-protocol/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for the AEGIS Protocol",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./escrow": {
+      "import": {
+        "types": "./dist/escrow.d.ts",
+        "default": "./dist/escrow.js"
+      },
+      "require": {
+        "types": "./dist/escrow.d.cts",
+        "default": "./dist/escrow.cjs"
+      }
+    },
+    "./dispute": {
+      "import": {
+        "types": "./dist/dispute.d.ts",
+        "default": "./dist/dispute.js"
+      },
+      "require": {
+        "types": "./dist/dispute.d.cts",
+        "default": "./dist/dispute.cjs"
+      }
+    },
+    "./treasury": {
+      "import": {
+        "types": "./dist/treasury.d.ts",
+        "default": "./dist/treasury.js"
+      },
+      "require": {
+        "types": "./dist/treasury.d.cts",
+        "default": "./dist/treasury.cjs"
+      }
+    },
+    "./factory": {
+      "import": {
+        "types": "./dist/factory.d.ts",
+        "default": "./dist/factory.js"
+      },
+      "require": {
+        "types": "./dist/factory.d.cts",
+        "default": "./dist/factory.cjs"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/utils.d.ts",
+        "default": "./dist/utils.js"
+      },
+      "require": {
+        "types": "./dist/utils.d.cts",
+        "default": "./dist/utils.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@aegis-protocol/types": "workspace:*",
+    "@aegis-protocol/abis": "workspace:*"
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0",
+    "ethers": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "viem": {
+      "optional": true
+    },
+    "ethers": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "viem": "^2.0.0",
+    "vitest": "^2.0.0"
+  }
+}
