@@ -78,3 +78,48 @@ export interface ArbitratorStats {
   totalFeesEarned: bigint;
   lastActiveAt: bigint;
 }
+
+// ---------------------------------------------------------------------------
+// Parsed event results — returned by SDK receipt parsers
+// ---------------------------------------------------------------------------
+
+export interface JobCreatedEvent {
+  jobId: Hex;
+  clientAgentId: bigint;
+  providerAgentId: bigint;
+  amount: bigint;
+  validatorAddress: Hex;
+  deadline: bigint;
+}
+
+export interface JobSettledEvent {
+  jobId: Hex;
+  providerWallet: Hex;
+  providerAmount: bigint;
+  protocolFee: bigint;
+}
+
+export interface DisputeInitiatedEvent {
+  disputeId: Hex;
+  jobId: Hex;
+  initiator: Hex;
+}
+
+export interface DisputeResolvedEvent {
+  disputeId: Hex;
+  jobId: Hex;
+  clientPercent: number;
+  method: number;
+}
+
+export interface TemplateCreatedEvent {
+  templateId: bigint;
+  name: string;
+  creator: Hex;
+  defaultValidator: Hex;
+  defaultTimeout: bigint;
+}
+
+export interface AgentRegisteredResult {
+  agentId: bigint;
+}

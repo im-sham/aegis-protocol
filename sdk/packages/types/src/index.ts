@@ -3,6 +3,14 @@ export { JobState, DisputeResolution } from "./enums";
 
 // Contract types
 export type { Hex, Job, Dispute, JobTemplate, ArbitratorStats } from "./contracts";
+export type {
+  JobCreatedEvent,
+  JobSettledEvent,
+  DisputeInitiatedEvent,
+  DisputeResolvedEvent,
+  TemplateCreatedEvent,
+  AgentRegisteredResult,
+} from "./contracts";
 
 // Config types and values
 export type {
