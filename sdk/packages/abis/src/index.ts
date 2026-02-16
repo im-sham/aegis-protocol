@@ -10,3 +10,4 @@ export { aegisJobFactoryAbi } from "./AegisJobFactory";
 export { erc8004IdentityAbi } from "./erc8004/Identity";
 export { erc8004ReputationAbi } from "./erc8004/Reputation";
 export { erc8004ValidationAbi } from "./erc8004/Validation";
+export { erc20Abi } from "./ERC20";
