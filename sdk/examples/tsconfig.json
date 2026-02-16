@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "paths": {
+      "@aegis-protocol/sdk": ["../packages/sdk/src/index.ts"],
+      "@aegis-protocol/types": ["../packages/types/src/index.ts"],
+      "@aegis-protocol/abis": ["../packages/abis/src/index.ts"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}
