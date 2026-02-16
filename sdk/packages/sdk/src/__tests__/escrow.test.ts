@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Hex, ContractAddresses } from "@aegis-protocol/types";
 import { AegisValidationError } from "@aegis-protocol/types";
-import type { AegisProvider } from "../provider";
+import type { AegisProvider, TransactionReceipt } from "../provider";
 import { EscrowService } from "../escrow";
 import type { CreateJobParams, SubmitDeliverableParams } from "../escrow";
 
@@ -84,6 +84,75 @@ describe("EscrowService", () => {
           params.validationThreshold,
         ],
       });
+    });
+  });
+
+  describe("createJobAndWait", () => {
+    const JOB_CREATED_RECEIPT: TransactionReceipt = {
+      transactionHash: FAKE_TX_HASH,
+      blockNumber: 100n,
+      status: "success",
+      logs: [
+        {
+          address: ESCROW_ADDRESS,
+          topics: [
+            "0xc3beba38db0ec2a3c21e693c2ec7e73f6a0a903f3a1753de2484c1bf7d1b2e63" as Hex,
+            "0x0000000000000000000000000000000000000000000000000000000000000042" as Hex,
+            "0x0000000000000000000000000000000000000000000000000000000000000001" as Hex,
+            "0x0000000000000000000000000000000000000000000000000000000000000002" as Hex,
+          ],
+          data: ("0x" +
+            "0000000000000000000000000000000000000000000000000000000000989680" +
+            "000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266" +
+            "0000000000000000000000000000000000000000000000000000000067890abc"
+          ) as Hex,
+        },
+      ],
+    };
+
+    it("should return parsed JobCreatedEvent after tx is mined", async () => {
+      vi.mocked(provider.waitForTransaction).mockResolvedValue(JOB_CREATED_RECEIPT);
+
+      const params: CreateJobParams = {
+        clientAgentId: 1n,
+        providerAgentId: 2n,
+        jobSpecHash: "0xaaaa000000000000000000000000000000000000000000000000000000000000",
+        jobSpecURI: "ipfs://spec",
+        validatorAddress: "0x9999999999999999999999999999999999999999",
+        deadline: 1700000000n,
+        amount: 10_000_000n,
+        validationThreshold: 70,
+      };
+
+      const event = await service.createJobAndWait(params);
+
+      expect(event.clientAgentId).toBe(1n);
+      expect(event.providerAgentId).toBe(2n);
+      expect(event.amount).toBe(10_000_000n);
+      expect(provider.writeContract).toHaveBeenCalled();
+      expect(provider.waitForTransaction).toHaveBeenCalledWith(FAKE_TX_HASH);
+    });
+
+    it("should throw if JobCreated event not found in receipt", async () => {
+      vi.mocked(provider.waitForTransaction).mockResolvedValue({
+        transactionHash: FAKE_TX_HASH,
+        blockNumber: 100n,
+        status: "success",
+        logs: [],
+      });
+
+      await expect(
+        service.createJobAndWait({
+          clientAgentId: 1n,
+          providerAgentId: 2n,
+          jobSpecHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+          jobSpecURI: "",
+          validatorAddress: "0x0000000000000000000000000000000000000000",
+          deadline: 0n,
+          amount: 0n,
+          validationThreshold: 70,
+        }),
+      ).rejects.toThrow("JobCreated event was not found");
     });
   });
 

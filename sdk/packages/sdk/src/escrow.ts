@@ -1,7 +1,8 @@
-import type { Hex, ContractAddresses, Job } from "@aegis-protocol/types";
+import type { Hex, ContractAddresses, Job, JobCreatedEvent } from "@aegis-protocol/types";
 import { AegisValidationError } from "@aegis-protocol/types";
 import { aegisEscrowAbi } from "@aegis-protocol/abis";
 import type { AegisProvider } from "./provider";
+import { parseJobCreated } from "./parsers";
 
 // ---------------------------------------------------------------------------
 // Param interfaces
@@ -73,6 +74,22 @@ export class EscrowService {
         params.validationThreshold,
       ],
     });
+  }
+
+  /**
+   * Create a job, wait for the transaction to be mined, and return the parsed
+   * JobCreated event data. Combines `createJob` + `waitForTransaction` + parsing.
+   */
+  async createJobAndWait(params: CreateJobParams): Promise<JobCreatedEvent> {
+    const txHash = await this.createJob(params);
+    const receipt = await this.provider.waitForTransaction(txHash);
+    const event = parseJobCreated(receipt);
+    if (!event) {
+      throw new AegisValidationError(
+        "Transaction succeeded but JobCreated event was not found in receipt.",
+      );
+    }
+    return event;
   }
 
   /**

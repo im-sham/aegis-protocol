@@ -71,6 +71,29 @@ describe("IdentityService", () => {
     });
   });
 
+  // ---- Convenience methods ----
+
+  describe("registerAndWait", () => {
+    it("should register, wait, and return agent ID from nextAgentId", async () => {
+      vi.mocked(provider.waitForTransaction).mockResolvedValue({
+        transactionHash: FAKE_TX_HASH,
+        blockNumber: 100n,
+        status: "success",
+        logs: [],
+      });
+      vi.mocked(provider.readContract).mockResolvedValue(4n);
+
+      const result = await service.registerAndWait("ipfs://agent-metadata");
+
+      expect(result.agentId).toBe(3n);
+      expect(provider.writeContract).toHaveBeenCalled();
+      expect(provider.waitForTransaction).toHaveBeenCalledWith(FAKE_TX_HASH);
+      expect(provider.readContract).toHaveBeenCalledWith(
+        expect.objectContaining({ functionName: "nextAgentId" }),
+      );
+    });
+  });
+
   // ---- Read methods ----
 
   describe("getAgentWallet", () => {
