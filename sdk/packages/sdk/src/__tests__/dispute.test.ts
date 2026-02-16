@@ -210,12 +210,12 @@ describe("DisputeService", () => {
   // ---- Read-only guard ----
 
   describe("read-only guard", () => {
-    it("should throw for write methods when read-only", () => {
+    it("should throw for write methods when read-only", async () => {
       const roProvider = createMockProvider(true);
       const roService = new DisputeService(roProvider, createAddresses());
 
-      expect(() => roService.stakeAsArbitrator(1n)).rejects.toThrow(AegisValidationError);
-      expect(() => roService.submitEvidence(FAKE_DISPUTE_ID, "", "0x0000000000000000000000000000000000000000000000000000000000000000")).rejects.toThrow(AegisValidationError);
+      await expect(() => roService.stakeAsArbitrator(1n)).rejects.toThrow(AegisValidationError);
+      await expect(() => roService.submitEvidence(FAKE_DISPUTE_ID, "", "0x0000000000000000000000000000000000000000000000000000000000000000")).rejects.toThrow(AegisValidationError);
     });
 
     it("should allow read methods when read-only", async () => {

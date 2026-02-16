@@ -278,11 +278,11 @@ describe("EscrowService", () => {
   // ---- Read-only guard ----
 
   describe("read-only guard", () => {
-    it("should throw AegisValidationError for write methods when read-only", () => {
+    it("should throw AegisValidationError for write methods when read-only", async () => {
       const roProvider = createMockProvider(true);
       const roService = new EscrowService(roProvider, createAddresses());
 
-      expect(() =>
+      await expect(() =>
         roService.createJob({
           clientAgentId: 1n,
           providerAgentId: 2n,

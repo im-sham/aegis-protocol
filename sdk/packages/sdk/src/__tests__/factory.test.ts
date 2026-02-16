@@ -137,11 +137,11 @@ describe("FactoryService", () => {
   // ---- Read-only guard ----
 
   describe("read-only guard", () => {
-    it("should throw for write methods when read-only", () => {
+    it("should throw for write methods when read-only", async () => {
       const roProvider = createMockProvider(true);
       const roService = new FactoryService(roProvider, createAddresses());
 
-      expect(() =>
+      await expect(() =>
         roService.createTemplate({
           name: "test",
           defaultValidator: "0x0000000000000000000000000000000000000000",
