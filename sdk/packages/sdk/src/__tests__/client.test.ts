@@ -10,6 +10,7 @@ import { FactoryService } from "../factory";
 import { IdentityService } from "../erc8004/identity";
 import { ReputationService } from "../erc8004/reputation";
 import { ValidationService } from "../erc8004/validation";
+import { USDCService } from "../usdc";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -38,7 +39,7 @@ function createTestClients() {
 
 describe("AegisClient", () => {
   describe("fromViem", () => {
-    it("should create a client with all 7 service modules", () => {
+    it("should create a client with all 8 service modules", () => {
       const { publicClient, walletClient } = createTestClients();
       const client = AegisClient.fromViem({
         walletClient,
@@ -53,6 +54,7 @@ describe("AegisClient", () => {
       expect(client.identity).toBeInstanceOf(IdentityService);
       expect(client.reputation).toBeInstanceOf(ReputationService);
       expect(client.validation).toBeInstanceOf(ValidationService);
+      expect(client.usdc).toBeInstanceOf(USDCService);
     });
 
     it("should accept contract address overrides", () => {
@@ -98,7 +100,7 @@ describe("AegisClient", () => {
   });
 
   describe("readOnly", () => {
-    it("should create a read-only client with all 7 service modules", () => {
+    it("should create a read-only client with all 8 service modules", () => {
       const client = AegisClient.readOnly({
         chain: "base-sepolia",
       });
@@ -110,6 +112,7 @@ describe("AegisClient", () => {
       expect(client.identity).toBeInstanceOf(IdentityService);
       expect(client.reputation).toBeInstanceOf(ReputationService);
       expect(client.validation).toBeInstanceOf(ValidationService);
+      expect(client.usdc).toBeInstanceOf(USDCService);
     });
 
     it("should accept a custom RPC URL", () => {
@@ -123,7 +126,7 @@ describe("AegisClient", () => {
   });
 
   describe("fromEthers", () => {
-    it("should create a client with all 7 service modules", () => {
+    it("should create a client with all 8 service modules", () => {
       // Use a minimal mock signer since ethers is not a dev dependency
       const mockSigner = { getAddress: async () => "0x1234" };
 
@@ -139,6 +142,7 @@ describe("AegisClient", () => {
       expect(client.identity).toBeInstanceOf(IdentityService);
       expect(client.reputation).toBeInstanceOf(ReputationService);
       expect(client.validation).toBeInstanceOf(ValidationService);
+      expect(client.usdc).toBeInstanceOf(USDCService);
     });
   });
 

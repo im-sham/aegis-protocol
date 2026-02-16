@@ -28,6 +28,17 @@ export type {
 export { USDCService } from "./usdc";
 
 // ---------------------------------------------------------------------------
+// Event parsers
+// ---------------------------------------------------------------------------
+export {
+  parseJobCreated,
+  parseJobSettled,
+  parseDisputeInitiated,
+  parseDisputeResolved,
+  parseTemplateCreated,
+} from "./parsers";
+
+// ---------------------------------------------------------------------------
 // ERC-8004 registry services
 // ---------------------------------------------------------------------------
 export {
@@ -63,6 +74,12 @@ export type {
   SupportedChain,
   ClientOptions,
   AegisContractErrorData,
+  JobCreatedEvent,
+  JobSettledEvent,
+  DisputeInitiatedEvent,
+  DisputeResolvedEvent,
+  TemplateCreatedEvent,
+  AgentRegisteredResult,
 } from "@aegis-protocol/types";
 export {
   AegisContractError,
