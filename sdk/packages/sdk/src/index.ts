@@ -25,6 +25,8 @@ export type {
   CreateJobFromTemplateParams,
 } from "./factory";
 
+export { USDCService } from "./usdc";
+
 // ---------------------------------------------------------------------------
 // ERC-8004 registry services
 // ---------------------------------------------------------------------------
