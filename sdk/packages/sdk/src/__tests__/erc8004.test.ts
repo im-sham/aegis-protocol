@@ -106,11 +106,11 @@ describe("IdentityService", () => {
   // ---- Read-only guard ----
 
   describe("read-only guard", () => {
-    it("should throw AegisValidationError for register when read-only", () => {
+    it("should throw AegisValidationError for register when read-only", async () => {
       const roProvider = createMockProvider(true);
       const roService = new IdentityService(roProvider, createAddresses());
 
-      expect(() => roService.register("ipfs://test")).rejects.toThrow(
+      await expect(() => roService.register("ipfs://test")).rejects.toThrow(
         AegisValidationError,
       );
     });

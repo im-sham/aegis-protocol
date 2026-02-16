@@ -125,12 +125,12 @@ describe("TreasuryService", () => {
   // ---- Read-only guard ----
 
   describe("read-only guard", () => {
-    it("should throw for write methods when read-only", () => {
+    it("should throw for write methods when read-only", async () => {
       const roProvider = createMockProvider(true);
       const roService = new TreasuryService(roProvider, createAddresses());
 
-      expect(() => roService.withdrawTreasury("0x0000000000000000000000000000000000000000", 1n)).rejects.toThrow(AegisValidationError);
-      expect(() => roService.sweep()).rejects.toThrow(AegisValidationError);
+      await expect(() => roService.withdrawTreasury("0x0000000000000000000000000000000000000000", 1n)).rejects.toThrow(AegisValidationError);
+      await expect(() => roService.sweep()).rejects.toThrow(AegisValidationError);
     });
 
     it("should allow read methods when read-only", async () => {
