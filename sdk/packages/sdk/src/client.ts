@@ -114,7 +114,10 @@ export class AegisClient {
   public readonly reputation: ReputationService;
   public readonly validation: ValidationService;
 
+  private readonly provider: AegisProvider;
+
   private constructor(provider: AegisProvider, addresses: ContractAddresses) {
+    this.provider = provider;
     this.escrow = new EscrowService(provider, addresses);
     this.dispute = new DisputeService(provider, addresses);
     this.treasury = new TreasuryService(provider, addresses);
@@ -156,7 +159,7 @@ export class AegisClient {
     const publicClient = createPublicClient({
       chain: viemChain,
       transport: http(rpcUrl),
-    });
+    }) as PublicClient;
     const adapter = ViemAdapter.readOnly(publicClient);
     const addresses = resolveAddresses(options.chain, options.contracts);
     return new AegisClient(adapter, addresses);
@@ -166,13 +169,13 @@ export class AegisClient {
    * Get the connected wallet address.
    */
   async getAddress() {
-    return this.escrow["provider"].getAddress();
+    return this.provider.getAddress();
   }
 
   /**
    * Get the chain ID of the connected network.
    */
   async getChainId() {
-    return this.escrow["provider"].getChainId();
+    return this.provider.getChainId();
   }
 }

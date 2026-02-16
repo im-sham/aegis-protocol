@@ -20,11 +20,13 @@ import type {
  *   const aegis = new EthersAdapter(signer, provider);
  */
 export class EthersAdapter implements AegisProvider {
-  private readonly signer: unknown; // ethers.Signer
-  private readonly ethersProvider: unknown; // ethers.Provider
+  // Use `any` — ethers types are not available at compile time since
+  // ethers is an optional peer dependency.
+  private readonly signer: any;
+  private readonly ethersProvider: any;
   readonly isReadOnly: boolean;
 
-  constructor(signer: unknown, provider?: unknown) {
+  constructor(signer: any, provider?: any) {
     this.signer = signer;
     this.ethersProvider = provider ?? signer;
     this.isReadOnly = false;
@@ -33,31 +35,30 @@ export class EthersAdapter implements AegisProvider {
   /**
    * Create a read-only adapter backed by an ethers Provider (no signer).
    */
-  static readOnly(provider: unknown): EthersAdapter {
-    const adapter = Object.create(EthersAdapter.prototype) as EthersAdapter;
-    (adapter as { signer: unknown }).signer = null;
-    (adapter as { ethersProvider: unknown }).ethersProvider = provider;
-    (adapter as { isReadOnly: boolean }).isReadOnly = true;
+  static readOnly(provider: any): EthersAdapter {
+    const adapter = new EthersAdapter(null, provider);
+    (adapter as any).isReadOnly = true;
+    (adapter as any).signer = null;
     return adapter;
   }
 
-  private async getEthers(): Promise<typeof import("ethers")> {
+  private async getEthers(): Promise<any> {
     try {
       return await import("ethers");
     } catch {
       throw new AegisProviderError(
-        'ethers is not installed. Install it with: npm install ethers"'
+        'ethers is not installed. Install it with: npm install ethers'
       );
     }
   }
 
   async readContract<T>(params: ReadContractParams): Promise<T> {
-    const ethers = await this.getEthers();
+    const { Contract } = await this.getEthers();
     try {
-      const contract = new ethers.Contract(
+      const contract = new Contract(
         params.address,
-        params.abi as ethers.InterfaceAbi,
-        this.ethersProvider as ethers.Provider
+        params.abi as any,
+        this.ethersProvider,
       );
       const result = await contract[params.functionName](
         ...(params.args ?? [])
@@ -66,7 +67,7 @@ export class EthersAdapter implements AegisProvider {
     } catch (error) {
       throw new AegisProviderError(
         `readContract failed: ${params.functionName}`,
-        error
+        error,
       );
     }
   }
@@ -74,36 +75,34 @@ export class EthersAdapter implements AegisProvider {
   async writeContract(params: WriteContractParams): Promise<Hex> {
     if (!this.signer) {
       throw new AegisProviderError(
-        "Cannot write: provider is read-only. Use an EthersAdapter with a Signer."
+        "Cannot write: provider is read-only. Use an EthersAdapter with a Signer.",
       );
     }
 
-    const ethers = await this.getEthers();
+    const { Contract } = await this.getEthers();
     try {
-      const contract = new ethers.Contract(
+      const contract = new Contract(
         params.address,
-        params.abi as ethers.InterfaceAbi,
-        this.signer as ethers.Signer
+        params.abi as any,
+        this.signer,
       );
       const tx = await contract[params.functionName](
         ...(params.args ?? []),
-        params.value != null ? { value: params.value } : {}
+        params.value != null ? { value: params.value } : {},
       );
       return tx.hash as Hex;
     } catch (error) {
       if (error instanceof AegisProviderError) throw error;
       throw new AegisProviderError(
         `writeContract failed: ${params.functionName}`,
-        error
+        error,
       );
     }
   }
 
   async waitForTransaction(hash: Hex): Promise<TransactionReceipt> {
-    const ethers = await this.getEthers();
     try {
-      const provider = this.ethersProvider as ethers.Provider;
-      const receipt = await provider.waitForTransaction(hash);
+      const receipt = await this.ethersProvider.waitForTransaction(hash);
 
       if (!receipt) {
         throw new AegisProviderError(`Transaction not found: ${hash}`);
@@ -113,7 +112,7 @@ export class EthersAdapter implements AegisProvider {
         transactionHash: receipt.hash as Hex,
         blockNumber: BigInt(receipt.blockNumber),
         status: receipt.status === 1 ? "success" : "reverted",
-        logs: receipt.logs.map((log) => ({
+        logs: receipt.logs.map((log: any) => ({
           address: log.address as Hex,
           topics: (log.topics ?? []) as Hex[],
           data: log.data as Hex,
@@ -123,26 +122,22 @@ export class EthersAdapter implements AegisProvider {
       if (error instanceof AegisProviderError) throw error;
       throw new AegisProviderError(
         `waitForTransaction failed: ${hash}`,
-        error
+        error,
       );
     }
   }
 
   watchContractEvent(params: WatchEventParams): () => void {
-    // ethers uses a synchronous setup with event listeners.
-    // We create the contract immediately (ethers should already be loaded
-    // if any prior call has been made). For simplicity, we require
-    // the dynamic import to have resolved before calling watch.
     let unsubscribed = false;
 
     void (async () => {
-      const ethers = await this.getEthers();
+      const { Contract } = await this.getEthers();
       if (unsubscribed) return;
 
-      const contract = new ethers.Contract(
+      const contract = new Contract(
         params.address,
-        params.abi as ethers.InterfaceAbi,
-        this.ethersProvider as ethers.Provider
+        params.abi as any,
+        this.ethersProvider,
       );
 
       contract.on(params.eventName, (...args: unknown[]) => {
@@ -160,20 +155,15 @@ export class EthersAdapter implements AegisProvider {
   async getAddress(): Promise<Hex> {
     if (!this.signer) {
       throw new AegisProviderError(
-        "No signer available. Provide an EthersAdapter with a Signer."
+        "No signer available. Provide an EthersAdapter with a Signer.",
       );
     }
-    const ethers = await this.getEthers();
-    const address = await (
-      this.signer as ethers.Signer
-    ).getAddress();
+    const address = await this.signer.getAddress();
     return address as Hex;
   }
 
   async getChainId(): Promise<number> {
-    const ethers = await this.getEthers();
-    const provider = this.ethersProvider as ethers.Provider;
-    const network = await provider.getNetwork();
+    const network = await this.ethersProvider.getNetwork();
     return Number(network.chainId);
   }
 }

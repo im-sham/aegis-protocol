@@ -27,21 +27,17 @@ export class ViemAdapter implements AegisProvider {
 
   readonly isReadOnly: boolean;
 
-  constructor(walletClient: WalletClient, publicClient: PublicClient) {
+  constructor(walletClient: WalletClient | null, publicClient: PublicClient) {
     this.walletClient = walletClient;
     this.publicClient = publicClient;
-    this.isReadOnly = false;
+    this.isReadOnly = walletClient === null;
   }
 
   /**
    * Create a read-only adapter (no write capabilities).
    */
   static readOnly(publicClient: PublicClient): ViemAdapter {
-    const adapter = Object.create(ViemAdapter.prototype) as ViemAdapter;
-    (adapter as { publicClient: PublicClient }).publicClient = publicClient;
-    (adapter as { walletClient: WalletClient | null }).walletClient = null;
-    (adapter as { isReadOnly: boolean }).isReadOnly = true;
-    return adapter;
+    return new ViemAdapter(null, publicClient);
   }
 
   async readContract<T>(params: ReadContractParams): Promise<T> {
