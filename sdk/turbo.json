@@ -8,6 +8,9 @@
     "test": {
       "dependsOn": ["build"]
     },
+    "test:integration": {
+      "dependsOn": ["build"]
+    },
     "lint": {},
     "clean": {
       "cache": false

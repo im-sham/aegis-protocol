@@ -71,6 +71,7 @@
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "lint": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },
