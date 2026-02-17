@@ -1,0 +1,11 @@
+{
+  "network": "base-sepolia",
+  "escrowAddress": "0xe988128467299fD856Bb45D2241811837BF35E77",
+  "escrowStartBlock": 37617228,
+  "disputeAddress": "0x2c831D663B87194Fa6444df17A9A7d135186Cb41",
+  "disputeStartBlock": 37617228,
+  "treasuryAddress": "0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5",
+  "treasuryStartBlock": 37617228,
+  "factoryAddress": "0xFD451BEfa1eE3EB4dBCA4E9EA539B4bf432866dA",
+  "factoryStartBlock": 37617228
+}

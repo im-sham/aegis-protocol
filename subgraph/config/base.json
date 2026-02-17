@@ -1,0 +1,11 @@
+{
+  "network": "base",
+  "escrowAddress": "0x0000000000000000000000000000000000000000",
+  "escrowStartBlock": 0,
+  "disputeAddress": "0x0000000000000000000000000000000000000000",
+  "disputeStartBlock": 0,
+  "treasuryAddress": "0x0000000000000000000000000000000000000000",
+  "treasuryStartBlock": 0,
+  "factoryAddress": "0x0000000000000000000000000000000000000000",
+  "factoryStartBlock": 0
+}
