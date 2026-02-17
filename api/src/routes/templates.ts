@@ -11,9 +11,10 @@ export function createTemplateRoutes(sdk?: AegisClient, subgraph?: GraphQLClient
     if (!sdk) return c.json({ error: "SDK not initialized" }, 503);
     const templateId = BigInt(c.req.param("id"));
     const template = await sdk.factory.getTemplate(templateId);
-    return c.json(template, 200, {
-      replacer: (_: string, v: unknown) => (typeof v === "bigint" ? v.toString() : v),
-    });
+    const serialized = JSON.parse(
+      JSON.stringify(template, (_: string, v: unknown) => (typeof v === "bigint" ? v.toString() : v)),
+    );
+    return c.json(serialized);
   });
 
   router.get("/:id/active", async (c) => {

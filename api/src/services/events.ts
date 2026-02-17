@@ -7,10 +7,12 @@ import {
 } from "viem";
 import { baseSepolia, base } from "viem/chains";
 import type { SupportedChain, ContractAddresses } from "@aegis-protocol/types";
-import { AegisEscrowAbi } from "@aegis-protocol/abis";
-import { AegisDisputeAbi } from "@aegis-protocol/abis";
-import { AegisTreasuryAbi } from "@aegis-protocol/abis";
-import { AegisJobFactoryAbi } from "@aegis-protocol/abis";
+import {
+  aegisEscrowAbi,
+  aegisDisputeAbi,
+  aegisTreasuryAbi,
+  aegisJobFactoryAbi,
+} from "@aegis-protocol/abis";
 
 const CHAIN_MAP = { "base-sepolia": baseSepolia, base } as const;
 
@@ -48,10 +50,10 @@ export function watchAllContracts(
 
   // Watch each contract
   const contracts = [
-    { name: "escrow", address: addresses.escrow, abi: AegisEscrowAbi },
-    { name: "dispute", address: addresses.dispute, abi: AegisDisputeAbi },
-    { name: "treasury", address: addresses.treasury, abi: AegisTreasuryAbi },
-    { name: "factory", address: addresses.factory, abi: AegisJobFactoryAbi },
+    { name: "escrow", address: addresses.escrow, abi: aegisEscrowAbi },
+    { name: "dispute", address: addresses.dispute, abi: aegisDisputeAbi },
+    { name: "treasury", address: addresses.treasury, abi: aegisTreasuryAbi },
+    { name: "factory", address: addresses.factory, abi: aegisJobFactoryAbi },
   ] as const;
 
   for (const { name, address, abi } of contracts) {
