@@ -25,5 +25,8 @@ filescode.zip
 # Foundry lock
 foundry.lock
 
+# Node modules
+node_modules/
+
 # Git worktrees
 .worktrees/
