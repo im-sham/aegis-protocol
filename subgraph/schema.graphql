@@ -1,0 +1,518 @@
+"""
+AEGIS Protocol Subgraph Schema
+6 mutable aggregation entities + 35 immutable event entities
+"""
+
+# =============================================================================
+# MUTABLE AGGREGATION ENTITIES
+# =============================================================================
+
+type Job @entity {
+  id: Bytes! # jobId (bytes32)
+  clientAgentId: BigInt!
+  providerAgentId: BigInt!
+  clientAddress: Bytes!
+  providerWallet: Bytes!
+  amount: BigInt! # USDC atomic units
+  protocolFeeBps: BigInt!
+  validatorAddress: Bytes!
+  validationScore: Int!
+  validationThreshold: Int!
+  passedThreshold: Boolean!
+  jobSpecHash: Bytes!
+  jobSpecURI: String!
+  deliverableHash: Bytes
+  deliverableURI: String
+  validationRequestHash: Bytes
+  templateId: BigInt!
+  state: String!
+  resolution: String!
+  deadline: BigInt!
+  createdAt: BigInt!
+  deliveredAt: BigInt
+  settledAt: BigInt
+  disputeWindowEnd: BigInt
+  providerAmount: BigInt
+  protocolFee: BigInt
+  refundAmount: BigInt
+  createdAtBlock: BigInt!
+  createdAtTx: Bytes!
+  dispute: [Dispute!]! @derivedFrom(field: "job")
+  template: JobTemplate
+  events: [JobCreatedEvent!]! @derivedFrom(field: "job")
+}
+
+type Dispute @entity {
+  id: Bytes!
+  job: Job!
+  jobId: Bytes!
+  initiator: Bytes!
+  respondent: Bytes
+  arbitrator: Bytes
+  clientPercent: Int
+  method: String
+  resolved: Boolean!
+  createdAt: BigInt!
+  resolvedAt: BigInt
+  createdAtBlock: BigInt!
+  createdAtTx: Bytes!
+  evidence: [EvidenceSubmittedEvent!]! @derivedFrom(field: "dispute")
+}
+
+type Arbitrator @entity {
+  id: Bytes!
+  totalStaked: BigInt!
+  totalSlashed: BigInt!
+  disputesAssigned: BigInt!
+  disputesResolved: BigInt!
+  firstStakedAt: BigInt!
+  lastActivityAt: BigInt!
+}
+
+type JobTemplate @entity {
+  id: String!
+  templateId: BigInt!
+  name: String!
+  creator: Bytes!
+  defaultValidator: Bytes!
+  defaultTimeout: BigInt!
+  minValidation: Int!
+  active: Boolean!
+  createdAt: BigInt!
+  createdAtBlock: BigInt!
+  jobCount: BigInt!
+  jobs: [Job!]! @derivedFrom(field: "template")
+}
+
+type ProtocolStats @entity {
+  id: String! # singleton "protocol"
+  totalJobs: BigInt!
+  totalSettled: BigInt!
+  totalDisputed: BigInt!
+  totalRefunded: BigInt!
+  totalVolumeUSDC: BigInt!
+  totalFeesCollected: BigInt!
+  totalDisputeBonds: BigInt!
+  totalTemplates: BigInt!
+  activeArbitrators: BigInt!
+}
+
+type DailyStats @entity {
+  id: String! # "YYYY-MM-DD"
+  date: Int!
+  jobsCreated: BigInt!
+  jobsSettled: BigInt!
+  jobsDisputed: BigInt!
+  jobsRefunded: BigInt!
+  volumeUSDC: BigInt!
+  feesCollected: BigInt!
+}
+
+# =============================================================================
+# IMMUTABLE EVENT ENTITIES — AegisEscrow (16)
+# =============================================================================
+
+type JobCreatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  clientAgentId: BigInt!
+  providerAgentId: BigInt!
+  amount: BigInt!
+  validatorAddress: Bytes!
+  deadline: BigInt!
+  job: Job!
+}
+
+type JobFundedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  amount: BigInt!
+  job: Job!
+}
+
+type DeliverableSubmittedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  deliverableURI: String!
+  deliverableHash: Bytes!
+  validationRequestHash: Bytes!
+  job: Job!
+}
+
+type ValidationReceivedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  score: Int!
+  passedThreshold: Boolean!
+  job: Job!
+}
+
+type JobSettledEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  providerWallet: Bytes!
+  providerAmount: BigInt!
+  protocolFee: BigInt!
+  job: Job!
+}
+
+type JobRefundedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  clientAddress: Bytes!
+  amount: BigInt!
+  job: Job!
+}
+
+type JobCancelledEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  job: Job!
+}
+
+type DisputeRaisedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  initiator: Bytes!
+  job: Job!
+}
+
+type ClientConfirmedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  job: Job!
+}
+
+type DisputeWindowStartedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  windowEnd: BigInt!
+  job: Job!
+}
+
+type FeedbackSubmittedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  agentId: BigInt!
+  value: BigInt!
+  job: Job!
+}
+
+type ProtocolFeeUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  oldFee: BigInt!
+  newFee: BigInt!
+}
+
+type DisputeWindowUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  oldWindow: BigInt!
+  newWindow: BigInt!
+}
+
+type TreasuryUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  oldTreasury: Bytes!
+  newTreasury: Bytes!
+}
+
+type DisputeContractUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  oldDispute: Bytes!
+  newDispute: Bytes!
+}
+
+type AuthorizedCallerUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  caller: Bytes!
+  authorized: Boolean!
+}
+
+# =============================================================================
+# IMMUTABLE EVENT ENTITIES — AegisDispute (10)
+# =============================================================================
+
+type DisputeInitiatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  jobId: Bytes!
+  initiator: Bytes!
+  dispute: Dispute!
+  job: Job!
+}
+
+type EvidenceSubmittedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  submitter: Bytes!
+  evidenceURI: String!
+  dispute: Dispute!
+}
+
+type ArbitratorAssignedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  arbitrator: Bytes!
+  dispute: Dispute!
+}
+
+type DisputeResolvedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  jobId: Bytes!
+  clientPercent: Int!
+  method: Int!
+  dispute: Dispute!
+  job: Job!
+}
+
+type ReValidationRequestedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  newValidationHash: Bytes!
+  dispute: Dispute!
+}
+
+type ArbitratorStakedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  arbitratorAddress: Bytes!
+  amount: BigInt!
+}
+
+type ArbitratorUnstakedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  arbitratorAddress: Bytes!
+  amount: BigInt!
+}
+
+type ArbitratorSlashedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  arbitratorAddress: Bytes!
+  amount: BigInt!
+}
+
+type BondReturnedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  dispute: Dispute!
+}
+
+type BondForfeitedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  disputeId: Bytes!
+  from: Bytes!
+  amount: BigInt!
+  dispute: Dispute!
+}
+
+# =============================================================================
+# IMMUTABLE EVENT ENTITIES — AegisTreasury (5)
+# =============================================================================
+
+type FeeReceivedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  source: Bytes!
+  amount: BigInt!
+  treasuryShare: BigInt!
+  arbitratorShare: BigInt!
+}
+
+type TreasuryWithdrawalEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  to: Bytes!
+  amount: BigInt!
+}
+
+type ArbitratorRewardsDistributedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  amount: BigInt!
+}
+
+type SourceAuthorizedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  source: Bytes!
+  authorized: Boolean!
+}
+
+type ArbitratorPoolBpsUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  oldBps: BigInt!
+  newBps: BigInt!
+}
+
+# =============================================================================
+# IMMUTABLE EVENT ENTITIES — AegisJobFactory (4)
+# =============================================================================
+
+type TemplateCreatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  templateId: BigInt!
+  name: String!
+  creator: Bytes!
+  defaultValidator: Bytes!
+  defaultTimeout: BigInt!
+  minValidation: Int!
+  template: JobTemplate!
+}
+
+type TemplateUpdatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  templateId: BigInt!
+  template: JobTemplate!
+}
+
+type TemplateDeactivatedEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  templateId: BigInt!
+  template: JobTemplate!
+}
+
+type JobCreatedFromTemplateEvent @entity(immutable: true) {
+  id: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  jobId: Bytes!
+  templateId: BigInt!
+  job: Job!
+  template: JobTemplate!
+}
