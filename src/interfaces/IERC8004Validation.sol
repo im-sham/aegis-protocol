@@ -13,10 +13,7 @@ interface IERC8004Validation {
     // =========================================================================
 
     event ValidationRequest(
-        address indexed validatorAddress,
-        uint256 indexed agentId,
-        string requestURI,
-        bytes32 indexed requestHash
+        address indexed validatorAddress, uint256 indexed agentId, string requestURI, bytes32 indexed requestHash
     );
 
     event ValidationResponse(
@@ -43,7 +40,8 @@ interface IERC8004Validation {
         uint256 agentId,
         string calldata requestURI,
         bytes32 requestHash
-    ) external;
+    )
+        external;
 
     /// @notice Submit a validation response (called by validator contracts)
     /// @param requestHash The request being responded to
@@ -57,7 +55,8 @@ interface IERC8004Validation {
         string calldata responseURI,
         bytes32 responseHash,
         string calldata tag
-    ) external;
+    )
+        external;
 
     // =========================================================================
     // Read Functions
@@ -92,7 +91,10 @@ interface IERC8004Validation {
         uint256 agentId,
         address[] calldata validatorAddresses,
         string calldata tag
-    ) external view returns (uint64 count, uint8 averageResponse);
+    )
+        external
+        view
+        returns (uint64 count, uint8 averageResponse);
 
     /// @notice Get all validation request hashes for an agent
     function getAgentValidations(uint256 agentId) external view returns (bytes32[] memory requestHashes);

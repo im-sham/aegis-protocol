@@ -57,12 +57,7 @@ contract AegisJobFactoryTest is Test {
 
         // Deploy escrow
         escrow = new AegisEscrow(
-            address(identity),
-            address(reputation),
-            address(validation),
-            address(usdc),
-            address(treasury),
-            owner
+            address(identity), address(reputation), address(validation), address(usdc), address(treasury), owner
         );
 
         // Deploy dispute
@@ -102,8 +97,8 @@ contract AegisJobFactoryTest is Test {
             validatorAddr,
             7 days,
             250, // 2.5% fee
-            70,  // min validation
-            50   // dispute split
+            70, // min validation
+            50 // dispute split
         );
     }
 
@@ -230,12 +225,7 @@ contract AegisJobFactoryTest is Test {
         // Client calls factory to create job from template
         vm.prank(client);
         bytes32 jobId = factory.createJobFromTemplate(
-            templateId,
-            clientAgentId,
-            providerAgentId,
-            JOB_SPEC_HASH,
-            JOB_SPEC_URI,
-            JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
 
         // Verify job was created in escrow
@@ -263,8 +253,7 @@ contract AegisJobFactoryTest is Test {
 
         vm.prank(client);
         factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
 
         // Factory balance should not change (USDC goes client → escrow)
@@ -277,10 +266,7 @@ contract AegisJobFactoryTest is Test {
         // so TemplateNotActive fires before TemplateNotFound
         vm.prank(client);
         vm.expectRevert(abi.encodeWithSelector(AegisTypes.TemplateNotActive.selector, 999));
-        factory.createJobFromTemplate(
-            999, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
-        );
+        factory.createJobFromTemplate(999, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT);
     }
 
     function test_CreateJobFromTemplate_RevertIfTemplateDeactivated() public {
@@ -293,8 +279,7 @@ contract AegisJobFactoryTest is Test {
         vm.prank(client);
         vm.expectRevert(abi.encodeWithSelector(AegisTypes.TemplateNotActive.selector, templateId));
         factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
     }
 
@@ -309,8 +294,7 @@ contract AegisJobFactoryTest is Test {
 
         vm.prank(outsider); // outsider calls, but USDC comes from client (agent owner)
         bytes32 jobId = factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
 
         // Job is created and USDC came from the actual agent owner (client)
@@ -330,8 +314,7 @@ contract AegisJobFactoryTest is Test {
         vm.prank(client);
         vm.expectRevert(abi.encodeWithSelector(AegisTypes.NotAgentOwner.selector, clientAgentId, address(factory)));
         factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
     }
 
@@ -340,14 +323,12 @@ contract AegisJobFactoryTest is Test {
 
         vm.prank(client);
         bytes32 jobId1 = factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
 
         vm.prank(client);
         bytes32 jobId2 = factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            keccak256("second job"), "ipfs://second-job", 200e6
+            templateId, clientAgentId, providerAgentId, keccak256("second job"), "ipfs://second-job", 200e6
         );
 
         assertTrue(jobId1 != jobId2, "Job IDs should be unique");
@@ -492,8 +473,7 @@ contract AegisJobFactoryTest is Test {
         // 2. Create job from template
         vm.prank(client);
         bytes32 jobId = factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
         );
 
         // 3. Provider delivers

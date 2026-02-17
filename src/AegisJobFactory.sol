@@ -14,7 +14,9 @@ interface IAegisEscrowForFactory {
         uint256 deadline,
         uint256 amount,
         uint8 validationThreshold
-    ) external returns (bytes32 jobId);
+    )
+        external
+        returns (bytes32 jobId);
 }
 
 /// @title AegisJobFactory
@@ -86,7 +88,10 @@ contract AegisJobFactory is Ownable {
         uint256 feeBps,
         uint8 minValidation,
         uint8 defaultDisputeSplit
-    ) external returns (uint256 templateId) {
+    )
+        external
+        returns (uint256 templateId)
+    {
         if (!openTemplateCreation && msg.sender != owner()) {
             revert AegisTypes.NotAuthorized(msg.sender);
         }
@@ -129,7 +134,10 @@ contract AegisJobFactory is Ownable {
         bytes32 jobSpecHash,
         string calldata jobSpecURI,
         uint256 amount
-    ) external returns (bytes32 jobId) {
+    )
+        external
+        returns (bytes32 jobId)
+    {
         AegisTypes.JobTemplate memory tpl = templates[templateId];
 
         if (!tpl.active) revert AegisTypes.TemplateNotActive(templateId);

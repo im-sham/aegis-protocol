@@ -79,17 +79,14 @@ contract MockReputationRegistry {
         string calldata tag2,
         string calldata, // endpoint
         string calldata, // feedbackURI
-        bytes32          // feedbackHash
-    ) external {
+        bytes32 // feedbackHash
+    )
+        external
+    {
         uint64 index = lastIndexes[agentId][msg.sender];
 
-        feedbacks[agentId][msg.sender][index] = Feedback({
-            value: value,
-            valueDecimals: valueDecimals,
-            tag1: tag1,
-            tag2: tag2,
-            isRevoked: false
-        });
+        feedbacks[agentId][msg.sender][index] =
+            Feedback({value: value, valueDecimals: valueDecimals, tag1: tag1, tag2: tag2, isRevoked: false});
 
         if (index == 0) {
             clients[agentId].push(msg.sender);
@@ -105,8 +102,12 @@ contract MockReputationRegistry {
         uint256 agentId,
         address[] calldata clientAddresses,
         string calldata, // tag1
-        string calldata  // tag2
-    ) external view returns (uint64 count, int128 summaryValue, uint8 summaryValueDecimals) {
+        string calldata // tag2
+    )
+        external
+        view
+        returns (uint64 count, int128 summaryValue, uint8 summaryValueDecimals)
+    {
         int256 total = 0;
         uint64 n = 0;
 
@@ -136,7 +137,11 @@ contract MockReputationRegistry {
         uint256 agentId,
         address clientAddress,
         uint64 feedbackIndex
-    ) external view returns (int128, uint8, string memory, string memory, bool) {
+    )
+        external
+        view
+        returns (int128, uint8, string memory, string memory, bool)
+    {
         Feedback memory fb = feedbacks[agentId][clientAddress][feedbackIndex];
         return (fb.value, fb.valueDecimals, fb.tag1, fb.tag2, fb.isRevoked);
     }
@@ -164,17 +169,11 @@ contract MockValidationRegistry {
     mapping(address => bytes32[]) public validatorRequests;
 
     event ValidationRequestEmitted(
-        address indexed validatorAddress,
-        uint256 indexed agentId,
-        string requestURI,
-        bytes32 indexed requestHash
+        address indexed validatorAddress, uint256 indexed agentId, string requestURI, bytes32 indexed requestHash
     );
 
     event ValidationResponseEmitted(
-        address indexed validatorAddress,
-        uint256 indexed agentId,
-        bytes32 indexed requestHash,
-        uint8 response
+        address indexed validatorAddress, uint256 indexed agentId, bytes32 indexed requestHash, uint8 response
     );
 
     function validationRequest(
@@ -182,7 +181,9 @@ contract MockValidationRegistry {
         uint256 agentId,
         string calldata requestURI,
         bytes32 requestHash
-    ) external {
+    )
+        external
+    {
         statuses[requestHash] = ValidationStatus({
             validatorAddress: validatorAddress,
             agentId: agentId,
@@ -204,7 +205,9 @@ contract MockValidationRegistry {
         string calldata, // responseURI
         bytes32 responseHash,
         string calldata tag
-    ) external {
+    )
+        external
+    {
         ValidationStatus storage status = statuses[requestHash];
         require(status.validatorAddress != address(0), "Request not found");
 
@@ -239,7 +242,11 @@ contract MockValidationRegistry {
         status.lastUpdate = block.timestamp;
     }
 
-    function getSummary(uint256, address[] calldata, string calldata)
+    function getSummary(
+        uint256,
+        address[] calldata,
+        string calldata
+    )
         external
         pure
         returns (uint64 count, uint8 averageResponse)

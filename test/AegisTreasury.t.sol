@@ -194,9 +194,7 @@ contract AegisTreasuryTest is Test {
         uint256 treasuryBal = treasury.treasuryBalance();
 
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(
-            AegisTypes.InsufficientBalance.selector, treasuryBal + 1, treasuryBal
-        ));
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientBalance.selector, treasuryBal + 1, treasuryBal));
         treasury.withdrawTreasury(recipient, treasuryBal + 1);
     }
 
@@ -251,9 +249,7 @@ contract AegisTreasuryTest is Test {
         uint256 arbPool = treasury.arbitratorPoolBalance();
 
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(
-            AegisTypes.InsufficientBalance.selector, arbPool + 1, arbPool
-        ));
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientBalance.selector, arbPool + 1, arbPool));
         treasury.distributeArbitratorRewards(disputeAddr, arbPool + 1);
     }
 

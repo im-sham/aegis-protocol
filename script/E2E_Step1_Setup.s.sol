@@ -11,7 +11,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /// @dev After running, check the broadcast logs or Basescan for the jobId.
 ///      Then pass it to Step 2.
 ///
-///   forge script script/E2E_Step1_Setup.s.sol:E2EStep1 --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY --broadcast
+///   forge script script/E2E_Step1_Setup.s.sol:E2EStep1 --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY
+/// --broadcast
 contract E2EStep1 is Script {
     address constant IDENTITY = 0xc67ed2b93a4B05c35872fBB15c199Ee30ce4300D;
     address constant ESCROW = 0xe988128467299fD856Bb45D2241811837BF35E77;

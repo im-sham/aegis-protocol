@@ -10,7 +10,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /// @notice Reads the job from chain, submits deliverable, confirms delivery, verifies payouts
 /// @dev Reads the first active job for the deployer from totalJobsCreated counter.
 ///
-///   forge script script/E2E_Step2_Deliver.s.sol:E2EStep2 --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY --broadcast
+///   forge script script/E2E_Step2_Deliver.s.sol:E2EStep2 --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY
+/// --broadcast
 contract E2EStep2 is Script {
     address constant ESCROW = 0xe988128467299fD856Bb45D2241811837BF35E77;
     address constant TREASURY = 0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5;
@@ -55,9 +56,7 @@ contract E2EStep2 is Script {
             console.log("");
             console.log("--- Submitting Deliverable ---");
             escrow.submitDeliverable(
-                jobId,
-                "ipfs://QmDemoDeliverable_CodeReviewReport",
-                keccak256("demo-code-review-deliverable-v1")
+                jobId, "ipfs://QmDemoDeliverable_CodeReviewReport", keccak256("demo-code-review-deliverable-v1")
             );
             console.log("Deliverable submitted! Job is now VALIDATING.");
         } else {

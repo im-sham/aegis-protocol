@@ -14,10 +14,7 @@ interface IERC8004Identity {
     event Registered(uint256 indexed agentId, string agentURI, address indexed owner);
 
     event MetadataSet(
-        uint256 indexed agentId,
-        string indexed indexedMetadataKey,
-        string metadataKey,
-        bytes metadataValue
+        uint256 indexed agentId, string indexed indexedMetadataKey, string metadataKey, bytes metadataValue
     );
 
     event URIUpdated(uint256 indexed agentId, string newURI, address indexed updatedBy);
@@ -54,12 +51,7 @@ interface IERC8004Identity {
 
     /// @notice Set the agent's wallet address (requires EIP-712 or ERC-1271 signature)
     /// @dev The agentWallet is a reserved metadata key that cannot be set via setMetadata()
-    function setAgentWallet(
-        uint256 agentId,
-        address newWallet,
-        uint256 deadline,
-        bytes calldata signature
-    ) external;
+    function setAgentWallet(uint256 agentId, address newWallet, uint256 deadline, bytes calldata signature) external;
 
     /// @notice Get the agent's designated wallet address
     function getAgentWallet(uint256 agentId) external view returns (address);

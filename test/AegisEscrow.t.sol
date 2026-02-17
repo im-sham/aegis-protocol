@@ -59,12 +59,7 @@ contract AegisEscrowTest is Test {
 
         // Deploy escrow
         escrow = new AegisEscrow(
-            address(identity),
-            address(reputation),
-            address(validation),
-            address(usdc),
-            address(treasury),
-            owner
+            address(identity), address(reputation), address(validation), address(usdc), address(treasury), owner
         );
 
         // Deploy dispute
@@ -669,14 +664,7 @@ contract AegisEscrowTest is Test {
 
         vm.prank(client);
         bytes32 jobId = escrow.createJob(
-            clientAgentId,
-            providerAgentId,
-            JOB_SPEC_HASH,
-            JOB_SPEC_URI,
-            validator,
-            block.timestamp + 7 days,
-            amount,
-            70
+            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validator, block.timestamp + 7 days, amount, 70
         );
 
         AegisTypes.Job memory job = escrow.getJob(jobId);

@@ -58,7 +58,8 @@ interface IERC8004Reputation {
         string calldata endpoint,
         string calldata feedbackURI,
         bytes32 feedbackHash
-    ) external;
+    )
+        external;
 
     /// @notice Revoke previously submitted feedback
     function revokeFeedback(uint256 agentId, uint64 feedbackIndex) external;
@@ -70,7 +71,8 @@ interface IERC8004Reputation {
         uint64 feedbackIndex,
         string calldata responseURI,
         bytes32 responseHash
-    ) external;
+    )
+        external;
 
     // =========================================================================
     // Read Functions
@@ -90,14 +92,20 @@ interface IERC8004Reputation {
         address[] calldata clientAddresses,
         string calldata tag1,
         string calldata tag2
-    ) external view returns (uint64 count, int128 summaryValue, uint8 summaryValueDecimals);
+    )
+        external
+        view
+        returns (uint64 count, int128 summaryValue, uint8 summaryValueDecimals);
 
     /// @notice Read a specific feedback entry
     function readFeedback(
         uint256 agentId,
         address clientAddress,
         uint64 feedbackIndex
-    ) external view returns (int128 value, uint8 valueDecimals, string memory tag1, string memory tag2, bool isRevoked);
+    )
+        external
+        view
+        returns (int128 value, uint8 valueDecimals, string memory tag1, string memory tag2, bool isRevoked);
 
     /// @notice Get all clients who have submitted feedback for an agent
     function getClients(uint256 agentId) external view returns (address[] memory);
