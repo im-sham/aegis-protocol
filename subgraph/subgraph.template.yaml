@@ -1,8 +1,6 @@
-specVersion: 1.3.0
+specVersion: 1.2.0
 schema:
   file: ./schema.graphql
-indexerHints:
-  prune: auto
 dataSources:
   # =========================================================================
   # AegisEscrow — Core vault with job lifecycle
