@@ -36,3 +36,36 @@ jobs:
 
       - name: Run Forge tests
         run: forge test -vvv
+
+  subgraph:
+    name: Subgraph
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: subgraph
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare manifest
+        run: npm run prepare:base-sepolia
+
+      - name: Generate types
+        run: npm run codegen
+
+      - name: Build subgraph
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test

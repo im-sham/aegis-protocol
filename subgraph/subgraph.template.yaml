@@ -1,0 +1,204 @@
+specVersion: 1.2.0
+schema:
+  file: ./schema.graphql
+dataSources:
+  # =========================================================================
+  # AegisEscrow — Core vault with job lifecycle
+  # =========================================================================
+  - kind: ethereum
+    name: AegisEscrow
+    network: {{network}}
+    source:
+      address: "{{escrowAddress}}"
+      abi: AegisEscrow
+      startBlock: {{escrowStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Job
+        - ProtocolStats
+        - DailyStats
+        - JobCreatedEvent
+        - JobFundedEvent
+        - DeliverableSubmittedEvent
+        - ValidationReceivedEvent
+        - JobSettledEvent
+        - JobRefundedEvent
+        - JobCancelledEvent
+        - DisputeRaisedEvent
+        - ClientConfirmedEvent
+        - DisputeWindowStartedEvent
+        - FeedbackSubmittedEvent
+        - ProtocolFeeUpdatedEvent
+        - DisputeWindowUpdatedEvent
+        - TreasuryUpdatedEvent
+        - DisputeContractUpdatedEvent
+        - AuthorizedCallerUpdatedEvent
+      abis:
+        - name: AegisEscrow
+          file: ./abis/AegisEscrow.json
+      eventHandlers:
+        - event: JobCreated(indexed bytes32,indexed uint256,indexed uint256,uint256,address,uint256)
+          handler: handleJobCreated
+        - event: JobFunded(indexed bytes32,uint256)
+          handler: handleJobFunded
+        - event: DeliverableSubmitted(indexed bytes32,string,bytes32,bytes32)
+          handler: handleDeliverableSubmitted
+        - event: ValidationReceived(indexed bytes32,uint8,bool)
+          handler: handleValidationReceived
+        - event: JobSettled(indexed bytes32,indexed address,uint256,uint256)
+          handler: handleJobSettled
+        - event: JobRefunded(indexed bytes32,indexed address,uint256)
+          handler: handleJobRefunded
+        - event: JobCancelled(indexed bytes32)
+          handler: handleJobCancelled
+        - event: DisputeRaised(indexed bytes32,indexed address)
+          handler: handleDisputeRaised
+        - event: ClientConfirmed(indexed bytes32)
+          handler: handleClientConfirmed
+        - event: DisputeWindowStarted(indexed bytes32,uint256)
+          handler: handleDisputeWindowStarted
+        - event: FeedbackSubmitted(indexed bytes32,indexed uint256,int128)
+          handler: handleFeedbackSubmitted
+        - event: ProtocolFeeUpdated(uint256,uint256)
+          handler: handleProtocolFeeUpdated
+        - event: DisputeWindowUpdated(uint256,uint256)
+          handler: handleDisputeWindowUpdated
+        - event: TreasuryUpdated(address,address)
+          handler: handleTreasuryUpdated
+        - event: DisputeContractUpdated(address,address)
+          handler: handleDisputeContractUpdated
+        - event: AuthorizedCallerUpdated(indexed address,bool)
+          handler: handleAuthorizedCallerUpdated
+      file: ./src/escrow.ts
+
+  # =========================================================================
+  # AegisDispute — 3-tier dispute resolution
+  # =========================================================================
+  - kind: ethereum
+    name: AegisDispute
+    network: {{network}}
+    source:
+      address: "{{disputeAddress}}"
+      abi: AegisDispute
+      startBlock: {{disputeStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Dispute
+        - Arbitrator
+        - Job
+        - ProtocolStats
+        - DailyStats
+        - DisputeInitiatedEvent
+        - EvidenceSubmittedEvent
+        - ArbitratorAssignedEvent
+        - DisputeResolvedEvent
+        - ReValidationRequestedEvent
+        - ArbitratorStakedEvent
+        - ArbitratorUnstakedEvent
+        - ArbitratorSlashedEvent
+        - BondReturnedEvent
+        - BondForfeitedEvent
+      abis:
+        - name: AegisDispute
+          file: ./abis/AegisDispute.json
+      eventHandlers:
+        - event: DisputeInitiated(indexed bytes32,indexed bytes32,indexed address)
+          handler: handleDisputeInitiated
+        - event: EvidenceSubmitted(indexed bytes32,indexed address,string)
+          handler: handleEvidenceSubmitted
+        - event: ArbitratorAssigned(indexed bytes32,indexed address)
+          handler: handleArbitratorAssigned
+        - event: DisputeResolved(indexed bytes32,indexed bytes32,uint8,uint8)
+          handler: handleDisputeResolved
+        - event: ReValidationRequested(indexed bytes32,bytes32)
+          handler: handleReValidationRequested
+        - event: ArbitratorStaked(indexed address,uint256)
+          handler: handleArbitratorStaked
+        - event: ArbitratorUnstaked(indexed address,uint256)
+          handler: handleArbitratorUnstaked
+        - event: ArbitratorSlashed(indexed address,uint256)
+          handler: handleArbitratorSlashed
+        - event: BondReturned(indexed bytes32,indexed address,uint256)
+          handler: handleBondReturned
+        - event: BondForfeited(indexed bytes32,indexed address,uint256)
+          handler: handleBondForfeited
+      file: ./src/dispute.ts
+
+  # =========================================================================
+  # AegisTreasury — Fee collection and distribution
+  # =========================================================================
+  - kind: ethereum
+    name: AegisTreasury
+    network: {{network}}
+    source:
+      address: "{{treasuryAddress}}"
+      abi: AegisTreasury
+      startBlock: {{treasuryStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ProtocolStats
+        - FeeReceivedEvent
+        - TreasuryWithdrawalEvent
+        - ArbitratorRewardsDistributedEvent
+        - SourceAuthorizedEvent
+        - ArbitratorPoolBpsUpdatedEvent
+      abis:
+        - name: AegisTreasury
+          file: ./abis/AegisTreasury.json
+      eventHandlers:
+        - event: FeeReceived(indexed address,uint256,uint256,uint256)
+          handler: handleFeeReceived
+        - event: TreasuryWithdrawal(indexed address,uint256)
+          handler: handleTreasuryWithdrawal
+        - event: ArbitratorRewardsDistributed(uint256)
+          handler: handleArbitratorRewardsDistributed
+        - event: SourceAuthorized(indexed address,bool)
+          handler: handleSourceAuthorized
+        - event: ArbitratorPoolBpsUpdated(uint256,uint256)
+          handler: handleArbitratorPoolBpsUpdated
+      file: ./src/treasury.ts
+
+  # =========================================================================
+  # AegisJobFactory — Template system for standardized job types
+  # =========================================================================
+  - kind: ethereum
+    name: AegisJobFactory
+    network: {{network}}
+    source:
+      address: "{{factoryAddress}}"
+      abi: AegisJobFactory
+      startBlock: {{factoryStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - JobTemplate
+        - Job
+        - ProtocolStats
+        - TemplateCreatedEvent
+        - TemplateUpdatedEvent
+        - TemplateDeactivatedEvent
+        - JobCreatedFromTemplateEvent
+      abis:
+        - name: AegisJobFactory
+          file: ./abis/AegisJobFactory.json
+      eventHandlers:
+        - event: TemplateCreated(indexed uint256,string,indexed address,address,uint256,uint8)
+          handler: handleTemplateCreated
+        - event: TemplateUpdated(indexed uint256)
+          handler: handleTemplateUpdated
+        - event: TemplateDeactivated(indexed uint256)
+          handler: handleTemplateDeactivated
+        - event: JobCreatedFromTemplate(indexed bytes32,indexed uint256)
+          handler: handleJobCreatedFromTemplate
+      file: ./src/factory.ts
