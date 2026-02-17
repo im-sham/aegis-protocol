@@ -127,7 +127,7 @@ export function handleDisputeResolved(event: DisputeResolved): void {
 
   // Update Dispute entity
   let dispute = Dispute.load(disputeId);
-  if (dispute != null) {
+  if (dispute !== null) {
     dispute.resolved = true;
     dispute.method = resolutionToString(method);
     dispute.clientPercent = clientPercent;
@@ -135,21 +135,22 @@ export function handleDisputeResolved(event: DisputeResolved): void {
     dispute.save();
   }
 
-  // Update Job state to RESOLVED
-  let job = Job.load(jobId);
-  if (job != null) {
-    job.state = "RESOLVED";
-    job.save();
-  }
-
-  // If method == 2 (ARBITRATOR), increment arbitrator's disputesResolved
-  if (method == 2) {
-    if (dispute != null && dispute.arbitrator != null) {
-      let arb = getOrCreateArbitrator(dispute.arbitrator as Bytes);
+  // If method == 2 (ARBITRATOR), try to update arbitrator stats
+  if (method == 2 && dispute !== null) {
+    let arbAddr = dispute.arbitrator;
+    if (arbAddr !== null) {
+      let arb = getOrCreateArbitrator(arbAddr as Bytes);
       arb.disputesResolved = arb.disputesResolved.plus(BigInt.fromI32(1));
       arb.lastActivityAt = event.block.timestamp;
       arb.save();
     }
+  }
+
+  // Update Job state to RESOLVED
+  let job = Job.load(jobId);
+  if (job !== null) {
+    job.state = "RESOLVED";
+    job.save();
   }
 
   // Create immutable event entity
@@ -172,7 +173,7 @@ export function handleDisputeResolved(event: DisputeResolved): void {
 // =============================================================================
 
 export function handleReValidationRequested(
-  event: ReValidationRequested,
+  event: ReValidationRequested
 ): void {
   let ev = new ReValidationRequestedEvent(generateEventId(event));
   ev.blockNumber = event.block.number;
