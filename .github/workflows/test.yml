@@ -69,3 +69,44 @@ jobs:
 
       - name: Run tests
         run: npm run test
+
+  api:
+    name: API (lint + test)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Build SDK
+        run: cd ../sdk && pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm test
+        env:
+          RPC_URL: https://sepolia.base.org
+          SUBGRAPH_URL: https://api.studio.thegraph.com/query/1742229/aegis-protocol/v0.1.0
+          CHAIN: base-sepolia
