@@ -52,12 +52,7 @@ contract AegisEdgeCasesTest is Test {
         treasury = new AegisTreasury(address(usdc), owner);
 
         escrow = new AegisEscrow(
-            address(identity),
-            address(reputation),
-            address(validation),
-            address(usdc),
-            address(treasury),
-            owner
+            address(identity), address(reputation), address(validation), address(usdc), address(treasury), owner
         );
 
         disputeContract = new AegisDispute(address(escrow), address(usdc), address(treasury), owner);
@@ -91,9 +86,7 @@ contract AegisEdgeCasesTest is Test {
     function _createJob(uint256 amount, uint256 deadline, uint8 threshold) internal returns (bytes32) {
         vm.prank(client);
         return escrow.createJob(
-            clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI,
-            validatorAddr, deadline, amount, threshold
+            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validatorAddr, deadline, amount, threshold
         );
     }
 
@@ -113,14 +106,16 @@ contract AegisEdgeCasesTest is Test {
 
     function test_MaxDeadline_RevertIfExceeded() public {
         vm.prank(client);
-        vm.expectRevert(abi.encodeWithSelector(
-            AegisTypes.InvalidDeadline.selector, block.timestamp + 31 days
-        ));
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidDeadline.selector, block.timestamp + 31 days));
         escrow.createJob(
-            clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI,
-            validatorAddr, block.timestamp + 31 days,
-            JOB_AMOUNT, 70
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validatorAddr,
+            block.timestamp + 31 days,
+            JOB_AMOUNT,
+            70
         );
     }
 
@@ -247,13 +242,14 @@ contract AegisEdgeCasesTest is Test {
 
     function test_MinEscrowAmount_RevertIfBelowMinimum() public {
         vm.prank(client);
-        vm.expectRevert(abi.encodeWithSelector(
-            AegisTypes.InsufficientAmount.selector, 999_999, 1e6
-        ));
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, 999_999, 1e6));
         escrow.createJob(
-            clientAgentId, providerAgentId,
-            JOB_SPEC_HASH, JOB_SPEC_URI,
-            validatorAddr, block.timestamp + 7 days,
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validatorAddr,
+            block.timestamp + 7 days,
             999_999, // below 1 USDC minimum
             70
         );
@@ -317,10 +313,14 @@ contract AegisEdgeCasesTest is Test {
         vm.prank(client);
         vm.expectRevert();
         escrow.createJob(
-            clientAgentId, providerAgentId,
-            keccak256("blocked"), "ipfs://blocked",
-            validatorAddr, block.timestamp + 7 days,
-            JOB_AMOUNT, 70
+            clientAgentId,
+            providerAgentId,
+            keccak256("blocked"),
+            "ipfs://blocked",
+            validatorAddr,
+            block.timestamp + 7 days,
+            JOB_AMOUNT,
+            70
         );
 
         // Deliverable submission blocked
@@ -472,9 +472,8 @@ contract AegisEdgeCasesTest is Test {
     }
 
     function test_Invariant_NoFundsTrapped_FullLifecycle() public {
-        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury))
-            + usdc.balanceOf(address(disputeContract));
+        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury)) + usdc.balanceOf(address(disputeContract));
 
         // Create and settle a job
         bytes32 jobId = _createDefaultJob();
@@ -486,18 +485,16 @@ contract AegisEdgeCasesTest is Test {
         validation.submitResponse(requestHash, 90);
         escrow.processValidation(jobId);
 
-        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury))
-            + usdc.balanceOf(address(disputeContract));
+        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury)) + usdc.balanceOf(address(disputeContract));
 
         // No USDC created or destroyed — conservation of value
         assertEq(systemBalAfter, systemBalBefore);
     }
 
     function test_Invariant_NoFundsTrapped_DisputeResolution() public {
-        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury))
-            + usdc.balanceOf(address(disputeContract));
+        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury)) + usdc.balanceOf(address(disputeContract));
 
         // Create job, fail validation, raise dispute, resolve by timeout
         bytes32 jobId = _createDefaultJob();
@@ -517,24 +514,23 @@ contract AegisEdgeCasesTest is Test {
         vm.warp(block.timestamp + 8 days);
         disputeContract.resolveByTimeout(disputeId);
 
-        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury))
-            + usdc.balanceOf(address(disputeContract));
+        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury)) + usdc.balanceOf(address(disputeContract));
 
         assertEq(systemBalAfter, systemBalBefore);
     }
 
     function test_Invariant_NoFundsTrapped_Refund() public {
-        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury));
+        uint256 systemBalBefore = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury));
 
         bytes32 jobId = _createDefaultJob();
 
         vm.warp(block.timestamp + 8 days);
         escrow.claimTimeout(jobId);
 
-        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider)
-            + usdc.balanceOf(address(escrow)) + usdc.balanceOf(address(treasury));
+        uint256 systemBalAfter = usdc.balanceOf(client) + usdc.balanceOf(provider) + usdc.balanceOf(address(escrow))
+            + usdc.balanceOf(address(treasury));
 
         assertEq(systemBalAfter, systemBalBefore);
     }

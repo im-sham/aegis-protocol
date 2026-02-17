@@ -99,7 +99,9 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     event DisputeInitiated(bytes32 indexed disputeId, bytes32 indexed jobId, address indexed initiator);
     event EvidenceSubmitted(bytes32 indexed disputeId, address indexed submitter, string evidenceURI);
     event ArbitratorAssigned(bytes32 indexed disputeId, address indexed arbitrator);
-    event DisputeResolved(bytes32 indexed disputeId, bytes32 indexed jobId, uint8 clientPercent, AegisTypes.DisputeResolution method);
+    event DisputeResolved(
+        bytes32 indexed disputeId, bytes32 indexed jobId, uint8 clientPercent, AegisTypes.DisputeResolution method
+    );
     event ReValidationRequested(bytes32 indexed disputeId, bytes32 newValidationHash);
     event ArbitratorStaked(address indexed arbitrator, uint256 amount);
     event ArbitratorUnstaked(address indexed arbitrator, uint256 amount);
@@ -111,12 +113,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     // Constructor
     // =========================================================================
 
-    constructor(
-        address _escrow,
-        address _usdc,
-        address _treasury,
-        address _owner
-    ) Ownable(_owner) {
+    constructor(address _escrow, address _usdc, address _treasury, address _owner) Ownable(_owner) {
         if (_escrow == address(0)) revert AegisTypes.ZeroAddress();
         if (_usdc == address(0)) revert AegisTypes.ZeroAddress();
         if (_treasury == address(0)) revert AegisTypes.ZeroAddress();
@@ -147,7 +144,10 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         address initiator,
         string calldata evidenceURI,
         bytes32 evidenceHash
-    ) external nonReentrant {
+    )
+        external
+        nonReentrant
+    {
         // Only AegisEscrow can initiate disputes
         if (msg.sender != address(escrow)) revert AegisTypes.NotAuthorized(msg.sender);
 
@@ -192,7 +192,10 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         bytes32 disputeId,
         string calldata evidenceURI,
         bytes32 evidenceHash
-    ) external nonReentrant {
+    )
+        external
+        nonReentrant
+    {
         AegisTypes.Dispute storage dispute = disputes[disputeId];
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
@@ -218,10 +221,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     ///      If both scores are within tolerance, consensus is used.
     /// @param disputeId The dispute to re-validate
     /// @param newValidatorAddress Alternative validator to use
-    function requestReValidation(
-        bytes32 disputeId,
-        address newValidatorAddress
-    ) external nonReentrant {
+    function requestReValidation(bytes32 disputeId, address newValidatorAddress) external nonReentrant {
         AegisTypes.Dispute storage dispute = disputes[disputeId];
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
@@ -238,9 +238,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         require(newValidatorAddress != job.validatorAddress, "Must use different validator");
 
         // Submit re-validation request to ERC-8004
-        bytes32 newRequestHash = keccak256(
-            abi.encodePacked(disputeId, newValidatorAddress, block.timestamp)
-        );
+        bytes32 newRequestHash = keccak256(abi.encodePacked(disputeId, newValidatorAddress, block.timestamp));
 
         IERC8004Validation validationReg = IERC8004Validation(escrow.validationRegistry());
         validationReg.validationRequest(
@@ -256,10 +254,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     /// @notice Process re-validation result and resolve if consensus reached
     /// @param disputeId The dispute to process
     /// @param reValidationHash The re-validation request hash to check
-    function processReValidation(
-        bytes32 disputeId,
-        bytes32 reValidationHash
-    ) external nonReentrant {
+    function processReValidation(bytes32 disputeId, bytes32 reValidationHash) external nonReentrant {
         AegisTypes.Dispute storage dispute = disputes[disputeId];
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
@@ -269,7 +264,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
         // Read re-validation score from ERC-8004
         IERC8004Validation validationReg = IERC8004Validation(escrow.validationRegistry());
-        (,,uint8 newScore,,, uint256 lastUpdate) = validationReg.getValidationStatus(reValidationHash);
+        (,, uint8 newScore,,, uint256 lastUpdate) = validationReg.getValidationStatus(reValidationHash);
 
         if (lastUpdate == 0) revert AegisTypes.ValidationNotComplete(dispute.jobId);
 
@@ -365,7 +360,10 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         uint8 clientPercent,
         string calldata rationaleURI,
         bytes32 rationaleHash
-    ) external nonReentrant {
+    )
+        external
+        nonReentrant
+    {
         AegisTypes.Dispute storage dispute = disputes[disputeId];
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
@@ -481,11 +479,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     // =========================================================================
 
     /// @dev Core resolution logic — distributes bonds and calls back to AegisEscrow
-    function _resolveDispute(
-        bytes32 disputeId,
-        uint8 clientPercent,
-        AegisTypes.DisputeResolution method
-    ) internal {
+    function _resolveDispute(bytes32 disputeId, uint8 clientPercent, AegisTypes.DisputeResolution method) internal {
         AegisTypes.Dispute storage dispute = disputes[disputeId];
 
         dispute.resolved = true;
@@ -518,12 +512,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         }
 
         // Pseudo-random seed from block data and dispute ID
-        uint256 seed = uint256(keccak256(abi.encodePacked(
-            disputeId,
-            block.timestamp,
-            block.prevrandao,
-            totalStake
-        )));
+        uint256 seed = uint256(keccak256(abi.encodePacked(disputeId, block.timestamp, block.prevrandao, totalStake)));
 
         uint256 target = seed % totalStake;
         uint256 cumulative = 0;

@@ -65,12 +65,7 @@ contract AegisDisputeTest is Test {
 
         // Deploy escrow
         escrow = new AegisEscrow(
-            address(identity),
-            address(reputation),
-            address(validation),
-            address(usdc),
-            address(treasury),
-            owner
+            address(identity), address(reputation), address(validation), address(usdc), address(treasury), owner
         );
 
         // Deploy dispute
@@ -378,9 +373,7 @@ contract AegisDisputeTest is Test {
         // Average: (50+55)/2 = 52, which is below threshold (70), so client gets 100%
 
         // Build the re-validation request hash the same way the contract does
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
 
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
@@ -420,9 +413,7 @@ contract AegisDisputeTest is Test {
         vm.prank(owner);
         disputeContract.setValidationTolerance(35);
 
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
 
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
@@ -442,9 +433,7 @@ contract AegisDisputeTest is Test {
         // Re-validate with score 80, original was 50
         // Difference = 30 > tolerance 10 → NO consensus → dispute NOT resolved
 
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
 
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
@@ -460,9 +449,7 @@ contract AegisDisputeTest is Test {
     function test_ProcessReValidation_RevertIfNotComplete() public {
         (bytes32 jobId, bytes32 disputeId) = _createActiveDispute();
 
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
 
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
@@ -880,9 +867,7 @@ contract AegisDisputeTest is Test {
         vm.prank(owner);
         disputeContract.setValidationTolerance(15);
 
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
 
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
@@ -1116,9 +1101,7 @@ contract AegisDisputeTest is Test {
         disputeContract.setValidationTolerance(15);
 
         // 4. Request re-validation
-        bytes32 reValidationHash = keccak256(
-            abi.encodePacked(disputeId, validatorAddr2, block.timestamp)
-        );
+        bytes32 reValidationHash = keccak256(abi.encodePacked(disputeId, validatorAddr2, block.timestamp));
         vm.prank(client);
         disputeContract.requestReValidation(disputeId, validatorAddr2);
 

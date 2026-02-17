@@ -1,4 +1,4 @@
-import type { Hex, ContractAddresses } from "@aegis-protocol/types";
+import type { Hex, ContractAddresses, AgentRegisteredResult } from "@aegis-protocol/types";
 import { AegisValidationError } from "@aegis-protocol/types";
 import { erc8004IdentityAbi } from "@aegis-protocol/abis";
 import type { AegisProvider } from "../provider";
@@ -37,6 +37,21 @@ export class IdentityService {
       functionName: "register",
       args: [agentURI],
     });
+  }
+
+  /**
+   * Register a new agent and wait for the transaction to be mined.
+   * Returns the newly assigned agent ID by reading `nextAgentId` post-tx.
+   */
+  async registerAndWait(agentURI: string): Promise<AgentRegisteredResult> {
+    const txHash = await this.register(agentURI);
+    await this.provider.waitForTransaction(txHash);
+    const nextId = await this.provider.readContract<bigint>({
+      address: this.address,
+      abi: erc8004IdentityAbi,
+      functionName: "nextAgentId",
+    });
+    return { agentId: nextId - 1n };
   }
 
   // -----------------------------------------------------------------------

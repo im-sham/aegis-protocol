@@ -13,7 +13,13 @@ import {IERC8004Validation} from "./interfaces/IERC8004Validation.sol";
 import {AegisTypes} from "./libraries/AegisTypes.sol";
 
 interface IAegisDispute {
-    function initiateDispute(bytes32 jobId, address initiator, string calldata evidenceURI, bytes32 evidenceHash) external;
+    function initiateDispute(
+        bytes32 jobId,
+        address initiator,
+        string calldata evidenceURI,
+        bytes32 evidenceHash
+    )
+        external;
 }
 
 /// @title AegisEscrow
@@ -98,19 +104,13 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
     event JobFunded(bytes32 indexed jobId, uint256 amount);
 
     event DeliverableSubmitted(
-        bytes32 indexed jobId,
-        string deliverableURI,
-        bytes32 deliverableHash,
-        bytes32 validationRequestHash
+        bytes32 indexed jobId, string deliverableURI, bytes32 deliverableHash, bytes32 validationRequestHash
     );
 
     event ValidationReceived(bytes32 indexed jobId, uint8 score, bool passedThreshold);
 
     event JobSettled(
-        bytes32 indexed jobId,
-        address indexed providerWallet,
-        uint256 providerAmount,
-        uint256 protocolFee
+        bytes32 indexed jobId, address indexed providerWallet, uint256 providerAmount, uint256 protocolFee
     );
 
     event JobRefunded(bytes32 indexed jobId, address indexed clientAddress, uint256 amount);
@@ -192,7 +192,9 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         address _usdc,
         address _treasury,
         address _owner
-    ) Ownable(_owner) {
+    )
+        Ownable(_owner)
+    {
         if (_identityRegistry == address(0)) revert AegisTypes.ZeroAddress();
         if (_reputationRegistry == address(0)) revert AegisTypes.ZeroAddress();
         if (_validationRegistry == address(0)) revert AegisTypes.ZeroAddress();
@@ -238,7 +240,12 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         uint256 deadline,
         uint256 amount,
         uint8 validationThreshold
-    ) external whenNotPaused nonReentrant returns (bytes32 jobId) {
+    )
+        external
+        whenNotPaused
+        nonReentrant
+        returns (bytes32 jobId)
+    {
         // --- Input Validation ---
         if (clientAgentId == providerAgentId) revert AegisTypes.SameAgent(clientAgentId);
         if (amount < minEscrowAmount) revert AegisTypes.InsufficientAmount(amount, minEscrowAmount);
@@ -268,15 +275,8 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         }
 
         // --- Generate unique job ID ---
-        jobId = keccak256(
-            abi.encodePacked(
-                clientAgentId,
-                providerAgentId,
-                jobSpecHash,
-                block.timestamp,
-                totalJobsCreated
-            )
-        );
+        jobId =
+            keccak256(abi.encodePacked(clientAgentId, providerAgentId, jobSpecHash, block.timestamp, totalJobsCreated));
 
         // --- Use default threshold if 0 provided ---
         uint8 threshold = validationThreshold == 0 ? defaultValidationThreshold : validationThreshold;
@@ -321,7 +321,13 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         bytes32 jobId,
         string calldata deliverableURI,
         bytes32 deliverableHash
-    ) external whenNotPaused nonReentrant inState(jobId, AegisTypes.JobState.FUNDED) onlyProvider(jobId) {
+    )
+        external
+        whenNotPaused
+        nonReentrant
+        inState(jobId, AegisTypes.JobState.FUNDED)
+        onlyProvider(jobId)
+    {
         AegisTypes.Job storage job = jobs[jobId];
 
         // Check deadline
@@ -337,22 +343,16 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
         // --- Trigger validation via ERC-8004 Validation Registry ---
         // Build the validation request hash (commitment linking job spec + deliverable)
-        bytes32 validationRequestHash = keccak256(
-            abi.encodePacked(jobId, job.jobSpecHash, deliverableHash, block.timestamp)
-        );
+        bytes32 validationRequestHash =
+            keccak256(abi.encodePacked(jobId, job.jobSpecHash, deliverableHash, block.timestamp));
 
         // Build request URI that validator will use to fetch job spec + deliverable
         // In production, this would point to an IPFS document containing both
-        string memory requestURI = string(
-            abi.encodePacked("aegis://validation/", _bytes32ToHex(jobId))
-        );
+        string memory requestURI = string(abi.encodePacked("aegis://validation/", _bytes32ToHex(jobId)));
 
         // Submit to ERC-8004 Validation Registry
         validationRegistry.validationRequest(
-            job.validatorAddress,
-            job.providerAgentId,
-            requestURI,
-            validationRequestHash
+            job.validatorAddress, job.providerAgentId, requestURI, validationRequestHash
         );
 
         // Store mapping for callback routing
@@ -378,11 +378,10 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
         // Read validation result from ERC-8004 Validation Registry
         (
-            ,            // validatorAddress (already known)
-            ,            // agentId (already known)
-            uint8 score,
-            ,            // responseHash
-            ,            // tag
+            , // validatorAddress (already known)
+            , // agentId (already known)
+            uint8 score,, // responseHash
+            , // tag
             uint256 lastUpdate
         ) = validationRegistry.getValidationStatus(job.validationRequestHash);
 
@@ -411,19 +410,11 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
     /// @dev Allows client to override validation and release funds immediately.
     ///      Useful when validation is subjective or client is satisfied.
     /// @param jobId The job to confirm
-    function confirmDelivery(bytes32 jobId)
-        external
-        whenNotPaused
-        nonReentrant
-        onlyClient(jobId)
-    {
+    function confirmDelivery(bytes32 jobId) external whenNotPaused nonReentrant onlyClient(jobId) {
         AegisTypes.Job storage job = jobs[jobId];
 
         // Can confirm during VALIDATING or DISPUTE_WINDOW states
-        if (
-            job.state != AegisTypes.JobState.VALIDATING &&
-            job.state != AegisTypes.JobState.DISPUTE_WINDOW
-        ) {
+        if (job.state != AegisTypes.JobState.VALIDATING && job.state != AegisTypes.JobState.DISPUTE_WINDOW) {
             revert AegisTypes.InvalidJobState(
                 jobId,
                 job.state,
@@ -463,19 +454,17 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         bytes32 jobId,
         string calldata evidenceURI,
         bytes32 evidenceHash
-    ) external whenNotPaused nonReentrant onlyJobParty(jobId) {
+    )
+        external
+        whenNotPaused
+        nonReentrant
+        onlyJobParty(jobId)
+    {
         AegisTypes.Job storage job = jobs[jobId];
 
         // Can only dispute during DISPUTE_WINDOW or VALIDATING (before validation returns)
-        if (
-            job.state != AegisTypes.JobState.DISPUTE_WINDOW &&
-            job.state != AegisTypes.JobState.VALIDATING
-        ) {
-            revert AegisTypes.InvalidJobState(
-                jobId,
-                job.state,
-                AegisTypes.JobState.DISPUTE_WINDOW
-            );
+        if (job.state != AegisTypes.JobState.DISPUTE_WINDOW && job.state != AegisTypes.JobState.VALIDATING) {
+            revert AegisTypes.InvalidJobState(jobId, job.state, AegisTypes.JobState.DISPUTE_WINDOW);
         }
 
         // If in dispute window, check it hasn't expired
@@ -490,12 +479,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
         // Delegate to dispute contract if set
         if (disputeContract != address(0)) {
-            IAegisDispute(disputeContract).initiateDispute(
-                jobId,
-                msg.sender,
-                evidenceURI,
-                evidenceHash
-            );
+            IAegisDispute(disputeContract).initiateDispute(jobId, msg.sender, evidenceURI, evidenceHash);
         }
     }
 
@@ -541,7 +525,10 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         bytes32 jobId,
         uint8 clientPercent,
         AegisTypes.DisputeResolution method
-    ) external inState(jobId, AegisTypes.JobState.DISPUTED) {
+    )
+        external
+        inState(jobId, AegisTypes.JobState.DISPUTED)
+    {
         if (msg.sender != disputeContract) {
             revert AegisTypes.NotAuthorized(msg.sender);
         }
@@ -575,13 +562,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
         // Submit reputation feedback based on resolution
         int128 providerScore = int128(int8(100 - clientPercent));
-        _submitFeedback(
-            job.providerAgentId,
-            providerScore,
-            "disputeResolution",
-            _resolutionToTag(method),
-            ""
-        );
+        _submitFeedback(job.providerAgentId, providerScore, "disputeResolution", _resolutionToTag(method), "");
     }
 
     // =========================================================================
@@ -703,11 +684,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
         // Auto-submit reputation feedback to ERC-8004 Reputation Registry
         _submitFeedback(
-            job.providerAgentId,
-            int128(uint128(job.validationScore)),
-            "jobCompletion",
-            "settled",
-            job.deliverableURI
+            job.providerAgentId, int128(uint128(job.validationScore)), "jobCompletion", "settled", job.deliverableURI
         );
     }
 
@@ -723,7 +700,9 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         string memory tag1,
         string memory tag2,
         string memory endpoint
-    ) internal {
+    )
+        internal
+    {
         // Try to submit feedback — don't revert if it fails (non-critical)
         try reputationRegistry.giveFeedback(
             agentId,
@@ -734,7 +713,8 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
             endpoint,
             "", // feedbackURI (can be set off-chain)
             bytes32(0) // feedbackHash
-        ) {} catch {
+        ) {}
+            catch {
             // Feedback submission is best-effort; don't block settlement
         }
     }

@@ -17,6 +17,7 @@ import { FactoryService } from "./factory";
 import { IdentityService } from "./erc8004/identity";
 import { ReputationService } from "./erc8004/reputation";
 import { ValidationService } from "./erc8004/validation";
+import { USDCService } from "./usdc";
 
 // ---------------------------------------------------------------------------
 // Option interfaces
@@ -113,6 +114,7 @@ export class AegisClient {
   public readonly identity: IdentityService;
   public readonly reputation: ReputationService;
   public readonly validation: ValidationService;
+  public readonly usdc: USDCService;
 
   private readonly provider: AegisProvider;
 
@@ -125,6 +127,7 @@ export class AegisClient {
     this.identity = new IdentityService(provider, addresses);
     this.reputation = new ReputationService(provider, addresses);
     this.validation = new ValidationService(provider, addresses);
+    this.usdc = new USDCService(provider, addresses);
   }
 
   /**

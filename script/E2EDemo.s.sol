@@ -106,9 +106,7 @@ contract E2EDemo is Script {
         console.log("--- Step 3: Provider Submits Deliverable ---");
 
         escrow.submitDeliverable(
-            jobId,
-            "ipfs://QmDemoDeliverable_CodeReviewReport",
-            keccak256("demo-code-review-deliverable-v1")
+            jobId, "ipfs://QmDemoDeliverable_CodeReviewReport", keccak256("demo-code-review-deliverable-v1")
         );
         console.log("Deliverable submitted! Job is now VALIDATING.");
 
@@ -144,7 +142,7 @@ contract E2EDemo is Script {
         //   - Net loss = 0.25 USDC (the 2.5% protocol fee)
         uint256 netCost = startBalance - endBalance;
         console.log("Net cost (protocol fee):", netCost);
-        console.log("Expected fee (2.5% of 10 USDC):", jobAmount * 250 / 10000);
+        console.log("Expected fee (2.5% of 10 USDC):", jobAmount * 250 / 10_000);
 
         vm.stopBroadcast();
 

@@ -41,7 +41,7 @@ contract DeployAegis is Script {
     address constant USDC_BASE_MAINNET = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
 
     // Base Sepolia chain ID
-    uint256 constant BASE_SEPOLIA_CHAIN_ID = 84532;
+    uint256 constant BASE_SEPOLIA_CHAIN_ID = 84_532;
     uint256 constant BASE_MAINNET_CHAIN_ID = 8453;
 
     function run() external {
@@ -110,12 +110,7 @@ contract DeployAegis is Script {
 
         // 2b. Escrow (core contract)
         AegisEscrow escrow = new AegisEscrow(
-            identityRegistry,
-            reputationRegistry,
-            validationRegistry,
-            usdc,
-            address(treasury),
-            deployer
+            identityRegistry, reputationRegistry, validationRegistry, usdc, address(treasury), deployer
         );
         console.log("AegisEscrow:", address(escrow));
 
