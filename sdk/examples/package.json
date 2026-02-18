@@ -1,0 +1,19 @@
+{
+  "name": "@aegis-protocol/examples",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lifecycle": "tsx lifecycle.ts",
+    "read-only": "tsx read-only.ts"
+  },
+  "dependencies": {
+    "@aegis-protocol/sdk": "workspace:*",
+    "@aegis-protocol/types": "workspace:*",
+    "@aegis-protocol/abis": "workspace:*",
+    "viem": "^2.27.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}

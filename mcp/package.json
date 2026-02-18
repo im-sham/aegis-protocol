@@ -1,0 +1,46 @@
+{
+  "name": "@aegis-protocol/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP Server for the AEGIS Protocol — trustless escrow for AI agent transactions",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "aegis-mcp": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@aegis-protocol/sdk": "workspace:*",
+    "@aegis-protocol/types": "workspace:*",
+    "@aegis-protocol/abis": "workspace:*",
+    "viem": "^2.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "aegis",
+    "escrow",
+    "ai-agents",
+    "erc-8004",
+    "base",
+    "usdc"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,5 @@
+packages:
+  - "sdk"
+  - "sdk/packages/*"
+  - "api"
+  - "mcp"
