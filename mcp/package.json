@@ -42,5 +42,10 @@
     "base",
     "usdc"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/im-sham/aegis-protocol.git",
+    "directory": "mcp"
+  }
 }

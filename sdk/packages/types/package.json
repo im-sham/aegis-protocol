@@ -28,5 +28,11 @@
     "tsup": "^8.0.0",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/im-sham/aegis-protocol.git",
+    "directory": "sdk/packages/types"
   }
 }
