@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px;
+    height: 640px;
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0a0e1a 0%, #111827 40%, #0f172a 100%);
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Subtle grid pattern */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+
+  /* Glow accent */
+  body::after {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 60px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .shield-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shield-icon svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .project-name {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .middle {
+    margin-top: -10px;
+  }
+
+  .tagline {
+    font-size: 28px;
+    font-weight: 500;
+    color: #e2e8f0;
+    line-height: 1.4;
+    max-width: 800px;
+  }
+
+  .tagline em {
+    font-style: normal;
+    color: #60a5fa;
+  }
+
+  .description {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #94a3b8;
+    line-height: 1.5;
+    max-width: 750px;
+  }
+
+  .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .badges {
+    display: flex;
+    gap: 12px;
+  }
+
+  .badge {
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .badge-blue {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+  }
+
+  .badge-purple {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+  }
+
+  .badge-green {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #4ade80;
+  }
+
+  .badge-cyan {
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    color: #22d3ee;
+  }
+
+  .status {
+    font-size: 14px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  }
+</style>
+</head>
+<body>
+  <div class="content">
+    <div class="top">
+      <div class="shield-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7V12C3 17.55 6.84 22.74 12 24C17.16 22.74 21 17.55 21 12V7L12 2Z" fill="url(#shield-gradient)" opacity="0.9"/>
+          <path d="M10 15.5L7.5 13L6.09 14.41L10 18.33L18 10.33L16.59 8.92L10 15.5Z" fill="white" opacity="0.95"/>
+          <defs>
+            <linearGradient id="shield-gradient" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6"/>
+              <stop offset="1" stop-color="#1d4ed8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="project-name">AEGIS Protocol</span>
+    </div>
+
+    <div class="middle">
+      <div class="tagline">
+        Trustless escrow middleware for<br><em>AI agent-to-agent transactions</em>
+      </div>
+      <div class="description">
+        Locks USDC in smart contracts. Validates work through ERC-8004.<br>
+        Resolves disputes autonomously. No humans required.
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="badges">
+        <span class="badge badge-blue">ERC-8004</span>
+        <span class="badge badge-purple">x402</span>
+        <span class="badge badge-cyan">Base L2</span>
+        <span class="badge badge-green">USDC</span>
+      </div>
+      <div class="status">
+        <span class="status-dot"></span>
+        Live on Base Sepolia
+      </div>
+    </div>
+  </div>
+</body>
+</html>
