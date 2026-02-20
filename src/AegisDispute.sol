@@ -59,6 +59,12 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     /// @notice Is address an active arbitrator
     mapping(address => bool) public isArbitrator;
 
+    /// @notice Number of unresolved disputes currently assigned to each arbitrator
+    mapping(address => uint256) public arbitratorActiveDisputes;
+
+    /// @notice Tracks re-validation request hashes that belong to each dispute
+    mapping(bytes32 => mapping(bytes32 => bool)) public validReValidationHashes;
+
     /// @notice Treasury address for receiving slashed stakes
     address public treasury;
 
@@ -235,7 +241,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         }
 
         // Ensure different validator from original
-        require(newValidatorAddress != job.validatorAddress, "Must use different validator");
+        if (newValidatorAddress == job.validatorAddress) revert AegisTypes.SameValidator(newValidatorAddress);
 
         // Submit re-validation request to ERC-8004
         bytes32 newRequestHash = keccak256(abi.encodePacked(disputeId, newValidatorAddress, block.timestamp));
@@ -247,6 +253,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
             string(abi.encodePacked("aegis://revalidation/", _bytes32ToHex(disputeId))),
             newRequestHash
         );
+        validReValidationHashes[disputeId][newRequestHash] = true;
 
         emit ReValidationRequested(disputeId, newRequestHash);
     }
@@ -259,6 +266,9 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
         if (dispute.resolved) revert AegisTypes.DisputeAlreadyResolved(disputeId);
+        if (!validReValidationHashes[disputeId][reValidationHash]) {
+            revert AegisTypes.UnknownReValidationHash(disputeId, reValidationHash);
+        }
 
         AegisTypes.Job memory job = escrow.getJob(dispute.jobId);
 
@@ -297,7 +307,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
     /// @notice Stake USDC to become an arbitrator
     function stakeAsArbitrator(uint256 amount) external nonReentrant {
-        require(amount >= minArbitratorStake, "Insufficient stake");
+        if (amount < minArbitratorStake) revert AegisTypes.InsufficientAmount(amount, minArbitratorStake);
 
         usdc.safeTransferFrom(msg.sender, address(this), amount);
         arbitratorStakes[msg.sender] += amount;
@@ -315,7 +325,8 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
     /// @notice Withdraw arbitrator stake (cannot have active disputes)
     function unstakeArbitrator(uint256 amount) external nonReentrant {
-        require(arbitratorStakes[msg.sender] >= amount, "Insufficient stake");
+        if (arbitratorStakes[msg.sender] < amount) revert AegisTypes.InsufficientAmount(amount, arbitratorStakes[msg.sender]);
+        if (arbitratorActiveDisputes[msg.sender] > 0) revert AegisTypes.ArbitratorHasActiveDisputes(msg.sender);
 
         arbitratorStakes[msg.sender] -= amount;
         usdc.safeTransfer(msg.sender, amount);
@@ -337,16 +348,22 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
         if (dispute.createdAt == 0) revert AegisTypes.DisputeNotFound(disputeId);
         if (dispute.resolved) revert AegisTypes.DisputeAlreadyResolved(disputeId);
-        require(dispute.arbitrator == address(0), "Arbitrator already assigned");
-        require(activeArbitrators.length > 0, "No arbitrators available");
+        if (dispute.arbitrator != address(0)) revert AegisTypes.ArbitratorAlreadyAssigned(disputeId);
+        if (activeArbitrators.length == 0) revert AegisTypes.NoArbitratorsAvailable();
+
+        // Timing guard: wait at least 1 hour after dispute creation for entropy to advance
+        if (block.timestamp < dispute.createdAt + 1 hours) revert AegisTypes.AssignmentTooEarly(disputeId);
 
         // Select arbitrator (pseudo-random, weighted by stake)
         address selected = _selectArbitrator(disputeId);
 
         // Ensure arbitrator isn't a dispute party
-        require(selected != dispute.initiator && selected != dispute.respondent, "Conflict of interest");
+        if (selected == dispute.initiator || selected == dispute.respondent) {
+            revert AegisTypes.ConflictOfInterest(disputeId, selected);
+        }
 
         dispute.arbitrator = selected;
+        arbitratorActiveDisputes[selected] += 1;
         emit ArbitratorAssigned(disputeId, selected);
     }
 
@@ -399,9 +416,9 @@ contract AegisDispute is ReentrancyGuard, Ownable {
             revert AegisTypes.ResolutionDeadlineNotPassed(disputeId);
         }
 
-        // Default split: 50/50 (can be overridden by job template)
-        // TODO: Read from job template's defaultDisputeSplit
-        uint8 defaultClientPercent = 50;
+        // Read dispute split from the job (snapshotted at creation time)
+        AegisTypes.Job memory job = escrow.getJob(dispute.jobId);
+        uint8 defaultClientPercent = job.defaultDisputeSplit;
 
         // Slash non-responsive arbitrator if one was assigned
         if (dispute.arbitrator != address(0)) {
@@ -451,12 +468,12 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     }
 
     function setEvidenceWindowSeconds(uint256 _seconds) external onlyOwner {
-        require(_seconds >= 1 hours && _seconds <= 7 days, "Invalid window");
+        if (_seconds < 1 hours || _seconds > 7 days) revert AegisTypes.InvalidWindow(_seconds);
         evidenceWindowSeconds = _seconds;
     }
 
     function setDisputeTTLSeconds(uint256 _seconds) external onlyOwner {
-        require(_seconds >= 1 days && _seconds <= 30 days, "Invalid TTL");
+        if (_seconds < 1 days || _seconds > 30 days) revert AegisTypes.InvalidTTL(_seconds);
         disputeTTLSeconds = _seconds;
     }
 
@@ -470,7 +487,7 @@ contract AegisDispute is ReentrancyGuard, Ownable {
     }
 
     function setValidationTolerance(uint8 _tolerance) external onlyOwner {
-        require(_tolerance <= 50, "Tolerance too high");
+        if (_tolerance > 50) revert AegisTypes.ToleranceTooHigh(_tolerance);
         validationTolerance = _tolerance;
     }
 
@@ -496,6 +513,10 @@ contract AegisDispute is ReentrancyGuard, Ownable {
         if (method == AegisTypes.DisputeResolution.ARBITRATOR && dispute.arbitrator != address(0)) {
             arbitratorStats[dispute.arbitrator].successfulResolutions++;
             // Arbitrator fee is handled by the protocol fee from settlement
+        }
+
+        if (dispute.arbitrator != address(0) && arbitratorActiveDisputes[dispute.arbitrator] > 0) {
+            arbitratorActiveDisputes[dispute.arbitrator] -= 1;
         }
 
         // Callback to AegisEscrow to distribute escrowed funds

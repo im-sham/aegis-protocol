@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { handleCreateJob } from "../../src/tools/create-job.js";
 import type { McpConfig } from "../../src/config.js";
+import { CHAIN_CONFIGS } from "@aegis-protocol/types";
 
 const TX_HASH = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890" as const;
 
@@ -59,7 +60,7 @@ describe("handleCreateJob", () => {
     expect(result.success).toBe(false);
     expect(result.mode).toBe("unsigned");
     expect(result.unsignedTx).toBeDefined();
-    expect(result.unsignedTx.to).toBe("0xe988128467299fD856Bb45D2241811837BF35E77");
+    expect(result.unsignedTx.to).toBe(CHAIN_CONFIGS["base-sepolia"].contracts.escrow);
     expect(result.unsignedTx.data).toMatch(/^0x/);
     expect(result.amount).toBe("50.00 USDC");
   });

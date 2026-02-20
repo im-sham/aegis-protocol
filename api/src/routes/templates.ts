@@ -2,10 +2,15 @@ import { Hono } from "hono";
 import type { AegisClient } from "@aegis-protocol/sdk";
 import type { GraphQLClient } from "graphql-request";
 import { gql } from "graphql-request";
+import { z } from "zod";
 import { TEMPLATE_FIELDS } from "../services/subgraph.js";
 
 export function createTemplateRoutes(sdk?: AegisClient, subgraph?: GraphQLClient): Hono {
   const router = new Hono();
+  const ListTemplatesQuerySchema = z.object({
+    active: z.enum(["true", "false"]).optional(),
+    first: z.coerce.number().int().min(1).max(100).default(20),
+  });
 
   router.get("/:id", async (c) => {
     if (!sdk) return c.json({ error: "SDK not initialized" }, 503);
@@ -26,17 +31,38 @@ export function createTemplateRoutes(sdk?: AegisClient, subgraph?: GraphQLClient
 
   router.get("/", async (c) => {
     if (!subgraph) return c.json({ error: "Subgraph not initialized" }, 503);
-    const active = c.req.query("active");
-    const first = parseInt(c.req.query("first") ?? "20", 10);
-    const where = active === "true" ? `where: { active: true }` : "";
-    const query = gql`
-      query Templates {
-        jobTemplates(first: ${first}, orderBy: createdAt, orderDirection: desc, ${where}) {
-          ${TEMPLATE_FIELDS}
+    const parsed = ListTemplatesQuerySchema.safeParse({
+      active: c.req.query("active"),
+      first: c.req.query("first"),
+    });
+
+    if (!parsed.success) {
+      return c.json({ error: "Invalid query", details: parsed.error.issues }, 400);
+    }
+
+    const { active, first } = parsed.data;
+    let data;
+
+    if (active === "true") {
+      const query = gql`
+        query Templates($first: Int!) {
+          jobTemplates(first: $first, orderBy: createdAt, orderDirection: desc, where: { active: true }) {
+            ${TEMPLATE_FIELDS}
+          }
         }
-      }
-    `;
-    const data = await subgraph.request(query);
+      `;
+      data = await subgraph.request(query, { first });
+    } else {
+      const query = gql`
+        query Templates($first: Int!) {
+          jobTemplates(first: $first, orderBy: createdAt, orderDirection: desc) {
+            ${TEMPLATE_FIELDS}
+          }
+        }
+      `;
+      data = await subgraph.request(query, { first });
+    }
+
     return c.json(data);
   });
 

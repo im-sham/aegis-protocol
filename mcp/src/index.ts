@@ -96,7 +96,7 @@ server.registerTool(checkBalanceDef.name, {
   inputSchema: checkBalanceDef.inputSchema,
 }, async (args) => {
   try {
-    return toolResult(await handleCheckBalance(client, args));
+    return toolResult(await handleCheckBalance(client, config, args));
   } catch (e) {
     return toolError(e);
   }

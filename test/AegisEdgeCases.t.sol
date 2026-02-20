@@ -86,7 +86,7 @@ contract AegisEdgeCasesTest is Test {
     function _createJob(uint256 amount, uint256 deadline, uint8 threshold) internal returns (bytes32) {
         vm.prank(client);
         return escrow.createJob(
-            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validatorAddr, deadline, amount, threshold
+            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validatorAddr, deadline, amount, threshold, 0
         );
     }
 
@@ -115,7 +115,8 @@ contract AegisEdgeCasesTest is Test {
             validatorAddr,
             block.timestamp + 31 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -251,7 +252,8 @@ contract AegisEdgeCasesTest is Test {
             validatorAddr,
             block.timestamp + 7 days,
             999_999, // below 1 USDC minimum
-            70
+            70,
+            0
         );
     }
 
@@ -320,7 +322,8 @@ contract AegisEdgeCasesTest is Test {
             validatorAddr,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
 
         // Deliverable submission blocked
@@ -564,6 +567,7 @@ contract AegisEdgeCasesTest is Test {
         vm.prank(arb);
         disputeContract.stakeAsArbitrator(1000e6);
 
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         // Get assigned arbitrator (may not be arb if selection is pseudo-random)

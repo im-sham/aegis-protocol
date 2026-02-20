@@ -70,6 +70,9 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
     /// @notice Maximum deadline duration (prevents indefinite locks)
     uint256 public maxDeadlineDuration;
 
+    /// @notice Default dispute split (% to client on timeout, 0-100)
+    uint8 public defaultDisputeSplit;
+
     /// @notice All jobs indexed by jobId
     mapping(bytes32 => AegisTypes.Job) public jobs;
 
@@ -213,6 +216,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         defaultValidationThreshold = 70; // 70/100 to auto-settle
         minEscrowAmount = 1e6; // 1 USDC (6 decimals)
         maxDeadlineDuration = 30 days;
+        defaultDisputeSplit = 50; // 50% to client by default
     }
 
     // =========================================================================
@@ -230,6 +234,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
     /// @param deadline Absolute timestamp by which deliverable must be submitted
     /// @param amount USDC amount to lock in escrow (atomic units, 6 decimals)
     /// @param validationThreshold Minimum validation score for auto-settlement (0-100, 0 = use default)
+    /// @param disputeSplit Timeout dispute split (% to client, 0-100, 0 = use default)
     /// @return jobId Unique identifier for this job
     function createJob(
         uint256 clientAgentId,
@@ -239,7 +244,8 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         address validatorAddress,
         uint256 deadline,
         uint256 amount,
-        uint8 validationThreshold
+        uint8 validationThreshold,
+        uint8 disputeSplit
     )
         external
         whenNotPaused
@@ -253,6 +259,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         if (deadline > block.timestamp + maxDeadlineDuration) revert AegisTypes.InvalidDeadline(deadline);
         if (validatorAddress == address(0)) revert AegisTypes.InvalidValidator(validatorAddress);
         if (validationThreshold > 100) revert AegisTypes.InvalidThreshold(validationThreshold);
+        if (disputeSplit > 100) revert AegisTypes.InvalidDisputeSplit(disputeSplit);
 
         // --- Verify both agents exist in ERC-8004 Identity Registry ---
         // ownerOf() will revert if token doesn't exist (ERC-721 behavior)
@@ -278,8 +285,9 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         jobId =
             keccak256(abi.encodePacked(clientAgentId, providerAgentId, jobSpecHash, block.timestamp, totalJobsCreated));
 
-        // --- Use default threshold if 0 provided ---
+        // --- Use defaults if 0 provided ---
         uint8 threshold = validationThreshold == 0 ? defaultValidationThreshold : validationThreshold;
+        uint8 split = disputeSplit == 0 ? defaultDisputeSplit : disputeSplit;
 
         // --- Store job ---
         AegisTypes.Job storage job = jobs[jobId];
@@ -293,6 +301,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         job.validationThreshold = threshold;
         job.amount = amount;
         job.protocolFeeBps = protocolFeeBps;
+        job.defaultDisputeSplit = split;
         job.createdAt = block.timestamp;
         job.deadline = deadline;
         job.state = AegisTypes.JobState.CREATED;
@@ -461,6 +470,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         onlyJobParty(jobId)
     {
         AegisTypes.Job storage job = jobs[jobId];
+        if (disputeContract == address(0)) revert AegisTypes.DisputeContractNotSet();
 
         // Can only dispute during DISPUTE_WINDOW or VALIDATING (before validation returns)
         if (job.state != AegisTypes.JobState.DISPUTE_WINDOW && job.state != AegisTypes.JobState.VALIDATING) {
@@ -477,10 +487,8 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
         job.state = AegisTypes.JobState.DISPUTED;
         emit DisputeRaised(jobId, msg.sender);
 
-        // Delegate to dispute contract if set
-        if (disputeContract != address(0)) {
-            IAegisDispute(disputeContract).initiateDispute(jobId, msg.sender, evidenceURI, evidenceHash);
-        }
+        // Delegate to dispute contract
+        IAegisDispute(disputeContract).initiateDispute(jobId, msg.sender, evidenceURI, evidenceHash);
     }
 
     /// @notice Claim refund after deadline passes without delivery
@@ -596,22 +604,28 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
     /// @notice Update protocol fee (basis points)
     function setProtocolFee(uint256 _feeBps) external onlyOwner {
-        require(_feeBps <= 1000, "Fee too high"); // Max 10%
+        if (_feeBps > 1000) revert AegisTypes.FeeTooHigh(_feeBps);
         emit ProtocolFeeUpdated(protocolFeeBps, _feeBps);
         protocolFeeBps = _feeBps;
     }
 
     /// @notice Update dispute window duration
     function setDisputeWindow(uint256 _seconds) external onlyOwner {
-        require(_seconds >= 1 hours && _seconds <= 7 days, "Invalid window");
+        if (_seconds < 1 hours || _seconds > 7 days) revert AegisTypes.InvalidWindow(_seconds);
         emit DisputeWindowUpdated(disputeWindowSeconds, _seconds);
         disputeWindowSeconds = _seconds;
     }
 
     /// @notice Update default validation threshold
     function setDefaultValidationThreshold(uint8 _threshold) external onlyOwner {
-        require(_threshold <= 100, "Invalid threshold");
+        if (_threshold > 100) revert AegisTypes.InvalidThreshold(_threshold);
         defaultValidationThreshold = _threshold;
+    }
+
+    /// @notice Update default dispute split (% to client on timeout)
+    function setDefaultDisputeSplit(uint8 _split) external onlyOwner {
+        if (_split > 100) revert AegisTypes.InvalidDisputeSplit(_split);
+        defaultDisputeSplit = _split;
     }
 
     /// @notice Update treasury address
@@ -634,7 +648,7 @@ contract AegisEscrow is ReentrancyGuard, Ownable, Pausable {
 
     /// @notice Update maximum deadline duration
     function setMaxDeadlineDuration(uint256 _duration) external onlyOwner {
-        require(_duration >= 1 hours, "Too short");
+        if (_duration < 1 hours) revert AegisTypes.DeadlineTooShort(_duration);
         maxDeadlineDuration = _duration;
     }
 

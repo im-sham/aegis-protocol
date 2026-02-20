@@ -61,6 +61,7 @@ library AegisTypes {
         // === Financial ===
         uint256 amount; // USDC amount locked in escrow (atomic units)
         uint256 protocolFeeBps; // Protocol fee in basis points at time of creation
+        uint8 defaultDisputeSplit; // Timeout dispute split (% to client, snapshotted at creation)
         // === Timing ===
         uint256 createdAt; // Block timestamp of job creation
         uint256 deadline; // Deadline for deliverable submission
@@ -150,6 +151,14 @@ library AegisTypes {
     error InvalidRuling(uint8 ruling);
     error InsufficientBond(uint256 provided, uint256 required);
     error ResolutionDeadlineNotPassed(bytes32 disputeId);
+    error ArbitratorAlreadyAssigned(bytes32 disputeId);
+    error NoArbitratorsAvailable();
+    error ArbitratorHasActiveDisputes(address arbitrator);
+    error ConflictOfInterest(bytes32 disputeId, address arbitrator);
+    error AssignmentTooEarly(bytes32 disputeId);
+    error SameValidator(address validator);
+    error UnknownReValidationHash(bytes32 disputeId, bytes32 hash);
+    error DisputeContractNotSet();
 
     // === Treasury Errors ===
     error NotAuthorized(address caller);
@@ -158,6 +167,19 @@ library AegisTypes {
     // === Template Errors ===
     error TemplateNotFound(uint256 templateId);
     error TemplateNotActive(uint256 templateId);
+    error InvalidTemplateSplit(uint8 split);
+    error InvalidTemplateTimeout(uint256 timeout);
+    error InvalidTemplateValidator(address validator);
+    error InvalidTemplateFeeBps(uint256 feeBps);
+
+    // === Admin Errors ===
+    error InvalidDisputeSplit(uint8 split);
+    error FeeTooHigh(uint256 feeBps);
+    error InvalidWindow(uint256 window);
+    error InvalidTTL(uint256 ttl);
+    error ToleranceTooHigh(uint8 tolerance);
+    error MaxBpsTooHigh(uint256 bps);
+    error DeadlineTooShort(uint256 duration);
 
     // === General ===
     error ZeroAddress();

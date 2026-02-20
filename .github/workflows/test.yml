@@ -37,6 +37,9 @@ jobs:
       - name: Run Forge tests
         run: forge test -vvv
 
+      - name: Run invariant tests
+        run: forge test --match-path "test/invariants/*" -vvv
+
   subgraph:
     name: Subgraph
     runs-on: ubuntu-22.04

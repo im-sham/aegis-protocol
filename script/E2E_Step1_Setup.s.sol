@@ -56,7 +56,8 @@ contract E2EStep1 is Script {
             deployer,
             block.timestamp + 7 days,
             jobAmount,
-            70
+            70,
+            0
         );
 
         vm.stopBroadcast();

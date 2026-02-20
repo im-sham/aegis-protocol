@@ -173,31 +173,31 @@ contract AegisJobFactoryTest is Test {
 
     function test_CreateTemplate_RevertIfInvalidValidator() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid validator");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTemplateValidator.selector, address(0)));
         factory.createTemplate("test", address(0), 7 days, 0, 70, 50);
     }
 
     function test_CreateTemplate_RevertIfTimeoutTooShort() public {
         vm.prank(owner);
-        vm.expectRevert("Timeout too short");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTemplateTimeout.selector, 30 minutes));
         factory.createTemplate("test", validatorAddr, 30 minutes, 0, 70, 50); // below 1 hour
     }
 
     function test_CreateTemplate_RevertIfInvalidThreshold() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid threshold");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidThreshold.selector, 101));
         factory.createTemplate("test", validatorAddr, 7 days, 0, 101, 50);
     }
 
     function test_CreateTemplate_RevertIfInvalidSplit() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid split");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTemplateSplit.selector, 101));
         factory.createTemplate("test", validatorAddr, 7 days, 0, 70, 101);
     }
 
     function test_CreateTemplate_RevertIfFeeTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Fee too high");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTemplateFeeBps.selector, 1001));
         factory.createTemplate("test", validatorAddr, 7 days, 1001, 70, 50);
     }
 
@@ -283,24 +283,11 @@ contract AegisJobFactoryTest is Test {
         );
     }
 
-    function test_CreateJobFromTemplate_AnyoneCanCallWhenFactoryAuthorized() public {
-        // When the factory is an authorized caller on escrow, the escrow resolves
-        // clientOwner from the identity registry and pulls USDC from them.
-        // So even an outsider calling the factory will create a job for the agent owner,
-        // as long as the agent owner has approved USDC to the escrow.
+    function test_CreateJobFromTemplate_RevertIfCallerNotClientOwner() public {
         uint256 templateId = _createDefaultTemplate();
-
-        uint256 clientBalBefore = usdc.balanceOf(client);
-
-        vm.prank(outsider); // outsider calls, but USDC comes from client (agent owner)
-        bytes32 jobId = factory.createJobFromTemplate(
-            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
-        );
-
-        // Job is created and USDC came from the actual agent owner (client)
-        AegisTypes.Job memory job = escrow.getJob(jobId);
-        assertEq(job.clientAddress, client); // client is the actual client, not outsider
-        assertEq(usdc.balanceOf(client), clientBalBefore - JOB_AMOUNT);
+        vm.prank(outsider);
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.NotAgentOwner.selector, clientAgentId, outsider));
+        factory.createJobFromTemplate(templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT);
     }
 
     function test_CreateJobFromTemplate_RevertIfNotAuthorizedFactory() public {
@@ -368,7 +355,7 @@ contract AegisJobFactoryTest is Test {
         uint256 templateId = _createDefaultTemplate();
 
         vm.prank(outsider);
-        vm.expectRevert("Not authorized");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.NotAuthorized.selector, outsider));
         factory.deactivateTemplate(templateId);
     }
 
@@ -411,7 +398,7 @@ contract AegisJobFactoryTest is Test {
         uint256 templateId = _createDefaultTemplate();
 
         vm.prank(outsider);
-        vm.expectRevert("Not authorized");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.NotAuthorized.selector, outsider));
         factory.updateTemplateValidator(templateId, makeAddr("newVal"));
     }
 
@@ -419,7 +406,7 @@ contract AegisJobFactoryTest is Test {
         uint256 templateId = _createDefaultTemplate();
 
         vm.prank(owner);
-        vm.expectRevert("Invalid validator");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTemplateValidator.selector, address(0)));
         factory.updateTemplateValidator(templateId, address(0));
     }
 
@@ -465,6 +452,27 @@ contract AegisJobFactoryTest is Test {
     // =========================================================================
     // Integration Tests
     // =========================================================================
+
+    function test_CreateJobFromTemplate_PassesDisputeSplit() public {
+        // Create a template with 70% client split
+        vm.prank(owner);
+        uint256 templateId = factory.createTemplate(
+            "high-split",
+            validatorAddr,
+            7 days,
+            250,
+            70,
+            70 // 70% to client on timeout
+        );
+
+        vm.prank(client);
+        bytes32 jobId = factory.createJobFromTemplate(
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+        );
+
+        AegisTypes.Job memory job = escrow.getJob(jobId);
+        assertEq(job.defaultDisputeSplit, 70);
+    }
 
     function test_FullFlow_TemplateToSettledJob() public {
         // 1. Create template

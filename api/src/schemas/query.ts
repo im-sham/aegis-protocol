@@ -6,7 +6,21 @@ export const PaginationSchema = z.object({
 });
 
 export const JobQuerySchema = PaginationSchema.extend({
-  state: z.string().optional(),
+  state: z
+    .enum([
+      "CREATED",
+      "FUNDED",
+      "DELIVERED",
+      "VALIDATING",
+      "DISPUTE_WINDOW",
+      "SETTLED",
+      "DISPUTED",
+      "RESOLVED",
+      "EXPIRED",
+      "REFUNDED",
+      "CANCELLED",
+    ])
+    .optional(),
   client: z.string().optional(),
   provider: z.string().optional(),
 });

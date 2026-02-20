@@ -25,6 +25,13 @@
 
 **Total SDK Research:** 86 KB across 4 documents
 
+### Security Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [security/security_best_practices_report.md](./security/security_best_practices_report.md) | Security findings, remediation details, and verification evidence |
+| [security/SECURITY-TRACKER.md](./security/SECURITY-TRACKER.md) | Living tracker for finding status, ownership, and hardening backlog |
+
 ---
 
 ## 🎯 Quick Navigation

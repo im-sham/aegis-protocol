@@ -128,7 +128,7 @@ contract AegisTreasury is Ownable, ReentrancyGuard {
     // =========================================================================
 
     function setArbitratorPoolBps(uint256 _bps) external onlyOwner {
-        require(_bps <= 5000, "Max 50%");
+        if (_bps > 5000) revert AegisTypes.MaxBpsTooHigh(_bps);
         emit ArbitratorPoolBpsUpdated(arbitratorPoolBps, _bps);
         arbitratorPoolBps = _bps;
     }

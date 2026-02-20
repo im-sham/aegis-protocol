@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC8004Identity} from "./interfaces/IERC8004Identity.sol";
 import {AegisTypes} from "./libraries/AegisTypes.sol";
 
 interface IAegisEscrowForFactory {
@@ -13,10 +14,13 @@ interface IAegisEscrowForFactory {
         address validatorAddress,
         uint256 deadline,
         uint256 amount,
-        uint8 validationThreshold
+        uint8 validationThreshold,
+        uint8 disputeSplit
     )
         external
         returns (bytes32 jobId);
+
+    function identityRegistry() external view returns (address);
 }
 
 /// @title AegisJobFactory
@@ -95,11 +99,11 @@ contract AegisJobFactory is Ownable {
         if (!openTemplateCreation && msg.sender != owner()) {
             revert AegisTypes.NotAuthorized(msg.sender);
         }
-        require(defaultValidator != address(0), "Invalid validator");
-        require(defaultTimeout >= 1 hours, "Timeout too short");
-        require(minValidation <= 100, "Invalid threshold");
-        require(defaultDisputeSplit <= 100, "Invalid split");
-        require(feeBps <= 1000, "Fee too high"); // Max 10%
+        if (defaultValidator == address(0)) revert AegisTypes.InvalidTemplateValidator(defaultValidator);
+        if (defaultTimeout < 1 hours) revert AegisTypes.InvalidTemplateTimeout(defaultTimeout);
+        if (minValidation > 100) revert AegisTypes.InvalidThreshold(minValidation);
+        if (defaultDisputeSplit > 100) revert AegisTypes.InvalidTemplateSplit(defaultDisputeSplit);
+        if (feeBps > 1000) revert AegisTypes.InvalidTemplateFeeBps(feeBps);
 
         templateId = templateCount++;
 
@@ -143,6 +147,13 @@ contract AegisJobFactory is Ownable {
         if (!tpl.active) revert AegisTypes.TemplateNotActive(templateId);
         if (bytes(tpl.name).length == 0) revert AegisTypes.TemplateNotFound(templateId);
 
+        // Ensure only the actual client agent owner can create/fund a job via factory.
+        // Prevents third parties from triggering escrow spends on pre-approved clients.
+        address clientOwner = IERC8004Identity(escrow.identityRegistry()).ownerOf(clientAgentId);
+        if (msg.sender != clientOwner) {
+            revert AegisTypes.NotAgentOwner(clientAgentId, msg.sender);
+        }
+
         uint256 deadline = block.timestamp + tpl.defaultTimeout;
 
         // Create job via AegisEscrow using template defaults
@@ -155,7 +166,8 @@ contract AegisJobFactory is Ownable {
             tpl.defaultValidator,
             deadline,
             amount,
-            tpl.minValidation
+            tpl.minValidation,
+            tpl.defaultDisputeSplit
         );
 
         emit JobCreatedFromTemplate(jobId, templateId);
@@ -165,7 +177,7 @@ contract AegisJobFactory is Ownable {
     function deactivateTemplate(uint256 templateId) external {
         AegisTypes.JobTemplate storage tpl = templates[templateId];
         if (bytes(tpl.name).length == 0) revert AegisTypes.TemplateNotFound(templateId);
-        require(msg.sender == tpl.creator || msg.sender == owner(), "Not authorized");
+        if (msg.sender != tpl.creator && msg.sender != owner()) revert AegisTypes.NotAuthorized(msg.sender);
 
         tpl.active = false;
         emit TemplateDeactivated(templateId);
@@ -175,8 +187,8 @@ contract AegisJobFactory is Ownable {
     function updateTemplateValidator(uint256 templateId, address newValidator) external {
         AegisTypes.JobTemplate storage tpl = templates[templateId];
         if (bytes(tpl.name).length == 0) revert AegisTypes.TemplateNotFound(templateId);
-        require(msg.sender == tpl.creator || msg.sender == owner(), "Not authorized");
-        require(newValidator != address(0), "Invalid validator");
+        if (msg.sender != tpl.creator && msg.sender != owner()) revert AegisTypes.NotAuthorized(msg.sender);
+        if (newValidator == address(0)) revert AegisTypes.InvalidTemplateValidator(newValidator);
 
         tpl.defaultValidator = newValidator;
         emit TemplateUpdated(templateId);

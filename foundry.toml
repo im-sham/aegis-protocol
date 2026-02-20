@@ -9,6 +9,10 @@ via_ir = true
 fuzz = { runs = 256 }
 gas_reports = ["AegisEscrow", "AegisDispute", "AegisTreasury", "AegisJobFactory"]
 
+[profile.ci]
+fuzz = { runs = 1024 }
+invariant = { runs = 256, depth = 50 }
+
 [fmt]
 bracket_spacing = false
 int_types = "long"

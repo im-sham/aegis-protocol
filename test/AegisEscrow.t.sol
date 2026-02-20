@@ -106,7 +106,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70 // 70% validation threshold
+            70, // 70% validation threshold
+            0   // use protocol default dispute split
         );
     }
 
@@ -179,7 +180,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -194,7 +196,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             0.5e6, // below minimum
-            70
+            70,
+            0
         );
     }
 
@@ -209,7 +212,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp - 1, // in the past
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -224,7 +228,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -244,7 +249,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -258,7 +264,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            0 // should use default (70)
+            0, // should use default (70)
+            0
         );
 
         AegisTypes.Job memory job = escrow.getJob(jobId);
@@ -517,6 +524,20 @@ contract AegisEscrowTest is Test {
         assertEq(uint8(job.state), uint8(AegisTypes.JobState.DISPUTED));
     }
 
+    function test_RaiseDispute_RevertIfDisputeContractNotSet() public {
+        bytes32 jobId = _createDefaultJob();
+        _submitDeliverable(jobId);
+        _submitValidationScore(jobId, 50);
+        escrow.processValidation(jobId);
+
+        vm.prank(owner);
+        escrow.setDisputeContract(address(0));
+
+        vm.prank(client);
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.DisputeContractNotSet.selector));
+        escrow.raiseDispute(jobId, "ipfs://evidence", keccak256("evidence"));
+    }
+
     function test_RaiseDispute_RevertIfNotJobParty() public {
         bytes32 jobId = _createDefaultJob();
         _submitDeliverable(jobId);
@@ -541,7 +562,7 @@ contract AegisEscrowTest is Test {
 
     function test_SetProtocolFee_RevertIfTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Fee too high");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.FeeTooHigh.selector, 1001));
         escrow.setProtocolFee(1001); // > 10%
     }
 
@@ -565,7 +586,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
     }
 
@@ -579,6 +601,54 @@ contract AegisEscrowTest is Test {
         // Should work now
         bytes32 jobId = _createDefaultJob();
         assertTrue(escrow.jobExists(jobId));
+    }
+
+    function test_CreateJob_SnapshotsDisputeSplit() public {
+        vm.prank(client);
+        bytes32 jobId = escrow.createJob(
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validator,
+            block.timestamp + 7 days,
+            JOB_AMOUNT,
+            70,
+            75 // 75% to client on timeout
+        );
+
+        AegisTypes.Job memory job = escrow.getJob(jobId);
+        assertEq(job.defaultDisputeSplit, 75);
+    }
+
+    function test_CreateJob_DefaultDisputeSplitWhenZero() public {
+        vm.prank(client);
+        bytes32 jobId = escrow.createJob(
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validator,
+            block.timestamp + 7 days,
+            JOB_AMOUNT,
+            70,
+            0 // should use default (50)
+        );
+
+        AegisTypes.Job memory job = escrow.getJob(jobId);
+        assertEq(job.defaultDisputeSplit, 50); // protocol default
+    }
+
+    function test_SetDefaultDisputeSplit() public {
+        vm.prank(owner);
+        escrow.setDefaultDisputeSplit(70);
+        assertEq(escrow.defaultDisputeSplit(), 70);
+    }
+
+    function test_SetDefaultDisputeSplit_RevertIfInvalid() public {
+        vm.prank(owner);
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidDisputeSplit.selector, 101));
+        escrow.setDefaultDisputeSplit(101);
     }
 
     // =========================================================================
@@ -664,7 +734,7 @@ contract AegisEscrowTest is Test {
 
         vm.prank(client);
         bytes32 jobId = escrow.createJob(
-            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validator, block.timestamp + 7 days, amount, 70
+            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validator, block.timestamp + 7 days, amount, 70, 0
         );
 
         AegisTypes.Job memory job = escrow.getJob(jobId);
@@ -685,7 +755,8 @@ contract AegisEscrowTest is Test {
             validator,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            threshold
+            threshold,
+            0
         );
 
         _submitDeliverable(jobId);

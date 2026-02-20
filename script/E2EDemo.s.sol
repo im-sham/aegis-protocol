@@ -88,7 +88,8 @@ contract E2EDemo is Script {
             deployer, // validator address (not used since we'll confirmDelivery)
             deadline,
             jobAmount,
-            validationThreshold
+            validationThreshold,
+            0
         );
         console.log("Job created!");
         console.log("Job ID:");

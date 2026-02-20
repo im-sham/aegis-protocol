@@ -325,7 +325,7 @@ contract AegisTreasuryTest is Test {
 
     function test_SetArbitratorPoolBps_RevertIfTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Max 50%");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.MaxBpsTooHigh.selector, 5001));
         treasury.setArbitratorPoolBps(5001);
     }
 

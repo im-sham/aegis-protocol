@@ -118,7 +118,8 @@ contract AegisDisputeTest is Test {
             validatorAddr,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
 
         vm.prank(provider);
@@ -333,7 +334,7 @@ contract AegisDisputeTest is Test {
 
         // Use the same validator as the original job
         vm.prank(client);
-        vm.expectRevert("Must use different validator");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.SameValidator.selector, validatorAddr));
         disputeContract.requestReValidation(disputeId, validatorAddr);
     }
 
@@ -459,6 +460,17 @@ contract AegisDisputeTest is Test {
         disputeContract.processReValidation(disputeId, reValidationHash);
     }
 
+    function test_ProcessReValidation_RevertIfUnknownHash() public {
+        (, bytes32 disputeId) = _createActiveDispute();
+
+        vm.prank(client);
+        disputeContract.requestReValidation(disputeId, validatorAddr2);
+
+        bytes32 unknownHash = keccak256("unknown-hash");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.UnknownReValidationHash.selector, disputeId, unknownHash));
+        disputeContract.processReValidation(disputeId, unknownHash);
+    }
+
     // =========================================================================
     // Tier 2: Arbitrator Staking Tests
     // =========================================================================
@@ -496,7 +508,7 @@ contract AegisDisputeTest is Test {
 
     function test_StakeAsArbitrator_RevertIfInsufficientStake() public {
         vm.prank(arbitrator1);
-        vm.expectRevert("Insufficient stake");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE - 1, MIN_ARB_STAKE));
         disputeContract.stakeAsArbitrator(MIN_ARB_STAKE - 1); // 999.999999 USDC
     }
 
@@ -558,8 +570,20 @@ contract AegisDisputeTest is Test {
         _stakeArbitrator1();
 
         vm.prank(arbitrator1);
-        vm.expectRevert("Insufficient stake");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE + 1, MIN_ARB_STAKE));
         disputeContract.unstakeArbitrator(MIN_ARB_STAKE + 1);
+    }
+
+    function test_UnstakeArbitrator_RevertIfHasActiveDisputes() public {
+        (, bytes32 disputeId) = _createActiveDispute();
+        _stakeArbitrator1();
+
+        vm.warp(block.timestamp + 1 hours);
+        disputeContract.assignArbitrator(disputeId);
+
+        vm.prank(arbitrator1);
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.ArbitratorHasActiveDisputes.selector, arbitrator1));
+        disputeContract.unstakeArbitrator(1);
     }
 
     function test_UnstakeArbitrator_SecondArbitratorRemainsAfterFirstLeaves() public {
@@ -583,6 +607,7 @@ contract AegisDisputeTest is Test {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
 
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         AegisTypes.Dispute memory d = disputeContract.getDispute(disputeId);
@@ -592,7 +617,7 @@ contract AegisDisputeTest is Test {
     function test_AssignArbitrator_RevertIfNoArbitrators() public {
         (, bytes32 disputeId) = _createActiveDispute();
 
-        vm.expectRevert("No arbitrators available");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.NoArbitratorsAvailable.selector));
         disputeContract.assignArbitrator(disputeId);
     }
 
@@ -600,9 +625,10 @@ contract AegisDisputeTest is Test {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
 
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
-        vm.expectRevert("Arbitrator already assigned");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.ArbitratorAlreadyAssigned.selector, disputeId));
         disputeContract.assignArbitrator(disputeId);
     }
 
@@ -623,6 +649,15 @@ contract AegisDisputeTest is Test {
         disputeContract.assignArbitrator(disputeId);
     }
 
+    function test_AssignArbitrator_RevertIfTooEarly() public {
+        (, bytes32 disputeId) = _createActiveDispute();
+        _stakeArbitrator1();
+
+        // Try to assign immediately — should fail (need to wait 1 hour)
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.AssignmentTooEarly.selector, disputeId));
+        disputeContract.assignArbitrator(disputeId);
+    }
+
     // =========================================================================
     // Tier 2: Arbitrator Ruling Tests
     // =========================================================================
@@ -630,6 +665,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_FullClientRefund() public {
         (bytes32 jobId, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         uint256 clientBalBefore = usdc.balanceOf(client);
@@ -661,6 +697,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_FullProviderPayment() public {
         (bytes32 jobId, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         uint256 providerBalBefore = usdc.balanceOf(provider);
@@ -681,6 +718,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_50_50Split() public {
         (bytes32 jobId, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         uint256 clientBalBefore = usdc.balanceOf(client);
@@ -707,6 +745,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_UpdatesStats() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         vm.prank(arbitrator1);
@@ -720,6 +759,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_RevertIfNotArbitrator() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         vm.prank(outsider);
@@ -730,6 +770,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_RevertIfInvalidRuling() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         vm.prank(arbitrator1);
@@ -740,6 +781,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByArbitrator_RevertIfAlreadyResolved() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         vm.prank(arbitrator1);
@@ -791,6 +833,7 @@ contract AegisDisputeTest is Test {
     function test_ResolveByTimeout_SlashesArbitrator() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         uint256 stakeBeforeSlash = disputeContract.arbitratorStakes(arbitrator1);
@@ -817,6 +860,7 @@ contract AegisDisputeTest is Test {
         disputeContract.stakeAsArbitrator(MIN_ARB_STAKE);
 
         (, bytes32 disputeId) = _createActiveDispute();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         // After 10% slash: 1000 - 100 = 900 < 1000 minimum
@@ -852,6 +896,48 @@ contract AegisDisputeTest is Test {
 
         AegisTypes.Dispute memory d = disputeContract.getDispute(disputeId);
         assertTrue(d.resolved);
+    }
+
+    function test_ResolveByTimeout_UsesJobDisputeSplit() public {
+        // Create job with 70% client split
+        vm.prank(client);
+        bytes32 jobId = escrow.createJob(
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validatorAddr,
+            block.timestamp + 7 days,
+            JOB_AMOUNT,
+            70,
+            70 // 70% to client on timeout
+        );
+
+        vm.prank(provider);
+        escrow.submitDeliverable(jobId, DELIVERABLE_URI, DELIVERABLE_HASH);
+
+        bytes32 requestHash = escrow.getJob(jobId).validationRequestHash;
+        validation.submitResponse(requestHash, 50);
+        escrow.processValidation(jobId);
+
+        vm.prank(client);
+        escrow.raiseDispute(jobId, EVIDENCE_URI, EVIDENCE_HASH);
+        bytes32 disputeId = disputeContract.jobToDispute(jobId);
+
+        uint256 clientBalBefore = usdc.balanceOf(client);
+        uint256 providerBalBefore = usdc.balanceOf(provider);
+
+        vm.warp(block.timestamp + 8 days);
+        disputeContract.resolveByTimeout(disputeId);
+
+        // Verify 70/30 split (not default 50/50)
+        uint256 fee = (JOB_AMOUNT * 250) / 10_000;
+        uint256 afterFee = JOB_AMOUNT - fee;
+        uint256 clientAmount = (afterFee * 70) / 100;
+        uint256 providerAmount = afterFee - clientAmount;
+
+        assertEq(usdc.balanceOf(client), clientBalBefore + DISPUTE_BOND + clientAmount);
+        assertEq(usdc.balanceOf(provider), providerBalBefore + providerAmount);
     }
 
     // =========================================================================
@@ -898,6 +984,7 @@ contract AegisDisputeTest is Test {
     function test_BondReturnedOnArbitratorRuling() public {
         (, bytes32 disputeId) = _createActiveDispute();
         _stakeArbitrator1();
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         uint256 clientBalBefore = usdc.balanceOf(client);
@@ -957,13 +1044,13 @@ contract AegisDisputeTest is Test {
 
     function test_SetEvidenceWindowSeconds_RevertIfTooLow() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid window");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidWindow.selector, 30 minutes));
         disputeContract.setEvidenceWindowSeconds(30 minutes); // below 1 hour minimum
     }
 
     function test_SetEvidenceWindowSeconds_RevertIfTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid window");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidWindow.selector, 8 days));
         disputeContract.setEvidenceWindowSeconds(8 days); // above 7 day max
     }
 
@@ -975,13 +1062,13 @@ contract AegisDisputeTest is Test {
 
     function test_SetDisputeTTLSeconds_RevertIfTooLow() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid TTL");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTTL.selector, 12 hours));
         disputeContract.setDisputeTTLSeconds(12 hours); // below 1 day minimum
     }
 
     function test_SetDisputeTTLSeconds_RevertIfTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Invalid TTL");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InvalidTTL.selector, 31 days));
         disputeContract.setDisputeTTLSeconds(31 days); // above 30 day max
     }
 
@@ -1012,7 +1099,7 @@ contract AegisDisputeTest is Test {
 
     function test_SetValidationTolerance_RevertIfTooHigh() public {
         vm.prank(owner);
-        vm.expectRevert("Tolerance too high");
+        vm.expectRevert(abi.encodeWithSelector(AegisTypes.ToleranceTooHigh.selector, 51));
         disputeContract.setValidationTolerance(51); // above 50 max
     }
 
@@ -1037,6 +1124,7 @@ contract AegisDisputeTest is Test {
         _stakeArbitrator1();
 
         // 5. Assign arbitrator
+        vm.warp(block.timestamp + 1 hours);
         disputeContract.assignArbitrator(disputeId);
 
         // 6. Arbitrator rules: 70% to client, 30% to provider
@@ -1136,7 +1224,8 @@ contract AegisDisputeTest is Test {
             validatorAddr,
             block.timestamp + 7 days,
             JOB_AMOUNT,
-            70
+            70,
+            0
         );
 
         vm.prank(provider);

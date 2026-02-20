@@ -1,7 +1,8 @@
 import { z } from "zod";
 import type { AegisClient } from "@aegis-protocol/sdk";
 import { formatUSDC } from "@aegis-protocol/sdk";
-import type { Hex } from "@aegis-protocol/types";
+import { CHAIN_CONFIGS, type Hex } from "@aegis-protocol/types";
+import type { McpConfig } from "../config.js";
 
 export const checkBalanceDef = {
   name: "aegis_check_balance",
@@ -16,10 +17,11 @@ export const checkBalanceDef = {
 
 export async function handleCheckBalance(
   client: AegisClient,
+  config: McpConfig,
   args: { address: string },
 ) {
   const address = args.address as Hex;
-  const escrowAddress = "0xe988128467299fD856Bb45D2241811837BF35E77" as Hex;
+  const escrowAddress = CHAIN_CONFIGS[config.chain].contracts.escrow;
 
   const [balance, allowance] = await Promise.all([
     client.usdc.balanceOf(address),
