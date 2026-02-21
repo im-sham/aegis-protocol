@@ -19,19 +19,6 @@ import { openDisputeDef, handleOpenDispute } from "./tools/open-dispute.js";
 import { claimRefundDef, handleClaimRefund } from "./tools/claim-refund.js";
 
 // ---------------------------------------------------------------------------
-// Bootstrap
-// ---------------------------------------------------------------------------
-
-const config = loadConfig();
-const client = createSdkClient(config);
-const signing = isSigningClient(config);
-
-const server = new McpServer({
-  name: "aegis-protocol",
-  version: "0.1.0",
-});
-
-// ---------------------------------------------------------------------------
 // Helper: wrap tool handlers with error handling and JSON serialization
 // ---------------------------------------------------------------------------
 
@@ -55,158 +42,189 @@ function toolError(error: unknown) {
 }
 
 // ---------------------------------------------------------------------------
-// Read tools
+// Server factory — used by both stdio entry point and Smithery sandbox
 // ---------------------------------------------------------------------------
 
-server.registerTool(checkJobDef.name, {
-  description: checkJobDef.description,
-  inputSchema: checkJobDef.inputSchema,
-}, async (args) => {
-  try {
-    return toolResult(await handleCheckJob(client, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+type Config = ReturnType<typeof loadConfig>;
 
-server.registerTool(lookupAgentDef.name, {
-  description: lookupAgentDef.description,
-  inputSchema: lookupAgentDef.inputSchema,
-}, async (args) => {
-  try {
-    return toolResult(await handleLookupAgent(client, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+function createServer(cfg?: Config) {
+  const config = cfg ?? loadConfig();
+  const client = createSdkClient(config);
+  const signing = isSigningClient(config);
 
-server.registerTool(listJobsDef.name, {
-  description: listJobsDef.description,
-  inputSchema: listJobsDef.inputSchema,
-}, async (args) => {
-  try {
-    return toolResult(await handleListJobs(client, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+  const server = new McpServer({
+    name: "aegis-protocol",
+    version: "0.1.2",
+  });
 
-server.registerTool(checkBalanceDef.name, {
-  description: checkBalanceDef.description,
-  inputSchema: checkBalanceDef.inputSchema,
-}, async (args) => {
-  try {
-    return toolResult(await handleCheckBalance(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+  // --- Read tools ---
 
-server.registerTool(getTemplateDef.name, {
-  description: getTemplateDef.description,
-  inputSchema: getTemplateDef.inputSchema,
-}, async (args) => {
-  try {
-    return toolResult(await handleGetTemplate(client, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+  server.registerTool(checkJobDef.name, {
+    description: checkJobDef.description,
+    inputSchema: checkJobDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleCheckJob(client, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(lookupAgentDef.name, {
+    description: lookupAgentDef.description,
+    inputSchema: lookupAgentDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleLookupAgent(client, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(listJobsDef.name, {
+    description: listJobsDef.description,
+    inputSchema: listJobsDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleListJobs(client, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(checkBalanceDef.name, {
+    description: checkBalanceDef.description,
+    inputSchema: checkBalanceDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleCheckBalance(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(getTemplateDef.name, {
+    description: getTemplateDef.description,
+    inputSchema: getTemplateDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleGetTemplate(client, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  // --- Write tools ---
+
+  server.registerTool(createJobDef.name, {
+    description: createJobDef.description,
+    inputSchema: createJobDef.inputSchema,
+    annotations: {
+      title: "Create Escrow Job",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: true,
+    },
+  }, async (args) => {
+    try {
+      return toolResult(await handleCreateJob(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(deliverWorkDef.name, {
+    description: deliverWorkDef.description,
+    inputSchema: deliverWorkDef.inputSchema,
+    annotations: {
+      title: "Deliver Work",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: true,
+    },
+  }, async (args) => {
+    try {
+      return toolResult(await handleDeliverWork(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(settleJobDef.name, {
+    description: settleJobDef.description,
+    inputSchema: settleJobDef.inputSchema,
+    annotations: {
+      title: "Settle Job",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: true,
+    },
+  }, async (args) => {
+    try {
+      return toolResult(await handleSettleJob(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(openDisputeDef.name, {
+    description: openDisputeDef.description,
+    inputSchema: openDisputeDef.inputSchema,
+    annotations: {
+      title: "Open Dispute",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: true,
+    },
+  }, async (args) => {
+    try {
+      return toolResult(await handleOpenDispute(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  server.registerTool(claimRefundDef.name, {
+    description: claimRefundDef.description,
+    inputSchema: claimRefundDef.inputSchema,
+    annotations: {
+      title: "Claim Refund",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: true,
+    },
+  }, async (args) => {
+    try {
+      return toolResult(await handleClaimRefund(client, config, args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
+  return { server, config, client, signing };
+}
 
 // ---------------------------------------------------------------------------
-// Write tools
+// Smithery sandbox export — allows Smithery to scan tools without credentials
 // ---------------------------------------------------------------------------
 
-server.registerTool(createJobDef.name, {
-  description: createJobDef.description,
-  inputSchema: createJobDef.inputSchema,
-  annotations: {
-    title: "Create Escrow Job",
-    readOnlyHint: false,
-    destructiveHint: false,
-    openWorldHint: true,
-  },
-}, async (args) => {
-  try {
-    return toolResult(await handleCreateJob(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
-
-server.registerTool(deliverWorkDef.name, {
-  description: deliverWorkDef.description,
-  inputSchema: deliverWorkDef.inputSchema,
-  annotations: {
-    title: "Deliver Work",
-    readOnlyHint: false,
-    destructiveHint: false,
-    openWorldHint: true,
-  },
-}, async (args) => {
-  try {
-    return toolResult(await handleDeliverWork(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
-
-server.registerTool(settleJobDef.name, {
-  description: settleJobDef.description,
-  inputSchema: settleJobDef.inputSchema,
-  annotations: {
-    title: "Settle Job",
-    readOnlyHint: false,
-    destructiveHint: false,
-    openWorldHint: true,
-  },
-}, async (args) => {
-  try {
-    return toolResult(await handleSettleJob(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
-
-server.registerTool(openDisputeDef.name, {
-  description: openDisputeDef.description,
-  inputSchema: openDisputeDef.inputSchema,
-  annotations: {
-    title: "Open Dispute",
-    readOnlyHint: false,
-    destructiveHint: false,
-    openWorldHint: true,
-  },
-}, async (args) => {
-  try {
-    return toolResult(await handleOpenDispute(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
-
-server.registerTool(claimRefundDef.name, {
-  description: claimRefundDef.description,
-  inputSchema: claimRefundDef.inputSchema,
-  annotations: {
-    title: "Claim Refund",
-    readOnlyHint: false,
-    destructiveHint: false,
-    openWorldHint: true,
-  },
-}, async (args) => {
-  try {
-    return toolResult(await handleClaimRefund(client, config, args));
-  } catch (e) {
-    return toolError(e);
-  }
-});
+export function createSandboxServer() {
+  const sandboxConfig = {
+    chain: "base-sepolia" as const,
+    rpcUrl: "https://sepolia.base.org",
+    privateKey: undefined,
+    apiUrl: undefined,
+  };
+  const { server: sandboxServer } = createServer(sandboxConfig);
+  return sandboxServer;
+}
 
 // ---------------------------------------------------------------------------
-// Connect transport and start
+// Connect transport and start (only when run directly, not when imported)
 // ---------------------------------------------------------------------------
 
 async function main() {
+  const { server, config, signing } = createServer();
   const transport = new StdioServerTransport();
   await server.connect(transport);
 

@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.im-sham/aegis-protocol",
   "description": "Trustless escrow for AI agent-to-agent transactions on Base L2 with ERC-8004 identity and USDC.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "url": "https://github.com/im-sham/aegis-protocol",
     "source": "github",
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@aegis-protocol/mcp-server",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "runtimeHint": "node",
       "environmentVariables": [
         {

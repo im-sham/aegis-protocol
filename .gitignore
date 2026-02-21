@@ -33,3 +33,6 @@ node_modules/
 
 # MCP Registry auth tokens
 mcp/.mcpregistry_*
+
+# Smithery build artifacts
+mcp/.smithery/

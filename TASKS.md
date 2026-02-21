@@ -11,8 +11,9 @@
 ### Development (Phase 2.5 — Agent-Native Distribution)
 - [x] ~~**Build AEGIS MCP Server**~~ - 10 tools, dual-mode (read-only/signing), stdio transport, 17 tests passing (2026-02-18)
 - [~] **Test MCP Server with Claude Desktop** - config wired, partially tested. Need to exercise all 10 tools end-to-end
-- [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server v0.1.0 (2026-02-18)
-- [ ] **Publish MCP Server to MCP registries** - Smithery.ai, Anthropic official MCP servers list
+- [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server v0.1.2 (2026-02-18, updated 2026-02-21)
+- [x] ~~**Publish to official MCP Registry**~~ - io.github.im-sham/aegis-protocol live at registry.modelcontextprotocol.io (2026-02-21)
+- [~] **Publish to Smithery** - namespace `aegis-protocol/mcp-server` created, server scans correctly, hosted deploy requires paid plan. Revisit when upgrading or when Smithery adds free stdio support
 - [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
 - [ ] **Host A2A Agent Card** - serve at `aegis-protocol.xyz/.well-known/agent-card.json`
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
@@ -129,3 +130,6 @@
 - [x] ~~Invariant test suite — 5 tests, 640k handler calls, CI profile added~~ (2026-02-20)
 - [x] ~~Security tracker + best practices report — docs/security/~~ (2026-02-20)
 - [x] ~~Content assets drafted — blog post, grant app, forum post, cold DMs in content/~~ (2026-02-18)
+- [x] ~~MCP Server published to official MCP Registry — io.github.im-sham/aegis-protocol~~ (2026-02-21)
+- [x] ~~MCP Server v0.1.2 — createSandboxServer export for registry scanners, server.json manifest~~ (2026-02-21)
+- [x] ~~Smithery namespace created — aegis-protocol/mcp-server (hosted deploy pending paid plan)~~ (2026-02-21)
