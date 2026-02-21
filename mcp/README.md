@@ -4,18 +4,39 @@ MCP (Model Context Protocol) server for the AEGIS Protocol — trustless escrow 
 
 Enables any MCP-compatible AI agent (Claude, GPT, Gemini) to autonomously create escrow jobs, deliver work, check status, settle payments, and open disputes through the AEGIS Protocol on Base L2.
 
+[![npm](https://img.shields.io/npm/v/@aegis-protocol/mcp-server)](https://www.npmjs.com/package/@aegis-protocol/mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Quick Start
 
-### Claude Desktop
+### Install via npx (recommended)
 
-Add to your `claude_desktop_config.json`:
+No installation required — runs directly from npm:
 
 ```json
 {
   "mcpServers": {
     "aegis": {
-      "command": "node",
-      "args": ["/path/to/aegis-protocol/mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@aegis-protocol/mcp-server"],
+      "env": {
+        "AEGIS_CHAIN": "base-sepolia"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json` (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+
+```json
+{
+  "mcpServers": {
+    "aegis": {
+      "command": "npx",
+      "args": ["-y", "@aegis-protocol/mcp-server"],
       "env": {
         "AEGIS_CHAIN": "base-sepolia"
       }
@@ -30,8 +51,8 @@ Add to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "aegis": {
-      "command": "node",
-      "args": ["/path/to/aegis-protocol/mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@aegis-protocol/mcp-server"],
       "env": {
         "AEGIS_CHAIN": "base-sepolia",
         "AEGIS_PRIVATE_KEY": "0x..."
@@ -86,6 +107,12 @@ When `AEGIS_PRIVATE_KEY` is set, write tools execute transactions directly on-ch
 | `AEGIS_RPC_URL` | RPC endpoint URL | Chain default |
 | `AEGIS_PRIVATE_KEY` | Private key for signing (optional) | — |
 | `AEGIS_API_URL` | REST API URL for relay (optional) | — |
+
+## Registries
+
+- **npm**: [@aegis-protocol/mcp-server](https://www.npmjs.com/package/@aegis-protocol/mcp-server)
+- **Smithery**: [aegis-protocol](https://smithery.ai/server/@aegis-protocol/mcp-server) *(pending)*
+- **MCP Registry**: [io.github.im-sham/aegis-protocol](https://registry.modelcontextprotocol.io) *(pending)*
 
 ## Development
 

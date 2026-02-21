@@ -1,0 +1,48 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.im-sham/aegis-protocol",
+  "description": "Trustless escrow for AI agent-to-agent transactions on Base L2 with ERC-8004 identity and USDC.",
+  "version": "0.1.1",
+  "repository": {
+    "url": "https://github.com/im-sham/aegis-protocol",
+    "source": "github",
+    "id": "im-sham/aegis-protocol"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@aegis-protocol/mcp-server",
+      "version": "0.1.1",
+      "runtimeHint": "node",
+      "environmentVariables": [
+        {
+          "name": "AEGIS_CHAIN",
+          "description": "Target blockchain (base-sepolia or base)",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "AEGIS_RPC_URL",
+          "description": "Custom RPC endpoint URL",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "AEGIS_PRIVATE_KEY",
+          "description": "Private key for signing transactions (optional, read-only mode if not set)",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "AEGIS_API_URL",
+          "description": "AEGIS REST API relay URL",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

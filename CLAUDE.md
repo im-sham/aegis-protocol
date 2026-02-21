@@ -96,7 +96,7 @@ forge install foundry-rs/forge-std
 # Build
 forge build
 
-# Test (25 tests including fuzz)
+# Test (217 tests: 212 unit/fuzz + 5 invariants)
 forge test -vvv
 
 # Gas report
@@ -147,12 +147,15 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] AegisDispute.sol with 3-tier resolution
 - [x] AegisJobFactory.sol with templates
 - [x] Mock ERC-8004 registries for testing
-- [x] Comprehensive test suite (202 tests including fuzz — all passing)
+- [x] Comprehensive test suite (217 tests: 212 unit/fuzz + 5 invariants — all passing)
 - [x] Deploy script for Base Sepolia
 - [x] Compile clean (zero errors)
-- [x] All 202 tests passing across 5 test suites
+- [x] All 217 tests passing across 6 test suites
 - [x] Gas report reviewed — all functions economically viable on Base L2
 - [x] Deployed mocks + AEGIS to Base Sepolia testnet
+- [x] Security audit pass — 6 findings fixed (SEC-001..006), 3 hardening items (BH-001..003)
+- [x] Custom error migration — all string reverts → typed errors
+- [x] Invariant test suite — fund conservation, escrow solvency, state machine monotonicity
 
 ### Phase 2: SDK & Developer Experience ✅
 - [x] TypeScript SDK (`@aegis-protocol/sdk`) — PR #1 merged
@@ -168,9 +171,10 @@ forge script script/Deploy.s.sol:DeployAegis \
   - 10 tools: aegis_create_job, aegis_deliver_work, aegis_check_job, aegis_settle_job, aegis_open_dispute, aegis_claim_refund, aegis_lookup_agent, aegis_list_jobs, aegis_check_balance, aegis_get_template
   - LLM-optimized tool descriptions (explain *when* to use escrow, not just *how*)
   - Dual mode: read-only (unsigned tx) or signing (direct execution)
-  - [ ] Test with Claude Desktop, Gemini, GPT
-  - [ ] Publish to MCP registries and npm
-- [ ] A2A Agent Card (`/.well-known/agent-card.json`) — agent discovery via Google A2A protocol
+  - [~] Test with Claude Desktop — config wired, partially tested
+  - [x] Published to npm — @aegis-protocol/mcp-server v0.1.0
+  - [ ] Publish to MCP registries (Smithery, official MCP Registry) — smithery.yaml + server.json created
+- [x] A2A Agent Card (`site/.well-known/agent-card.json`) — created, needs hosting
 - [ ] ERC-8004 Identity Registration — register AEGIS as a service agent in the registry
 - [ ] Agent framework integrations: AutoGPT (P0), CrewAI (P0), LangChain (P0), OpenClaw (P1)
 
@@ -210,7 +214,7 @@ Worktrees at `.worktrees/<branch-name>` (gitignored). Always verify `.worktrees/
 - **Licensing**: MIT License for all code (contracts, SDK, API, subgraph). Revenue is from protocol fees, not software licensing.
 - **Audit plan**: Sherlock competitive audit contest (public). Start Sherlock AI GitHub integration during development.
 - **Grant targets**: Base Builder Grants (apply at testnet deploy), Base Batches 2026, Ethereum Foundation ESP, x402 Foundation, Optimism RetroPGF
-- **Go-public timing**: Repo goes public at Base Sepolia testnet deployment (scrub git history for secrets first)
+- **Go-public timing**: Repo is public at github.com/im-sham/aegis-protocol (history scrubbed 2026-02-18)
 - **Not competitors**: Fomolt (vertical trading app), OpenX402 (complementary payment facilitator). OpenX402 is a potential integration partner.
 
 ## Key Reference Docs
@@ -224,4 +228,6 @@ Worktrees at `.worktrees/<branch-name>` (gitignored). Always verify `.worktrees/
 - `docs/plans/2026-02-17-subgraph-plan.md` — Subgraph implementation plan (10 tasks)
 - `AEGIS_Strategic_Research_Brief.md` — Living strategic research document (competitive landscape, GTM, grants, costs)
 - `docs/plans/2026-02-18-python-sdk-design-wip.md` — Python SDK design (paused, resume after MCP Server)
+- `docs/security/SECURITY-TRACKER.md` — Security findings register and hardening backlog
+- `docs/security/security_best_practices_report.md` — Detailed security audit narrative
 - `TASKS.md` — Master task list with priorities and sequencing

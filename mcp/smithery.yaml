@@ -1,0 +1,38 @@
+# Smithery configuration — https://smithery.ai/docs/config
+# AEGIS Protocol MCP Server: trustless escrow for AI agent-to-agent transactions
+
+startCommand:
+  type: stdio
+
+configSchema:
+  type: object
+  required: []
+  properties:
+    aegisChain:
+      type: string
+      description: Target blockchain (base-sepolia or base)
+      default: base-sepolia
+    aegisRpcUrl:
+      type: string
+      description: Custom RPC endpoint URL (optional, uses chain default if not set)
+    aegisPrivateKey:
+      type: string
+      description: Private key for signing transactions (optional, read-only mode if not set)
+    aegisApiUrl:
+      type: string
+      description: AEGIS REST API relay URL (optional)
+
+commandFunction: |-
+  (config) => ({
+    command: 'npx',
+    args: ['-y', '@aegis-protocol/mcp-server'],
+    env: {
+      AEGIS_CHAIN: config.aegisChain || 'base-sepolia',
+      ...(config.aegisRpcUrl && { AEGIS_RPC_URL: config.aegisRpcUrl }),
+      ...(config.aegisPrivateKey && { AEGIS_PRIVATE_KEY: config.aegisPrivateKey }),
+      ...(config.aegisApiUrl && { AEGIS_API_URL: config.aegisApiUrl })
+    }
+  })
+
+exampleConfig:
+  aegisChain: base-sepolia

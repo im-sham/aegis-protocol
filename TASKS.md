@@ -4,26 +4,31 @@
 
 ### Development (Phase 1 — Core Contracts) ✅ COMPLETE
 - [x] ~~**Compile contracts and fix any errors**~~ - all 4 contracts compile clean with forge build (2026-02-18)
-- [x] ~~**Get all 202 tests passing**~~ - 202/202 tests across 5 suites, including fuzz tests (2026-02-18)
+- [x] ~~**Get all tests passing**~~ - 217 tests across 6 suites (212 unit/fuzz + 5 invariants) (2026-02-20)
 - [x] ~~**Gas optimization review**~~ - all functions economically viable on Base L2 (2026-02-18)
 - [x] ~~**Deploy mocks + AEGIS to Base Sepolia testnet**~~ - 7 contracts deployed via Deploy.s.sol (2026-02-18)
 
 ### Development (Phase 2.5 — Agent-Native Distribution)
-- [x] ~~**Build AEGIS MCP Server**~~ - 10 tools, dual-mode (read-only/signing), stdio transport, 15 tests passing (2026-02-18)
-- [ ] **Test MCP Server with Claude Desktop** - verify all tools work end-to-end
-- [ ] **Publish MCP Server to npm + MCP registries** - @aegis-protocol/mcp-server
-- [ ] **Publish A2A Agent Card** - host at /.well-known/agent-card.json on AEGIS domain
+- [x] ~~**Build AEGIS MCP Server**~~ - 10 tools, dual-mode (read-only/signing), stdio transport, 17 tests passing (2026-02-18)
+- [~] **Test MCP Server with Claude Desktop** - config wired, partially tested. Need to exercise all 10 tools end-to-end
+- [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server v0.1.0 (2026-02-18)
+- [ ] **Publish MCP Server to MCP registries** - Smithery.ai, Anthropic official MCP servers list
+- [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
+- [ ] **Host A2A Agent Card** - serve at `aegis-protocol.xyz/.well-known/agent-card.json`
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
 - [ ] **AutoGPT integration** - P0 framework integration, plugin/tool
 - [ ] **CrewAI integration** - P0 framework integration
 - [ ] **LangChain integration** - P0 framework integration
 
-### Pre-Public Repo
-- [ ] **Scrub git history for secrets** - check for any .env values, private keys, or credentials ever committed
-- [ ] **Add MIT LICENSE file** - to repo root
-- [ ] **Make repo public on GitHub** - timing: at Base Sepolia testnet deploy
+### Pre-Public Repo ✅ COMPLETE
+- [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
+- [x] ~~**Add MIT LICENSE file**~~ - to repo root (2026-02-18)
+- [x] ~~**Make repo public on GitHub**~~ - github.com/im-sham/aegis-protocol (2026-02-18)
 
 ### Security & Audit
+- [x] ~~**Internal security audit pass**~~ - 6 findings fixed (SEC-001..006), 3 hardening items (BH-001..003) (2026-02-20)
+- [x] ~~**Invariant test suite**~~ - 5 invariant tests, 640k handler calls, fund conservation + state machine + solvency (2026-02-20)
+- [x] ~~**Custom error migration**~~ - all string reverts → typed errors across 4 contracts (2026-02-20)
 - [ ] **Sign up for Sherlock AI** - connect GitHub repo for real-time scanning during development
 - [ ] **Contact Sherlock sales for audit quote** - timing: after testnet deploy. Pitch: ERC-8004 + x402 escrow on Base, ~1,500 nSLOC, 4 contracts, public contest preferred
 - [ ] **Run Solidity Metrics on codebase** - get exact nSLOC count for Sherlock quote
@@ -41,11 +46,11 @@
 - [ ] **Apply: x402 Foundation Developer Grant** - timing: after shipping escrow header extension proposal (month 2-3)
 
 ### Community & GTM
-- [ ] **Post on Ethereum Magicians forum** - ERC-8004 discussion thread, announce AEGIS
+- [ ] **Post on Ethereum Magicians forum** - ERC-8004 discussion thread, announce AEGIS (draft ready in `content/`)
 - [ ] **DM Davide Crapis (EF dAI team lead)** - Twitter/Farcaster, link to deployed contracts + one-paragraph pitch
-- [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase)
+- [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase) (draft ready in `content/`)
 - [ ] **Join x402 Foundation developer community** - Discord/forum
-- [ ] **Write "Introducing AEGIS" blog post** - Mirror / blog, publish at testnet deploy
+- [ ] **Write "Introducing AEGIS" blog post** - Mirror / blog (draft ready in `content/`)
 
 ### Legal & Entity
 - [ ] **Set up LLC** - for legal entity, grant applications, terms of service
@@ -108,8 +113,19 @@
 - [x] ~~Strategic Research Brief v1.0~~ (2026-02-18)
 - [x] ~~Strategic Research Brief v2.0 — expanded GTM, agent distribution, Sherlock, grants, open source strategy~~ (2026-02-18)
 - [x] ~~Updated CLAUDE.md with strategic context~~ (2026-02-18)
-- [x] ~~AEGIS MCP Server — 10 tools, dual-mode, 15 tests~~ (2026-02-18)
+- [x] ~~AEGIS MCP Server — 10 tools, dual-mode, 17 tests~~ (2026-02-18)
 - [x] ~~Contracts compile clean — zero errors, forge build~~ (2026-02-18)
-- [x] ~~202/202 tests passing — 5 test suites including fuzz~~ (2026-02-18)
+- [x] ~~217 tests passing — 6 test suites (212 unit/fuzz + 5 invariants)~~ (2026-02-20)
 - [x] ~~Gas report reviewed — all functions viable on Base L2~~ (2026-02-18)
 - [x] ~~Base Sepolia testnet deployment — 7 contracts (4 AEGIS + 3 mock ERC-8004)~~ (2026-02-18)
+- [x] ~~Git history scrubbed for secrets~~ (2026-02-18)
+- [x] ~~MIT LICENSE added~~ (2026-02-18)
+- [x] ~~Repo made public — github.com/im-sham/aegis-protocol~~ (2026-02-18)
+- [x] ~~All SDK packages published to npm — types, abis, sdk, mcp-server v0.1.0~~ (2026-02-18)
+- [x] ~~README + landing page + social preview images~~ (2026-02-18)
+- [x] ~~A2A Agent Card created — site/.well-known/agent-card.json~~ (2026-02-18)
+- [x] ~~Security audit pass — 6 findings fixed (SEC-001..006), 3 hardening items (BH-001..003)~~ (2026-02-20)
+- [x] ~~Custom error migration — all string reverts → typed errors across 4 contracts~~ (2026-02-20)
+- [x] ~~Invariant test suite — 5 tests, 640k handler calls, CI profile added~~ (2026-02-20)
+- [x] ~~Security tracker + best practices report — docs/security/~~ (2026-02-20)
+- [x] ~~Content assets drafted — blog post, grant app, forum post, cold DMs in content/~~ (2026-02-18)
