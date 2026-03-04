@@ -30,6 +30,11 @@ This checkpoint marks a stable continuation boundary for the current local work-
 ## Next Slice
 
 Reliability checkpoint completion:
-1. Merge this reliability branch to `main`.
-2. Re-run MCP E2E with protected environment approval path on `main`.
-3. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks.
+1. Merge this reliability branch to `main`. ✅
+2. Re-run MCP E2E with protected environment approval path on `main`. ✅
+3. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks. ✅
+
+Completion evidence (2026-03-04):
+- PR `#6` merged to `main`.
+- GitHub Actions run `22681335573` completed successfully on `main`.
+- Protected `MCP E2E (Base Sepolia)` job was approved via `testnet-e2e` and passed end-to-end.

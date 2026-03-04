@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "lifecycle": "tsx lifecycle.ts",
-    "read-only": "tsx read-only.ts"
+    "read-only": "tsx read-only.ts",
+    "langchain-agent": "tsx langchain-agent.ts"
   },
   "dependencies": {
+    "@aegis-protocol/langchain": "workspace:*",
     "@aegis-protocol/sdk": "workspace:*",
     "@aegis-protocol/types": "workspace:*",
     "@aegis-protocol/abis": "workspace:*",
+    "@langchain/langgraph": "^1.2.0",
+    "@langchain/openai": "^1.2.12",
     "viem": "^2.27.0"
   },
   "devDependencies": {
