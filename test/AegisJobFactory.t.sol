@@ -287,7 +287,9 @@ contract AegisJobFactoryTest is Test {
         uint256 templateId = _createDefaultTemplate();
         vm.prank(outsider);
         vm.expectRevert(abi.encodeWithSelector(AegisTypes.NotAgentOwner.selector, clientAgentId, outsider));
-        factory.createJobFromTemplate(templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT);
+        factory.createJobFromTemplate(
+            templateId, clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, JOB_AMOUNT
+        );
     }
 
     function test_CreateJobFromTemplate_RevertIfNotAuthorizedFactory() public {

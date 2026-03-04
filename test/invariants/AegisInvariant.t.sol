@@ -139,8 +139,8 @@ contract AegisInvariant is Test {
             // Active jobs: FUNDED, DELIVERED, VALIDATING, DISPUTE_WINDOW, DISPUTED
             if (
                 job.state == AegisTypes.JobState.FUNDED || job.state == AegisTypes.JobState.DELIVERED
-                    || job.state == AegisTypes.JobState.VALIDATING
-                    || job.state == AegisTypes.JobState.DISPUTE_WINDOW || job.state == AegisTypes.JobState.DISPUTED
+                    || job.state == AegisTypes.JobState.VALIDATING || job.state == AegisTypes.JobState.DISPUTE_WINDOW
+                    || job.state == AegisTypes.JobState.DISPUTED
             ) {
                 activeSum += job.amount;
             }

@@ -32,6 +32,13 @@
 | [security/security_best_practices_report.md](./security/security_best_practices_report.md) | Security findings, remediation details, and verification evidence |
 | [security/SECURITY-TRACKER.md](./security/SECURITY-TRACKER.md) | Living tracker for finding status, ownership, and hardening backlog |
 
+### Operations & Reliability Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [operations/ENGINEERING-RISK-TRACKER.md](./operations/ENGINEERING-RISK-TRACKER.md) | Living tracker for non-security engineering risks (external dependencies, reliability, and mitigation status) |
+| [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md) | Preflight, fallback, and incident-response procedure for RPC and E2E reliability |
+
 ---
 
 ## 🎯 Quick Navigation
@@ -49,6 +56,12 @@
 
 **"I want to understand ERC-8004 integration"**
 → Read [ERC-8004-SPEC.md](./ERC-8004-SPEC.md)
+
+**"I need current engineering/reliability risks and mitigations"**
+→ Read [operations/ENGINEERING-RISK-TRACKER.md](./operations/ENGINEERING-RISK-TRACKER.md)
+
+**"I need the operational procedure for reliability incidents"**
+→ Read [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md)
 
 ### For SDK Developers
 
@@ -207,5 +220,5 @@ MIT License — See LICENSE file for details
 
 ---
 
-**Last Updated:** February 15, 2026
-**Version:** 0.1.0 (Pre-release)
+**Last Updated:** February 27, 2026
+**Version:** 0.1.1 (Pre-release)

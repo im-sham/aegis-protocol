@@ -36,6 +36,10 @@ export const createJobDef = {
       .number()
       .optional()
       .describe("Minimum validation score 0-100 to pass (default: 70)"),
+    disputeSplit: z
+      .number()
+      .optional()
+      .describe("Dispute split percentage 0-100 (% to client on timeout, default: 0 = use contract default)"),
   },
 };
 
@@ -51,11 +55,14 @@ export async function handleCreateJob(
     validatorAddress: string;
     deadlineSeconds: number;
     validationThreshold?: number;
+    disputeSplit?: number;
   },
 ) {
   const amount = parseUSDC(args.amount);
   const deadline = BigInt(Math.floor(Date.now() / 1000) + args.deadlineSeconds);
   const threshold = args.validationThreshold ?? 70;
+
+  const split = args.disputeSplit ?? 0;
 
   const params = {
     clientAgentId: BigInt(args.clientAgentId),
@@ -66,6 +73,7 @@ export async function handleCreateJob(
     deadline,
     amount,
     validationThreshold: threshold,
+    disputeSplit: split,
   };
 
   // If we have a signer, execute the transaction directly

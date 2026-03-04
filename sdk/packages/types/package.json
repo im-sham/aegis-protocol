@@ -1,6 +1,6 @@
 {
   "name": "@aegis-protocol/types",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Type definitions for the AEGIS Protocol SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -10,12 +10,12 @@
 
 ### Development (Phase 2.5 — Agent-Native Distribution)
 - [x] ~~**Build AEGIS MCP Server**~~ - 10 tools, dual-mode (read-only/signing), stdio transport, 17 tests passing (2026-02-18)
-- [~] **Test MCP Server with Claude Desktop** - config wired, partially tested. Need to exercise all 10 tools end-to-end
+- [x] ~~**Test MCP Server with Claude Desktop**~~ - all 10 tools E2E tested against Base Sepolia, 10/10 passing (2026-02-21)
 - [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server v0.1.2 (2026-02-18, updated 2026-02-21)
 - [x] ~~**Publish to official MCP Registry**~~ - io.github.im-sham/aegis-protocol live at registry.modelcontextprotocol.io (2026-02-21)
 - [~] **Publish to Smithery** - namespace `aegis-protocol/mcp-server` created, server scans correctly, hosted deploy requires paid plan. Revisit when upgrading or when Smithery adds free stdio support
 - [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
-- [ ] **Host A2A Agent Card** - serve at `aegis-protocol.xyz/.well-known/agent-card.json`
+- [x] ~~**Host A2A Agent Card**~~ - hosted on Cloudflare at aegis-protocol.xyz (2026-02-21)
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
 - [ ] **AutoGPT integration** - P0 framework integration, plugin/tool
 - [ ] **CrewAI integration** - P0 framework integration
@@ -38,6 +38,15 @@
 - [ ] **Purchase Ledger hardware wallet** - for mainnet deployment. Ledger Nano S Plus (~$79)
 - [ ] **Set up deployment wallet** - fresh wallet on Ledger for contract ownership
 - [ ] **Plan Safe multisig transition** - 2-of-3 or 3-of-5 setup, 1-2 months post-mainnet
+
+### Reliability & Operations
+- [~] **Provision dedicated RPC endpoints for CI/staging** - secrets and protected `testnet-e2e` environment are configured in GitHub, but current RPC secret values are temporary public endpoints; remaining step is replacing with dedicated provider URLs and setting rotation cadence
+- [x] ~~**Implement RPC failover strategy in MCP/SDK runtime**~~ - prioritized multi-endpoint transport (`AEGIS_RPC_URLS`) with fallback in MCP + SDK read-only paths (2026-02-27)
+- [x] ~~**Create reliability runbook**~~ - documented preflight, guardrails, fallback, incident steps in `docs/operations/RELIABILITY-RUNBOOK.md` (2026-03-02)
+- [ ] **Establish weekly risk review cadence** - keep `docs/operations/ENGINEERING-RISK-TRACKER.md` current with status and verification evidence
+
+### Program Checkpoints
+- [ ] **State of Project #1 (Agent-First Foundation Checkpoint)** - trigger when CI MCP E2E is green with dedicated primary/secondary RPC secrets, reliability docs are current, and next integration target scope (Virtuals GAME or ElizaOS) is frozen for implementation
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded
@@ -133,3 +142,6 @@
 - [x] ~~MCP Server published to official MCP Registry — io.github.im-sham/aegis-protocol~~ (2026-02-21)
 - [x] ~~MCP Server v0.1.2 — createSandboxServer export for registry scanners, server.json manifest~~ (2026-02-21)
 - [x] ~~Smithery namespace created — aegis-protocol/mcp-server (hosted deploy pending paid plan)~~ (2026-02-21)
+- [x] ~~Contracts redeployed to Base Sepolia — post-BH-001 security hardening (disputeSplit param)~~ (2026-02-21)
+- [x] ~~E2E test suite for all 10 MCP tools — 10/10 passing against Base Sepolia~~ (2026-02-21)
+- [x] ~~A2A Agent Card hosted on Cloudflare at aegis-protocol.xyz~~ (2026-02-21)

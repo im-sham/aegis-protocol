@@ -141,6 +141,11 @@ function formatAbiModule(exportName: string, abi: unknown[]): string {
 // Barrel export generation
 // ---------------------------------------------------------------------------
 
+/** Extra manually-maintained ABIs to include in the barrel export. */
+const EXTRA_EXPORTS = [
+  'export { erc20Abi } from "./ERC20";',
+];
+
 function generateBarrelExport(mappings: AbiMapping[]): string {
   const lines = mappings.map((m) => {
     // Convert outputPath to a relative import (strip .ts extension)
@@ -148,7 +153,7 @@ function generateBarrelExport(mappings: AbiMapping[]): string {
     return `export { ${m.exportName} } from "${importPath}";`;
   });
 
-  return `${FILE_HEADER}${lines.join("\n")}\n`;
+  return `${FILE_HEADER}${[...lines, ...EXTRA_EXPORTS].join("\n")}\n`;
 }
 
 // ---------------------------------------------------------------------------

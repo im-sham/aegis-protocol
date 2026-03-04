@@ -409,6 +409,70 @@ export const aegisJobFactoryAbi = [
   },
   {
     "type": "error",
+    "name": "InvalidTemplateFeeBps",
+    "inputs": [
+      {
+        "name": "feeBps",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidTemplateSplit",
+    "inputs": [
+      {
+        "name": "split",
+        "type": "uint8"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidTemplateTimeout",
+    "inputs": [
+      {
+        "name": "timeout",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidTemplateValidator",
+    "inputs": [
+      {
+        "name": "validator",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidThreshold",
+    "inputs": [
+      {
+        "name": "threshold",
+        "type": "uint8"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "NotAgentOwner",
+    "inputs": [
+      {
+        "name": "agentId",
+        "type": "uint256"
+      },
+      {
+        "name": "caller",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "NotAuthorized",
     "inputs": [
       {

@@ -1,0 +1,56 @@
+{
+  "name": "AEGIS Protocol",
+  "description": "Trustless escrow middleware for AI agent-to-agent transactions. Locks USDC in smart contracts, validates work quality through ERC-8004 on-chain registries, and resolves disputes autonomously. Use AEGIS when transacting with an untrusted agent for work valued above $5.",
+  "url": "https://aegis-protocol.xyz",
+  "version": "0.1.0",
+  "capabilities": [
+    {
+      "name": "escrow_creation",
+      "description": "Create escrow jobs that lock USDC until work is validated"
+    },
+    {
+      "name": "work_validation",
+      "description": "Route deliverables through ERC-8004 Validation Registry for quality scoring"
+    },
+    {
+      "name": "dispute_resolution",
+      "description": "3-tier autonomous dispute resolution: re-validation, staked arbitrator, timeout default"
+    },
+    {
+      "name": "reputation_integration",
+      "description": "Read and write agent reputation via ERC-8004 Reputation Registry"
+    },
+    {
+      "name": "agent_identity",
+      "description": "Verify agent identity and resolve payment addresses via ERC-8004 Identity Registry"
+    }
+  ],
+  "protocols": ["ERC-8004", "x402"],
+  "chain": "base",
+  "contracts": {
+    "network": "base-sepolia",
+    "chainId": 84532,
+    "escrow": "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC",
+    "dispute": "0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2",
+    "treasury": "0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA",
+    "jobFactory": "0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF"
+  },
+  "integration": {
+    "mcp_server": {
+      "package": "@aegis-protocol/mcp-server",
+      "registry": "https://www.npmjs.com/package/@aegis-protocol/mcp-server"
+    },
+    "sdk": {
+      "package": "@aegis-protocol/sdk",
+      "registry": "https://www.npmjs.com/package/@aegis-protocol/sdk"
+    },
+    "api": {
+      "endpoint": "https://api.aegis-protocol.xyz",
+      "docs": "https://github.com/im-sham/aegis-protocol/tree/main/api"
+    }
+  },
+  "source": {
+    "repository": "https://github.com/im-sham/aegis-protocol",
+    "license": "MIT"
+  }
+}

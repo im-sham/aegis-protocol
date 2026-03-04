@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1600px;
+    height: 900px;
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+    background: linear-gradient(145deg, #0a0e1a 0%, #0f1629 30%, #111827 60%, #0a0e1a 100%);
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Grid pattern */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    z-index: 0;
+  }
+
+  /* Top-right glow */
+  .glow-1 {
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 65%);
+    z-index: 0;
+  }
+
+  /* Bottom-left glow */
+  .glow-2 {
+    position: absolute;
+    bottom: -150px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 65%);
+    z-index: 0;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 80px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo svg {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+  }
+
+  .middle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    margin-top: -20px;
+  }
+
+  h1 {
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.1;
+  }
+
+  h1 .accent {
+    background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 50%, #4ade80 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 24px;
+    color: #94a3b8;
+    line-height: 1.5;
+    max-width: 800px;
+  }
+
+  .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .badges {
+    display: flex;
+    gap: 14px;
+  }
+
+  .badge {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .badge-blue {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #60a5fa;
+  }
+
+  .badge-purple {
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    color: #a78bfa;
+  }
+
+  .badge-cyan {
+    background: rgba(6, 182, 212, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    color: #22d3ee;
+  }
+
+  .badge-green {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+  }
+
+  /* Flow diagram on the right side */
+  .flow-visual {
+    position: absolute;
+    right: 96px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    opacity: 0.35;
+  }
+
+  .flow-line {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    color: #60a5fa;
+    line-height: 1.8;
+    white-space: pre;
+  }
+
+  .url {
+    font-size: 16px;
+    color: #475569;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <!-- Faded flow diagram on right -->
+  <div class="flow-visual">
+    <div class="flow-line">  Client Agent</div>
+    <div class="flow-line">      │</div>
+    <div class="flow-line">  Lock USDC ──►  AEGIS</div>
+    <div class="flow-line">                   │</div>
+    <div class="flow-line">              ◄── Deliver</div>
+    <div class="flow-line">                   │</div>
+    <div class="flow-line">              Validate via</div>
+    <div class="flow-line">             ERC-8004 Registry</div>
+    <div class="flow-line">                   │</div>
+    <div class="flow-line">            Score ≥ Threshold?</div>
+    <div class="flow-line">            ┌──────┴──────┐</div>
+    <div class="flow-line">           Yes            No</div>
+    <div class="flow-line">            │              │</div>
+    <div class="flow-line">       Auto-settle   Dispute</div>
+    <div class="flow-line">            │         Window</div>
+    <div class="flow-line">       USDC ──►        │</div>
+    <div class="flow-line">       Provider    3-Tier</div>
+    <div class="flow-line">                 Resolution</div>
+  </div>
+
+  <div class="content">
+    <div class="top">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L3 7V12C3 17.55 6.84 22.74 12 24C17.16 22.74 21 17.55 21 12V7L12 2Z" fill="url(#sg)"/>
+          <path d="M10 15.5L7.5 13L6.09 14.41L10 18.33L18 10.33L16.59 8.92L10 15.5Z" fill="white" opacity="0.95"/>
+          <defs><linearGradient id="sg" x1="3" y1="2" x2="21" y2="24"><stop stop-color="#3b82f6"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs>
+        </svg>
+        <span class="logo-text">AEGIS PROTOCOL</span>
+      </div>
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        Base Sepolia
+      </div>
+    </div>
+
+    <div class="middle">
+      <h1>Introducing AEGIS:<br><span class="accent">Trustless Escrow for the<br>Agent Economy</span></h1>
+      <div class="subtitle">
+        The trust layer between payment and delivery.<br>
+        Composing ERC-8004 + x402 on Base L2.
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="badges">
+        <span class="badge badge-blue">ERC-8004</span>
+        <span class="badge badge-purple">x402</span>
+        <span class="badge badge-cyan">Base L2</span>
+        <span class="badge badge-green">USDC</span>
+      </div>
+      <div class="url">aegis-protocol.xyz</div>
+    </div>
+  </div>
+</body>
+</html>

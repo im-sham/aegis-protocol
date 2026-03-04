@@ -20,6 +20,8 @@ export interface CreateJobParams {
   deadline: bigint;
   amount: bigint;
   validationThreshold: number;
+  /** Dispute split percentage (0-100, % to client on timeout). Defaults to 0 (use contract default). */
+  disputeSplit?: number;
 }
 
 /**
@@ -72,6 +74,7 @@ export class EscrowService {
         params.deadline,
         params.amount,
         params.validationThreshold,
+        params.disputeSplit ?? 0,
       ],
     });
   }

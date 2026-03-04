@@ -107,7 +107,7 @@ contract AegisEscrowTest is Test {
             block.timestamp + 7 days,
             JOB_AMOUNT,
             70, // 70% validation threshold
-            0   // use protocol default dispute split
+            0 // use protocol default dispute split
         );
     }
 
@@ -734,7 +734,15 @@ contract AegisEscrowTest is Test {
 
         vm.prank(client);
         bytes32 jobId = escrow.createJob(
-            clientAgentId, providerAgentId, JOB_SPEC_HASH, JOB_SPEC_URI, validator, block.timestamp + 7 days, amount, 70, 0
+            clientAgentId,
+            providerAgentId,
+            JOB_SPEC_HASH,
+            JOB_SPEC_URI,
+            validator,
+            block.timestamp + 7 days,
+            amount,
+            70,
+            0
         );
 
         AegisTypes.Job memory job = escrow.getJob(jobId);

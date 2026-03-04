@@ -40,6 +40,111 @@ jobs:
       - name: Run invariant tests
         run: forge test --match-path "test/invariants/*" -vvv
 
+  mcp:
+    name: MCP (typecheck + unit tests)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: mcp
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Build SDK
+        run: cd ../sdk && pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run MCP unit tests
+        run: pnpm exec vitest run tests/config.test.ts tests/tools/*.test.ts
+
+  mcp-e2e:
+    name: MCP E2E (Base Sepolia)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: mcp
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      }}
+    environment:
+      name: testnet-e2e
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mcp
+    env:
+      AEGIS_PRIVATE_KEY: ${{ secrets.AEGIS_E2E_PRIVATE_KEY }}
+      AEGIS_RPC_URL: ${{ secrets.BASE_SEPOLIA_RPC_URL_PRIMARY }}
+      AEGIS_RPC_URLS: ${{ secrets.BASE_SEPOLIA_RPC_URL_PRIMARY }},${{ secrets.BASE_SEPOLIA_RPC_URL_SECONDARY }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Build SDK
+        run: cd ../sdk && pnpm build
+
+      - name: Validate required secrets
+        id: preflight
+        shell: bash
+        run: |
+          missing=0
+          for var in AEGIS_PRIVATE_KEY AEGIS_RPC_URL AEGIS_RPC_URLS; do
+            if [ -z "${!var}" ]; then
+              echo "::warning::Missing required secret-backed env var: $var"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run MCP E2E tests
+        if: steps.preflight.outputs.skip != 'true'
+        run: pnpm exec vitest run tests/e2e/mcp-e2e.test.ts
+
+      - name: Skip MCP E2E (missing secrets)
+        if: steps.preflight.outputs.skip == 'true'
+        run: echo "Skipping MCP E2E due to missing required secrets."
+
   subgraph:
     name: Subgraph
     runs-on: ubuntu-22.04

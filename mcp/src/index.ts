@@ -10,6 +10,7 @@ import { lookupAgentDef, handleLookupAgent } from "./tools/lookup-agent.js";
 import { listJobsDef, handleListJobs } from "./tools/list-jobs.js";
 import { checkBalanceDef, handleCheckBalance } from "./tools/check-balance.js";
 import { getTemplateDef, handleGetTemplate } from "./tools/get-template.js";
+import { shouldIEscrowDef, handleShouldIEscrow } from "./tools/should-i-escrow.js";
 
 // Write tools
 import { createJobDef, handleCreateJob } from "./tools/create-job.js";
@@ -114,6 +115,17 @@ function createServer(cfg?: Config) {
     }
   });
 
+  server.registerTool(shouldIEscrowDef.name, {
+    description: shouldIEscrowDef.description,
+    inputSchema: shouldIEscrowDef.inputSchema,
+  }, async (args) => {
+    try {
+      return toolResult(await handleShouldIEscrow(args));
+    } catch (e) {
+      return toolError(e);
+    }
+  });
+
   // --- Write tools ---
 
   server.registerTool(createJobDef.name, {
@@ -209,9 +221,11 @@ function createServer(cfg?: Config) {
 // ---------------------------------------------------------------------------
 
 export function createSandboxServer() {
+  const rpcUrl = "https://sepolia.base.org";
   const sandboxConfig = {
     chain: "base-sepolia" as const,
-    rpcUrl: "https://sepolia.base.org",
+    rpcUrl,
+    rpcUrls: [rpcUrl],
     privateKey: undefined,
     apiUrl: undefined,
   };

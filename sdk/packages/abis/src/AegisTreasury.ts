@@ -340,6 +340,16 @@ export const aegisTreasuryAbi = [
   },
   {
     "type": "error",
+    "name": "MaxBpsTooHigh",
+    "inputs": [
+      {
+        "name": "bps",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "OwnableInvalidOwner",
     "inputs": [
       {
