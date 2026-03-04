@@ -57,7 +57,7 @@ Completed:
 - LangChain integration slice is complete:
   - package: `sdk/packages/langchain` (`@aegis-protocol/langchain`)
   - example: `sdk/examples/langchain-agent.ts`
-  - tracked in PR `#7`.
+  - merged in PR `#7` with post-merge `main` CI run `22686298159` passing (including protected `MCP E2E`).
 
 Pending / watch items:
 - Next framework integration target is `CrewAI`.
