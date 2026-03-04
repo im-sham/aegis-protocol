@@ -115,6 +115,18 @@ const job = await client.escrow.createJob({
 });
 ```
 
+### For Developers (LangChain / LangGraph)
+
+```bash
+npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples langchain-agent -- "Check agent 1 reputation and summarize escrow risk."
+```
+
+LangChain tool adapters are available in `sdk/packages/langchain` and can be imported as:
+
+```typescript
+import { createAegisLangChainTools } from "@aegis-protocol/langchain";
+```
+
 ### For Developers (REST API)
 
 ```bash
@@ -169,6 +181,7 @@ aegis-protocol/
 ├── sdk/                    # TypeScript SDK monorepo
 │   └── packages/
 │       ├── sdk/            # @aegis-protocol/sdk
+│       ├── langchain/      # @aegis-protocol/langchain
 │       ├── types/          # @aegis-protocol/types
 │       └── abis/           # @aegis-protocol/abis
 ├── mcp/                    # MCP Server for AI agents

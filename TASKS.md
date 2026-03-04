@@ -19,7 +19,7 @@
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
 - [ ] **AutoGPT integration** - P0 framework integration, plugin/tool
 - [ ] **CrewAI integration** - P0 framework integration
-- [ ] **LangChain integration** - P0 framework integration
+- [x] ~~**LangChain integration**~~ - shipped `@aegis-protocol/langchain` tools package + LangGraph example (`sdk/examples/langchain-agent.ts`) (2026-03-04)
 
 ### Pre-Public Repo ✅ COMPLETE
 - [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
@@ -40,13 +40,13 @@
 - [ ] **Plan Safe multisig transition** - 2-of-3 or 3-of-5 setup, 1-2 months post-mainnet
 
 ### Reliability & Operations
-- [~] **Provision dedicated RPC endpoints for CI/staging** - secrets and protected `testnet-e2e` environment are configured in GitHub, but current RPC secret values are temporary public endpoints; remaining step is replacing with dedicated provider URLs and setting rotation cadence
+- [x] ~~**Provision dedicated RPC endpoints for CI/staging**~~ - dedicated primary/secondary Base Sepolia secrets are set and verified; protected `main` MCP E2E path validated (2026-03-04)
 - [x] ~~**Implement RPC failover strategy in MCP/SDK runtime**~~ - prioritized multi-endpoint transport (`AEGIS_RPC_URLS`) with fallback in MCP + SDK read-only paths (2026-02-27)
 - [x] ~~**Create reliability runbook**~~ - documented preflight, guardrails, fallback, incident steps in `docs/operations/RELIABILITY-RUNBOOK.md` (2026-03-02)
 - [ ] **Establish weekly risk review cadence** - keep `docs/operations/ENGINEERING-RISK-TRACKER.md` current with status and verification evidence
 
 ### Program Checkpoints
-- [ ] **State of Project #1 (Agent-First Foundation Checkpoint)** - trigger when CI MCP E2E is green with dedicated primary/secondary RPC secrets, reliability docs are current, and next integration target scope (Virtuals GAME or ElizaOS) is frozen for implementation
+- [x] ~~**State of Project #1 (Agent-First Foundation Checkpoint)**~~ - CI MCP E2E is green on protected `main`, dedicated RPC secrets are active, reliability docs are current, and next integration scope is frozen to `CrewAI` (2026-03-04)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded

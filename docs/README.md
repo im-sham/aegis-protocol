@@ -133,7 +133,7 @@
 ### Integration Examples (Phase 3) 📋
 - [ ] viem example
 - [ ] ethers v6 example
-- [ ] LangChain agent
+- [x] LangChain agent
 - [ ] AutoGPT integration
 - [ ] CrewAI integration
 
