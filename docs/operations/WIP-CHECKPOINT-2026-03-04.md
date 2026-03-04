@@ -23,10 +23,11 @@ This checkpoint marks a stable continuation boundary for the current local work-
 - `cd mcp && npm exec -y vitest -- run tests/config.test.ts tests/tools/*.test.ts` -> PASS (15/15)
 - `cd mcp && AEGIS_PRIVATE_KEY=... npm exec -y vitest -- run tests/e2e/mcp-e2e.test.ts` -> NOT RUN in this session (key not set)
 - GitHub `testnet-e2e` environment reviewer policy updated to `prevent_self_review=false` (required reviewer + `main` branch policy retained)
+- GitHub `BASE_SEPOLIA_RPC_URL_PRIMARY` and `BASE_SEPOLIA_RPC_URL_SECONDARY` secrets updated to dedicated provider endpoints
+- Primary and secondary endpoints health check passed (`eth_blockNumber`)
 
 ## Next Slice
 
 Reliability checkpoint completion:
-1. Replace temporary/public CI RPC secret values with dedicated provider endpoints.
-2. Re-run MCP E2E with protected environment approval path.
-3. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks.
+1. Re-run MCP E2E with protected environment approval path.
+2. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks.
