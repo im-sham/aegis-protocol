@@ -25,9 +25,11 @@ This checkpoint marks a stable continuation boundary for the current local work-
 - GitHub `testnet-e2e` environment reviewer policy updated to `prevent_self_review=false` (required reviewer + `main` branch policy retained)
 - GitHub `BASE_SEPOLIA_RPC_URL_PRIMARY` and `BASE_SEPOLIA_RPC_URL_SECONDARY` secrets updated to dedicated provider endpoints
 - Primary and secondary endpoints health check passed (`eth_blockNumber`)
+- `gh workflow run test.yml --ref codex/aegis-reliability-checkpoint-20260304`: `mcp-e2e` rejected by environment branch policy (`main`-only), as expected
 
 ## Next Slice
 
 Reliability checkpoint completion:
-1. Re-run MCP E2E with protected environment approval path.
-2. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks.
+1. Merge this reliability branch to `main`.
+2. Re-run MCP E2E with protected environment approval path on `main`.
+3. Update `ENGINEERING-RISK-TRACKER.md` and `RELIABILITY-RUNBOOK.md` with protected-run verification evidence and residual risks.
