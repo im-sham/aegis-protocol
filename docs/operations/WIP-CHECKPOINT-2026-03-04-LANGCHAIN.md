@@ -38,8 +38,13 @@ This checkpoint marks completion of the first AI-framework integration slice aft
 - Fixed via root lockfile sync commit on branch:
   - `71810da` (`pnpm-lock.yaml` update)
 
+## Merge Completion Evidence
+
+- PR `#7` merged to `main`.
+- Merge commit: `6973f51`.
+- `main` CI run `22686298159` -> PASS (Foundry/API/MCP/Subgraph + protected `MCP E2E`).
+
 ## Next Slice
 
-1. Merge this branch to `main` (PR `#7`).
-2. Start `CrewAI` integration using LangChain package patterns.
-3. Address OPS-002 by adding explicit E2E wallet balance/allowance guardrails.
+1. Start `CrewAI` integration using LangChain package patterns.
+2. Address OPS-002 by adding explicit E2E wallet balance/allowance guardrails.
