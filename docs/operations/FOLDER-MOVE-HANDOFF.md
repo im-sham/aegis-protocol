@@ -1,6 +1,6 @@
 # Aegis Protocol Folder Move Handoff
 
-Last updated: 2026-03-02
+Last updated: 2026-03-04
 
 ## Purpose
 
@@ -49,13 +49,21 @@ Completed:
 - Reliability docs exist and are current:
   - `docs/operations/ENGINEERING-RISK-TRACKER.md`
   - `docs/operations/RELIABILITY-RUNBOOK.md`
-- GitHub protected environment `testnet-e2e` is configured with required reviewer and branch policy.
-- Required GitHub secrets are configured for E2E key + primary/secondary Base Sepolia RPC endpoints.
+- GitHub protected environment `testnet-e2e` is configured with required reviewer and branch policy, and self-review deadlock was removed (`prevent_self_review=false`).
+- Required GitHub secrets are configured for E2E key + dedicated primary/secondary Base Sepolia RPC endpoints.
+- Reliability slice was merged to `main` and validated with protected E2E:
+  - PR `#6`
+  - `main` CI run `22681335573` completed successfully (including protected `MCP E2E`).
+- LangChain integration slice is complete:
+  - package: `sdk/packages/langchain` (`@aegis-protocol/langchain`)
+  - example: `sdk/examples/langchain-agent.ts`
+  - tracked in PR `#7`.
 
 Pending / watch items:
-- Local workflow changes for `mcp-e2e` must be merged/pushed before they can be observed on `main`.
-- `main` currently has a separate failing `forge fmt --check` workflow status to resolve.
-- Residual external risk remains until temporary/public RPC secret values are replaced with dedicated provider endpoints.
+- Next framework integration target is `CrewAI`.
+- OPS-002 remains open: add minimum USDC/allowance guardrails before repeated live E2E runs.
+- Add secondary reviewer for `testnet-e2e` environment for approval-path resilience.
+- Keep weekly engineering risk review cadence in `docs/operations/ENGINEERING-RISK-TRACKER.md`.
 
 ## Resume Prompt (Copy/Paste for New Thread)
 
@@ -69,7 +77,7 @@ Continue implementation from docs/operations/FOLDER-MOVE-HANDOFF.md and treat it
 Start with:
 1) Validate git/workspace status and confirm no path-related breakage.
 2) Run targeted tests listed in the handoff file and report failures with root-cause analysis.
-3) Continue pending implementation items (CI workflow propagation, reliability hardening, and remaining roadmap tasks) without introducing temporary fixes.
+3) Start the next implementation slice: CrewAI integration, using `sdk/packages/langchain` patterns as reference for tool design and docs.
 4) Update docs/operations/ENGINEERING-RISK-TRACKER.md and docs/operations/RELIABILITY-RUNBOOK.md when new evidence or risks appear.
 5) Flag a "state of the project" milestone when one major implementation slice is completed and validated.
 ```
