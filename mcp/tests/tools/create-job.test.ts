@@ -6,18 +6,22 @@ import { CHAIN_CONFIGS } from "@aegis-protocol/types";
 const TX_HASH = "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890" as const;
 
 function signingConfig(): McpConfig {
+  const rpcUrl = "https://sepolia.base.org";
   return {
     chain: "base-sepolia",
-    rpcUrl: "https://sepolia.base.org",
+    rpcUrl,
+    rpcUrls: [rpcUrl],
     privateKey: "0x1234",
     apiUrl: undefined,
   };
 }
 
 function readOnlyConfig(): McpConfig {
+  const rpcUrl = "https://sepolia.base.org";
   return {
     chain: "base-sepolia",
-    rpcUrl: "https://sepolia.base.org",
+    rpcUrl,
+    rpcUrls: [rpcUrl],
     privateKey: undefined,
     apiUrl: undefined,
   };

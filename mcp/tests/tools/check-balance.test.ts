@@ -4,9 +4,11 @@ import { handleCheckBalance } from "../../src/tools/check-balance.js";
 import type { McpConfig } from "../../src/config.js";
 
 function makeConfig(chain: "base-sepolia" | "base" = "base-sepolia"): McpConfig {
+  const rpcUrl = CHAIN_CONFIGS[chain].rpcUrl;
   return {
     chain,
-    rpcUrl: CHAIN_CONFIGS[chain].rpcUrl,
+    rpcUrl,
+    rpcUrls: [rpcUrl],
     privateKey: undefined,
     apiUrl: undefined,
   };

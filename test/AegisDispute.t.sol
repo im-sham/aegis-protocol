@@ -508,7 +508,9 @@ contract AegisDisputeTest is Test {
 
     function test_StakeAsArbitrator_RevertIfInsufficientStake() public {
         vm.prank(arbitrator1);
-        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE - 1, MIN_ARB_STAKE));
+        vm.expectRevert(
+            abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE - 1, MIN_ARB_STAKE)
+        );
         disputeContract.stakeAsArbitrator(MIN_ARB_STAKE - 1); // 999.999999 USDC
     }
 
@@ -570,7 +572,9 @@ contract AegisDisputeTest is Test {
         _stakeArbitrator1();
 
         vm.prank(arbitrator1);
-        vm.expectRevert(abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE + 1, MIN_ARB_STAKE));
+        vm.expectRevert(
+            abi.encodeWithSelector(AegisTypes.InsufficientAmount.selector, MIN_ARB_STAKE + 1, MIN_ARB_STAKE)
+        );
         disputeContract.unstakeArbitrator(MIN_ARB_STAKE + 1);
     }
 

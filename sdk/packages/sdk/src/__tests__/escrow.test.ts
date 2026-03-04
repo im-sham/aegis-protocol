@@ -82,6 +82,7 @@ describe("EscrowService", () => {
           params.deadline,
           params.amount,
           params.validationThreshold,
+          0,
         ],
       });
     });

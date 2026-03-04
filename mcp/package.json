@@ -1,6 +1,6 @@
 {
   "name": "@aegis-protocol/mcp-server",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP Server for the AEGIS Protocol — trustless escrow for AI agent transactions",
   "mcpName": "io.github.im-sham/aegis-protocol",
   "type": "module",

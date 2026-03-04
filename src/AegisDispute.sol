@@ -325,7 +325,9 @@ contract AegisDispute is ReentrancyGuard, Ownable {
 
     /// @notice Withdraw arbitrator stake (cannot have active disputes)
     function unstakeArbitrator(uint256 amount) external nonReentrant {
-        if (arbitratorStakes[msg.sender] < amount) revert AegisTypes.InsufficientAmount(amount, arbitratorStakes[msg.sender]);
+        if (arbitratorStakes[msg.sender] < amount) {
+            revert AegisTypes.InsufficientAmount(amount, arbitratorStakes[msg.sender]);
+        }
         if (arbitratorActiveDisputes[msg.sender] > 0) revert AegisTypes.ArbitratorHasActiveDisputes(msg.sender);
 
         arbitratorStakes[msg.sender] -= amount;

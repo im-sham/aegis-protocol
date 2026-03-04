@@ -121,17 +121,17 @@ forge script script/Deploy.s.sol:DeployAegis \
 - `disputeTTLSeconds`: 7 days
 - `minArbitratorStake`: 1,000 USDC
 
-## Addresses (Base Sepolia) — Deployed 2026-02-18
+## Addresses (Base Sepolia) — Redeployed 2026-02-21 (post-BH-001 security hardening)
 
 | Contract | Address |
 |----------|---------|
-| AegisEscrow | `0xD5140b684Ea05a9e5fB6090cb89ED53eeE22A42a` |
-| AegisDispute | `0xEA82d5142557CD5B63EFDE17a0a62AC913abE4a0` |
-| AegisTreasury | `0x7977a4F05b2a93738b4aBb2b29328c8d0666FF2A` |
-| AegisJobFactory | `0x9A9821B35D1Cd7fC38f02daEF5BE4B1a77954a29` |
-| MockIdentityRegistry | `0x3365f24bC393e7B8Fd7c05B2B038916D4B043167` |
-| MockReputationRegistry | `0x8f354D60D8f12bf1339DbAC02F84F0bdf292F39D` |
-| MockValidationRegistry | `0x63e89bE524b338c32BFd5752e199362b77F895Ad` |
+| AegisEscrow | `0x8e013cf23f11168B62bA2600d99166507Cbb4aAC` |
+| AegisDispute | `0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2` |
+| AegisTreasury | `0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA` |
+| AegisJobFactory | `0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF` |
+| MockIdentityRegistry | `0x587Fc182dB14b059c30f8B2b553edce62D81182d` |
+| MockReputationRegistry | `0x2f738B69484de79828C83e292F13Ad6EF523848a` |
+| MockValidationRegistry | `0x4F15a4ce7db076F1A0159ce457AbB7D3a75BC0CD` |
 | USDC | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` |
 | Owner/Admin | `0x31084ba014bC91D467D008e6fb21f827AC6f7eb0` |
 
@@ -171,10 +171,11 @@ forge script script/Deploy.s.sol:DeployAegis \
   - 10 tools: aegis_create_job, aegis_deliver_work, aegis_check_job, aegis_settle_job, aegis_open_dispute, aegis_claim_refund, aegis_lookup_agent, aegis_list_jobs, aegis_check_balance, aegis_get_template
   - LLM-optimized tool descriptions (explain *when* to use escrow, not just *how*)
   - Dual mode: read-only (unsigned tx) or signing (direct execution)
-  - [~] Test with Claude Desktop — config wired, partially tested
-  - [x] Published to npm — @aegis-protocol/mcp-server v0.1.0
-  - [ ] Publish to MCP registries (Smithery, official MCP Registry) — smithery.yaml + server.json created
-- [x] A2A Agent Card (`site/.well-known/agent-card.json`) — created, needs hosting
+  - [x] Test with Claude Desktop — all 10 tools E2E tested against Base Sepolia (2026-02-21)
+  - [x] Published to npm — @aegis-protocol/mcp-server v0.1.2
+  - [x] Publish to official MCP Registry — io.github.im-sham/aegis-protocol live
+  - [~] Publish to Smithery — namespace created, hosted deploy pending paid plan
+- [x] A2A Agent Card (`site/.well-known/agent-card.json`) — hosted on Cloudflare at aegis-protocol.xyz
 - [ ] ERC-8004 Identity Registration — register AEGIS as a service agent in the registry
 - [ ] Agent framework integrations: AutoGPT (P0), CrewAI (P0), LangChain (P0), OpenClaw (P1)
 

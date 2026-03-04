@@ -131,6 +131,10 @@ export const aegisEscrowAbi = [
       {
         "name": "validationThreshold",
         "type": "uint8"
+      },
+      {
+        "name": "disputeSplit",
+        "type": "uint8"
       }
     ],
     "outputs": [
@@ -140,6 +144,18 @@ export const aegisEscrowAbi = [
       }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "defaultDisputeSplit",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -278,6 +294,10 @@ export const aegisEscrowAbi = [
             "type": "uint256"
           },
           {
+            "name": "defaultDisputeSplit",
+            "type": "uint8"
+          },
+          {
             "name": "createdAt",
             "type": "uint256"
           },
@@ -408,6 +428,10 @@ export const aegisEscrowAbi = [
       {
         "name": "protocolFeeBps",
         "type": "uint256"
+      },
+      {
+        "name": "defaultDisputeSplit",
+        "type": "uint8"
       },
       {
         "name": "createdAt",
@@ -597,6 +621,18 @@ export const aegisEscrowAbi = [
       {
         "name": "authorized",
         "type": "bool"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setDefaultDisputeSplit",
+    "inputs": [
+      {
+        "name": "_split",
+        "type": "uint8"
       }
     ],
     "outputs": [],
@@ -1212,6 +1248,21 @@ export const aegisEscrowAbi = [
   },
   {
     "type": "error",
+    "name": "DeadlineTooShort",
+    "inputs": [
+      {
+        "name": "duration",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "DisputeContractNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "DisputeWindowClosed",
     "inputs": [
       {
@@ -1242,6 +1293,16 @@ export const aegisEscrowAbi = [
   },
   {
     "type": "error",
+    "name": "FeeTooHigh",
+    "inputs": [
+      {
+        "name": "feeBps",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "InsufficientAmount",
     "inputs": [
       {
@@ -1261,6 +1322,16 @@ export const aegisEscrowAbi = [
       {
         "name": "deadline",
         "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidDisputeSplit",
+    "inputs": [
+      {
+        "name": "split",
+        "type": "uint8"
       }
     ]
   },
@@ -1309,6 +1380,16 @@ export const aegisEscrowAbi = [
       {
         "name": "validator",
         "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidWindow",
+    "inputs": [
+      {
+        "name": "window",
+        "type": "uint256"
       }
     ]
   },

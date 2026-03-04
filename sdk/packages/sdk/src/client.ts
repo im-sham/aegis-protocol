@@ -1,5 +1,5 @@
 import type { PublicClient, WalletClient } from "viem";
-import { createPublicClient, http } from "viem";
+import { createPublicClient, http, fallback } from "viem";
 import { baseSepolia, base } from "viem/chains";
 import type {
   SupportedChain,
@@ -48,6 +48,7 @@ export interface EthersClientOptions {
  */
 export interface ReadOnlyClientOptions {
   rpcUrl?: string;
+  rpcUrls?: string[];
   chain: SupportedChain | ChainConfig;
   contracts?: Partial<ContractAddresses>;
 }
@@ -73,6 +74,29 @@ function resolveAddresses(
 ): ContractAddresses {
   const config = resolveChainConfig(chain);
   return { ...config.contracts, ...overrides };
+}
+
+function dedupePreserveOrder(values: string[]): string[] {
+  const seen = new Set<string>();
+  const output: string[] = [];
+  for (const value of values) {
+    if (!seen.has(value)) {
+      seen.add(value);
+      output.push(value);
+    }
+  }
+  return output;
+}
+
+function buildRpcTransport(rpcUrls: string[]) {
+  const transports = rpcUrls.map((rpcUrl) =>
+    http(rpcUrl, {
+      timeout: 20_000,
+      retryCount: 1,
+      retryDelay: 300,
+    }),
+  );
+  return transports.length === 1 ? transports[0] : fallback(transports);
 }
 
 // ---------------------------------------------------------------------------
@@ -154,14 +178,18 @@ export class AegisClient {
    */
   static readOnly(options: ReadOnlyClientOptions): AegisClient {
     const chainConfig = resolveChainConfig(options.chain);
-    const rpcUrl = options.rpcUrl ?? chainConfig.rpcUrl;
+    const rpcUrls = dedupePreserveOrder([
+      ...(options.rpcUrl ? [options.rpcUrl] : []),
+      ...(options.rpcUrls ?? []),
+      chainConfig.rpcUrl,
+    ]);
     const viemChain =
       typeof options.chain === "string"
         ? CHAIN_MAP[options.chain]
         : undefined;
     const publicClient = createPublicClient({
       chain: viemChain,
-      transport: http(rpcUrl),
+      transport: buildRpcTransport(rpcUrls),
     }) as PublicClient;
     const adapter = ViemAdapter.readOnly(publicClient);
     const addresses = resolveAddresses(options.chain, options.contracts);

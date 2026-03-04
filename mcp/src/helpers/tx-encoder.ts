@@ -25,6 +25,7 @@ export function encodeCreateJobTx(
     deadline: bigint;
     amount: bigint;
     validationThreshold: number;
+    disputeSplit: number;
   },
 ): UnsignedTx {
   return {
@@ -41,6 +42,7 @@ export function encodeCreateJobTx(
         args.deadline,
         args.amount,
         args.validationThreshold,
+        args.disputeSplit,
       ],
     }),
     value: "0",

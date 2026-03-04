@@ -123,6 +123,18 @@ describe("AegisClient", () => {
 
       expect(client.escrow).toBeInstanceOf(EscrowService);
     });
+
+    it("should accept a prioritized failover RPC list", () => {
+      const client = AegisClient.readOnly({
+        chain: "base-sepolia",
+        rpcUrls: [
+          "https://primary-rpc.example.com",
+          "https://backup-rpc.example.com",
+        ],
+      });
+
+      expect(client.escrow).toBeInstanceOf(EscrowService);
+    });
   });
 
   describe("fromEthers", () => {

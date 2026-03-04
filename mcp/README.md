@@ -88,6 +88,7 @@ Add to your `claude_desktop_config.json` (`~/Library/Application Support/Claude/
 |------|-------------|
 | `aegis_check_balance` | Check USDC balance and escrow approval |
 | `aegis_get_template` | Get a job template's default parameters |
+| `aegis_should_i_escrow` | Score transaction risk and recommend whether escrow is appropriate |
 
 ## Operating Modes
 
@@ -105,14 +106,25 @@ When `AEGIS_PRIVATE_KEY` is set, write tools execute transactions directly on-ch
 |----------|-------------|---------|
 | `AEGIS_CHAIN` | Target chain (`base-sepolia` or `base`) | `base-sepolia` |
 | `AEGIS_RPC_URL` | RPC endpoint URL | Chain default |
+| `AEGIS_RPC_URLS` | Comma-separated RPC failover list (ordered priority) | — |
 | `AEGIS_PRIVATE_KEY` | Private key for signing (optional) | — |
 | `AEGIS_API_URL` | REST API URL for relay (optional) | — |
+
+## Reliability Notes
+
+- External RPC reliability is a known residual risk for live on-chain tests and operations.
+- For CI and production-like test runs, set `AEGIS_RPC_URLS` (or at least `AEGIS_RPC_URL`) to dedicated provider endpoints instead of relying on shared public RPC.
+- Resolution priority is: `AEGIS_RPC_URL` -> `AEGIS_RPC_URLS` entries -> chain-specific env (`BASE_SEPOLIA_RPC_URL` or `BASE_RPC_URL`/`BASE_MAINNET_RPC_URL`) -> chain default.
+- MCP E2E tests include bounded retries for transient transport failures (`fetch failed`, timeouts, temporary unreachable hosts) in `tests/e2e/mcp-e2e.test.ts`.
+- CI secreted E2E runs are gated behind a protected `testnet-e2e` environment and trusted events.
+- Canonical risk log and mitigation status live in [`docs/operations/ENGINEERING-RISK-TRACKER.md`](../docs/operations/ENGINEERING-RISK-TRACKER.md).
+- Operational preflight and incident procedure lives in [`docs/operations/RELIABILITY-RUNBOOK.md`](../docs/operations/RELIABILITY-RUNBOOK.md).
 
 ## Registries
 
 - **npm**: [@aegis-protocol/mcp-server](https://www.npmjs.com/package/@aegis-protocol/mcp-server)
-- **Smithery**: [aegis-protocol](https://smithery.ai/server/@aegis-protocol/mcp-server) *(pending)*
-- **MCP Registry**: [io.github.im-sham/aegis-protocol](https://registry.modelcontextprotocol.io) *(pending)*
+- **Smithery**: [aegis-protocol](https://smithery.ai/server/@aegis-protocol/mcp-server) *(namespace registered; hosted deployment pending paid plan)*
+- **MCP Registry**: [io.github.im-sham/aegis-protocol](https://registry.modelcontextprotocol.io) *(live listing)*
 
 ## Development
 

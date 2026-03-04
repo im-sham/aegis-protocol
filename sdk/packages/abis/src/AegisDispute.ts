@@ -45,6 +45,23 @@ export const aegisDisputeAbi = [
   },
   {
     "type": "function",
+    "name": "arbitratorActiveDisputes",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "arbitratorStakes",
     "inputs": [
       {
@@ -712,6 +729,27 @@ export const aegisDisputeAbi = [
   },
   {
     "type": "function",
+    "name": "validReValidationHashes",
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "validationTolerance",
     "inputs": [],
     "outputs": [
@@ -941,6 +979,50 @@ export const aegisDisputeAbi = [
   },
   {
     "type": "error",
+    "name": "ArbitratorAlreadyAssigned",
+    "inputs": [
+      {
+        "name": "disputeId",
+        "type": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ArbitratorHasActiveDisputes",
+    "inputs": [
+      {
+        "name": "arbitrator",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AssignmentTooEarly",
+    "inputs": [
+      {
+        "name": "disputeId",
+        "type": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ConflictOfInterest",
+    "inputs": [
+      {
+        "name": "disputeId",
+        "type": "bytes32"
+      },
+      {
+        "name": "arbitrator",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "DisputeAlreadyExists",
     "inputs": [
       {
@@ -981,11 +1063,35 @@ export const aegisDisputeAbi = [
   },
   {
     "type": "error",
+    "name": "InsufficientAmount",
+    "inputs": [
+      {
+        "name": "provided",
+        "type": "uint256"
+      },
+      {
+        "name": "required",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "InvalidRuling",
     "inputs": [
       {
         "name": "ruling",
         "type": "uint8"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidTTL",
+    "inputs": [
+      {
+        "name": "ttl",
+        "type": "uint256"
       }
     ]
   },
@@ -998,6 +1104,21 @@ export const aegisDisputeAbi = [
         "type": "address"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidWindow",
+    "inputs": [
+      {
+        "name": "window",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "NoArbitratorsAvailable",
+    "inputs": []
   },
   {
     "type": "error",
@@ -1079,6 +1200,40 @@ export const aegisDisputeAbi = [
       {
         "name": "token",
         "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SameValidator",
+    "inputs": [
+      {
+        "name": "validator",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ToleranceTooHigh",
+    "inputs": [
+      {
+        "name": "tolerance",
+        "type": "uint8"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "UnknownReValidationHash",
+    "inputs": [
+      {
+        "name": "disputeId",
+        "type": "bytes32"
+      },
+      {
+        "name": "hash",
+        "type": "bytes32"
       }
     ]
   },

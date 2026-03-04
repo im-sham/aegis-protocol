@@ -67,10 +67,10 @@ Every settled job generates reputation data that makes the ecosystem smarter.
 
 | Contract | Address |
 |----------|---------|
-| AegisEscrow | [`0xD5140b684Ea05a9e5fB6090cb89ED53eeE22A42a`](https://sepolia.basescan.org/address/0xD5140b684Ea05a9e5fB6090cb89ED53eeE22A42a) |
-| AegisDispute | [`0xEA82d5142557CD5B63EFDE17a0a62AC913abE4a0`](https://sepolia.basescan.org/address/0xEA82d5142557CD5B63EFDE17a0a62AC913abE4a0) |
-| AegisTreasury | [`0x7977a4F05b2a93738b4aBb2b29328c8d0666FF2A`](https://sepolia.basescan.org/address/0x7977a4F05b2a93738b4aBb2b29328c8d0666FF2A) |
-| AegisJobFactory | [`0x9A9821B35D1Cd7fC38f02daEF5BE4B1a77954a29`](https://sepolia.basescan.org/address/0x9A9821B35D1Cd7fC38f02daEF5BE4B1a77954a29) |
+| AegisEscrow | [`0x8e013cf23f11168B62bA2600d99166507Cbb4aAC`](https://sepolia.basescan.org/address/0x8e013cf23f11168B62bA2600d99166507Cbb4aAC) |
+| AegisDispute | [`0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2`](https://sepolia.basescan.org/address/0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2) |
+| AegisTreasury | [`0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA`](https://sepolia.basescan.org/address/0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA) |
+| AegisJobFactory | [`0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF`](https://sepolia.basescan.org/address/0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF) |
 
 ## Quick Start
 
@@ -82,7 +82,7 @@ The fastest way to integrate — any MCP-compatible agent (Claude, Gemini, GPT) 
 npm install @aegis-protocol/mcp-server
 ```
 
-10 tools available: `aegis_create_job`, `aegis_deliver_work`, `aegis_check_job`, `aegis_settle_job`, `aegis_open_dispute`, `aegis_claim_refund`, `aegis_lookup_agent`, `aegis_list_jobs`, `aegis_check_balance`, `aegis_get_template`
+11 tools available: `aegis_create_job`, `aegis_deliver_work`, `aegis_check_job`, `aegis_settle_job`, `aegis_open_dispute`, `aegis_claim_refund`, `aegis_lookup_agent`, `aegis_list_jobs`, `aegis_check_balance`, `aegis_get_template`, `aegis_should_i_escrow`
 
 See [`mcp/README.md`](mcp/README.md) for configuration and usage.
 
@@ -143,8 +143,11 @@ forge install
 # Build contracts
 forge build
 
-# Run tests (202 tests including fuzz)
+# Run tests
 forge test -vvv
+
+# Run invariants only
+forge test --match-path "test/invariants/*" -vvv
 
 # Gas report
 forge test --gas-report
@@ -161,7 +164,7 @@ aegis-protocol/
 │   ├── AegisJobFactory.sol
 │   ├── interfaces/         # ERC-8004 interface definitions
 │   └── libraries/          # AegisTypes shared library
-├── test/                   # Foundry test suite (202 tests)
+├── test/                   # Foundry tests (unit, fuzz, invariants)
 ├── script/                 # Deploy & E2E demo scripts
 ├── sdk/                    # TypeScript SDK monorepo
 │   └── packages/
@@ -193,11 +196,13 @@ Solidity 0.8.24 · Foundry · OpenZeppelin 5.x · Base L2 · USDC · TypeScript 
 
 AEGIS is on **Base Sepolia testnet**. Mainnet deployment is planned for Q2 2026, pending security audit.
 
-- 202 tests passing (including fuzz tests)
+- 217 tests passing (212 Foundry + 5 invariants)
 - TypeScript SDK published on npm
-- MCP Server published on npm
+- MCP Server published on npm and listed in the official MCP Registry
 - REST API and subgraph operational
 - Security audit planned via Sherlock competitive contest
+- Engineering risk tracker maintained at [`docs/operations/ENGINEERING-RISK-TRACKER.md`](docs/operations/ENGINEERING-RISK-TRACKER.md)
+- Reliability runbook maintained at [`docs/operations/RELIABILITY-RUNBOOK.md`](docs/operations/RELIABILITY-RUNBOOK.md)
 
 ## Contributing
 

@@ -125,7 +125,9 @@ contract AegisHandler is Test {
             amount,
             0, // default threshold
             0 // default dispute split
-        ) returns (bytes32 jobId) {
+        ) returns (
+            bytes32 jobId
+        ) {
             ghost_jobs.push(jobId);
             ghost_highestState[jobId] = uint8(AegisTypes.JobState.FUNDED);
         } catch {}
