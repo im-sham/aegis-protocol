@@ -85,10 +85,7 @@ jobs:
     needs: mcp
     if: >-
       ${{
-        (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) &&
-        secrets.AEGIS_E2E_PRIVATE_KEY != '' &&
-        secrets.BASE_SEPOLIA_RPC_URL_PRIMARY != '' &&
-        secrets.BASE_SEPOLIA_RPC_URL_SECONDARY != ''
+        github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
       }}
     environment:
       name: testnet-e2e
@@ -123,8 +120,30 @@ jobs:
       - name: Build SDK
         run: cd ../sdk && pnpm build
 
+      - name: Validate required secrets
+        id: preflight
+        shell: bash
+        run: |
+          missing=0
+          for var in AEGIS_PRIVATE_KEY AEGIS_RPC_URL AEGIS_RPC_URLS; do
+            if [ -z "${!var}" ]; then
+              echo "::warning::Missing required secret-backed env var: $var"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run MCP E2E tests
+        if: steps.preflight.outputs.skip != 'true'
         run: pnpm exec vitest run tests/e2e/mcp-e2e.test.ts
+
+      - name: Skip MCP E2E (missing secrets)
+        if: steps.preflight.outputs.skip == 'true'
+        run: echo "Skipping MCP E2E due to missing required secrets."
 
   subgraph:
     name: Subgraph
