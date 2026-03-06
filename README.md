@@ -149,6 +149,26 @@ npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples crewai-agent -- "Che
 
 The example uses CrewAI's MCP integration (`MCPServerStdio`) to call the published `@aegis-protocol/mcp-server` tools directly.
 
+### For Developers (ElizaOS)
+
+Run the ElizaOS example config summary:
+
+```bash
+npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples eliza-character
+```
+
+The ElizaOS plugin package is available in `sdk/packages/elizaos` and can be imported as:
+
+```typescript
+import { createAegisElizaPlugin } from "@aegis-protocol/elizaos";
+```
+
+The example exports a minimal character/plugin config in `sdk/examples/eliza-character.ts` and includes:
+
+- advisory action entry point: `AEGIS_SHOULD_I_ESCROW`
+- trust and funding checks: `AEGIS_LOOKUP_AGENT`, `AEGIS_CHECK_BALANCE`
+- write-path actions for signer-enabled runtimes: `AEGIS_APPROVE_ESCROW`, `AEGIS_CREATE_JOB`, `AEGIS_SUBMIT_DELIVERABLE`, `AEGIS_SETTLE_JOB`
+
 ### For Developers (REST API)
 
 ```bash
@@ -234,6 +254,7 @@ AEGIS is on **Base Sepolia testnet**. Mainnet deployment is planned for Q2 2026,
 - 217 tests passing (212 Foundry + 5 invariants)
 - TypeScript SDK published on npm
 - MCP Server published on npm and listed in the official MCP Registry
+- ElizaOS plugin package shipped (`sdk/packages/elizaos`)
 - CrewAI integration example shipped via MCP (`sdk/examples/crewai-agent.py`)
 - REST API and subgraph operational
 - Security audit planned via Sherlock competitive contest

@@ -143,7 +143,7 @@
 - [ ] viem example
 - [ ] ethers v6 example
 - [x] LangChain agent
-- [ ] ElizaOS integration
+- [x] ElizaOS integration (`sdk/packages/elizaos` + `sdk/examples/eliza-character.ts`)
 - [ ] Virtuals integration
 - [ ] AutoGPT integration (explicitly deferred behind MCP optimization, ElizaOS, and Virtuals unless evidence changes)
 - [x] CrewAI integration (MCP-backed example in `sdk/examples/crewai-agent.py`)

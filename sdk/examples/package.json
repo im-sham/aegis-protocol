@@ -7,7 +7,8 @@
     "lifecycle": "tsx lifecycle.ts",
     "read-only": "tsx read-only.ts",
     "langchain-agent": "tsx langchain-agent.ts",
-    "crewai-agent": "python3 crewai-agent.py"
+    "crewai-agent": "python3 crewai-agent.py",
+    "eliza-character": "tsx eliza-character.ts"
   },
   "dependencies": {
     "@aegis-protocol/langchain": "workspace:*",
@@ -16,7 +17,8 @@
     "@aegis-protocol/abis": "workspace:*",
     "@langchain/langgraph": "^1.2.0",
     "@langchain/openai": "^1.2.12",
-    "viem": "^2.27.0"
+    "viem": "^2.27.0",
+    "@aegis-protocol/elizaos": "workspace:*"
   },
   "devDependencies": {
     "tsx": "^4.19.0"
