@@ -62,12 +62,13 @@ Root `pnpm-workspace.yaml` links: `sdk/`, `sdk/packages/*`, `api/`, `mcp/`
 ## MCP Server (mcp/)
 
 MCP server enabling AI agents to autonomously use AEGIS escrow via the Model Context Protocol.
-- **10 tools**: create_job, deliver_work, check_job, settle_job, open_dispute, claim_refund, lookup_agent, list_jobs, check_balance, get_template
+- **11 tools**: create_job, deliver_work, check_job, settle_job, open_dispute, claim_refund, lookup_agent, list_jobs, check_balance, get_template, should_i_escrow
 - **Dual mode**: Read-only (returns unsigned tx calldata) or signing (executes directly with `AEGIS_PRIVATE_KEY`)
 - **Transport**: Stdio (Claude Desktop) — primary
-- **Config env vars**: `AEGIS_CHAIN`, `AEGIS_RPC_URL`, `AEGIS_PRIVATE_KEY` (optional), `AEGIS_API_URL` (optional)
+- **Config env vars**: `AEGIS_CHAIN`, `AEGIS_RPC_URL`, `AEGIS_RPC_URLS`, `AEGIS_PRIVATE_KEY` (optional), `AEGIS_API_URL` (optional)
 - **Build/Test**: `cd mcp && pnpm build` / `cd mcp && pnpm test`
-- **LLM-optimized**: Tool descriptions explain *when* to use escrow, not just *how*
+- **Current priority**: optimize tool descriptions and usage instrumentation for external agent adoption
+- **LLM-optimized**: Tool descriptions should explain *when* to use escrow, not just *how*
 
 ## API Package (api/)
 
@@ -163,21 +164,28 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] SDK DX enhancements — PR #3 merged
 - [x] Subgraph (The Graph) for full event indexing — PR #4 merged
 - [x] REST API relay server — PR #5 merged
+- [x] LangChain integration example/package
+- [x] CrewAI integration example (MCP-backed)
 - [ ] Python SDK
-- [ ] Integration examples (AutoGPT, CrewAI, LangChain)
+- [ ] ElizaOS integration
+- [ ] Virtuals integration
+- [ ] AutoGPT integration (deprioritized behind ElizaOS/Virtuals unless evidence changes)
 
 ### Phase 2.5: Agent-Native Distribution (Parallel with Phase 2)
 - [x] AEGIS MCP Server (Model Context Protocol) — highest priority agent distribution channel
-  - 10 tools: aegis_create_job, aegis_deliver_work, aegis_check_job, aegis_settle_job, aegis_open_dispute, aegis_claim_refund, aegis_lookup_agent, aegis_list_jobs, aegis_check_balance, aegis_get_template
+  - 11 tools: aegis_create_job, aegis_deliver_work, aegis_check_job, aegis_settle_job, aegis_open_dispute, aegis_claim_refund, aegis_lookup_agent, aegis_list_jobs, aegis_check_balance, aegis_get_template, aegis_should_i_escrow
   - LLM-optimized tool descriptions (explain *when* to use escrow, not just *how*)
   - Dual mode: read-only (unsigned tx) or signing (direct execution)
-  - [x] Test with Claude Desktop — all 10 tools E2E tested against Base Sepolia (2026-02-21)
+  - [x] Test with Claude Desktop — 10 core transactional tools E2E tested against Base Sepolia (2026-02-21)
   - [x] Published to npm — @aegis-protocol/mcp-server v0.1.2
   - [x] Publish to official MCP Registry — io.github.im-sham/aegis-protocol live
   - [~] Publish to Smithery — namespace created, hosted deploy pending paid plan
 - [x] A2A Agent Card (`site/.well-known/agent-card.json`) — hosted on Cloudflare at aegis-protocol.xyz
 - [ ] ERC-8004 Identity Registration — register AEGIS as a service agent in the registry
-- [ ] Agent framework integrations: AutoGPT (P0), CrewAI (P0), LangChain (P0), OpenClaw (P1)
+- [ ] MCP optimization + external usage instrumentation
+- [ ] Agent framework integrations: ElizaOS (P0), Virtuals (P0), AutoGPT (P1), OpenClaw experiments (later)
+- [x] CrewAI integration example is implemented locally (`sdk/examples/crewai-agent.py`)
+- [x] LangChain integration package is shipped (`sdk/packages/langchain`)
 
 ### Phase 3: Mainnet Launch (Weeks 13-16)
 - [ ] Security audit (Sherlock competitive audit contest — public, ~1,500 nSLOC)
@@ -210,8 +218,10 @@ Worktrees at `.worktrees/<branch-name>` (gitignored). Always verify `.worktrees/
 
 ## Strategic Context
 
-- **GTM Strategy**: Developer-first, standards-native organic growth. See `AEGIS_Strategic_Research_Brief.md` for full execution plan.
-- **Primary distribution channels**: MCP Server (highest priority), A2A Agent Cards, ERC-8004 registry, agent framework integrations
+- **GTM Strategy**: Agent-native distribution optimized for external agent usage. Default assumption: distribution through agent choice architecture, not awareness-first marketing.
+- **North star for the next 30-45 days**: external agent usage (`aegis_should_i_escrow`, write-path calls, non-demo jobs, repeat usage)
+- **Primary distribution channels**: MCP optimization, framework defaults/integrations, on-chain discoverability, direct framework/operator adoption
+- **Experiments, not pillars**: ambassador agents, memory-layer syndication, follower-growth tactics
 - **Licensing**: MIT License for all code (contracts, SDK, API, subgraph). Revenue is from protocol fees, not software licensing.
 - **Audit plan**: Sherlock competitive audit contest (public). Start Sherlock AI GitHub integration during development.
 - **Grant targets**: Base Builder Grants (apply at testnet deploy), Base Batches 2026, Ethereum Foundation ESP, x402 Foundation, Optimism RetroPGF
@@ -228,6 +238,9 @@ Worktrees at `.worktrees/<branch-name>` (gitignored). Always verify `.worktrees/
 - `docs/plans/2026-02-17-subgraph-design.md` — Subgraph design document
 - `docs/plans/2026-02-17-subgraph-plan.md` — Subgraph implementation plan (10 tasks)
 - `AEGIS_Strategic_Research_Brief.md` — Living strategic research document (competitive landscape, GTM, grants, costs)
+- `content/agent-native-distribution-v2.md` — Higher-level agent-native distribution thesis and priority ranking
+- `content/agent-promotion-playbook.md` — Current execution playbook for agent-native adoption
+- `docs/decisions/2026-03-06-agent-first-distribution.md` — Canonical rationale memo for the current strategy reset
 - `docs/plans/2026-02-18-python-sdk-design-wip.md` — Python SDK design (paused, resume after MCP Server)
 - `docs/security/SECURITY-TRACKER.md` — Security findings register and hardening backlog
 - `docs/security/security_best_practices_report.md` — Detailed security audit narrative

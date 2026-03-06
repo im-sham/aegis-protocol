@@ -127,6 +127,28 @@ LangChain tool adapters are available in `sdk/packages/langchain` and can be imp
 import { createAegisLangChainTools } from "@aegis-protocol/langchain";
 ```
 
+### For Developers (CrewAI)
+
+Install Python dependencies (one-time):
+
+```bash
+python3 -m pip install crewai mcp
+```
+
+Run the CrewAI + MCP example:
+
+```bash
+OPENAI_API_KEY=... python3 sdk/examples/crewai-agent.py "Check agent 1 reputation and summarize escrow risk."
+```
+
+Or through the examples workspace script:
+
+```bash
+npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples crewai-agent -- "Check agent 1 reputation and summarize escrow risk."
+```
+
+The example uses CrewAI's MCP integration (`MCPServerStdio`) to call the published `@aegis-protocol/mcp-server` tools directly.
+
 ### For Developers (REST API)
 
 ```bash
@@ -212,6 +234,7 @@ AEGIS is on **Base Sepolia testnet**. Mainnet deployment is planned for Q2 2026,
 - 217 tests passing (212 Foundry + 5 invariants)
 - TypeScript SDK published on npm
 - MCP Server published on npm and listed in the official MCP Registry
+- CrewAI integration example shipped via MCP (`sdk/examples/crewai-agent.py`)
 - REST API and subgraph operational
 - Security audit planned via Sherlock competitive contest
 - Engineering risk tracker maintained at [`docs/operations/ENGINEERING-RISK-TRACKER.md`](docs/operations/ENGINEERING-RISK-TRACKER.md)

@@ -2,6 +2,8 @@
 
 **Date:** February 27, 2026 | **Status:** Strategic update based on ecosystem research | **Supersedes:** Strategic Research Brief Section 4 (v1.0)
 
+**Execution note (2026-03-06):** Treat this document as the higher-level thesis. The current execution companion is `content/agent-promotion-playbook.md`, and the canonical rationale memo for the latest priority reset is `docs/decisions/2026-03-06-agent-first-distribution.md`.
+
 ---
 
 ## Executive Summary

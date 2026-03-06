@@ -36,3 +36,13 @@ mcp/.mcpregistry_*
 
 # Smithery build artifacts
 mcp/.smithery/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local preview captures
+site-preview-*.png
+
+# Accidental JS emit beside TypeScript SDK sources
+sdk/packages/sdk/src/**/*.js

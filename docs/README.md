@@ -39,6 +39,13 @@
 | [operations/ENGINEERING-RISK-TRACKER.md](./operations/ENGINEERING-RISK-TRACKER.md) | Living tracker for non-security engineering risks (external dependencies, reliability, and mitigation status) |
 | [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md) | Preflight, fallback, and incident-response procedure for RPC and E2E reliability |
 
+### Strategy & Decisions
+
+| Document | Purpose |
+|----------|---------|
+| [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) | Current execution playbook for agent-native adoption, optimized for external agent usage |
+| [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md) | Canonical rationale memo explaining why AEGIS now prioritizes agent choice architecture over awareness-first tactics |
+
 ---
 
 ## 🎯 Quick Navigation
@@ -62,6 +69,9 @@
 
 **"I need the operational procedure for reliability incidents"**
 → Read [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md)
+
+**"I need the current distribution strategy and why it changed"**
+→ Read [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) and [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md)
 
 ### For SDK Developers
 
@@ -117,25 +127,26 @@
 
 ### Smart Contracts (Phase 1) ✅
 - [x] Core contracts written (Escrow, Dispute, Treasury, Factory)
-- [x] 202 tests passing
+- [x] 217 tests passing (212 unit/fuzz + 5 invariants)
 - [x] Base Sepolia deployment
 - [ ] Mainnet deployment (pending audit)
 
-### TypeScript SDK (Phase 2) 🚧
-- [x] Research complete (February 2026)
-- [ ] Monorepo setup
-- [ ] Provider adapters
-- [ ] Service modules
-- [ ] Unified client
-- [ ] Tests + docs
-- [ ] npm publish
+### TypeScript SDK (Phase 2) ✅
+- [x] Monorepo setup
+- [x] Provider adapters and client surface
+- [x] Service modules
+- [x] Tests + docs
+- [x] npm publish
+- [ ] Python SDK follow-on
 
 ### Integration Examples (Phase 3) 📋
 - [ ] viem example
 - [ ] ethers v6 example
 - [x] LangChain agent
+- [ ] ElizaOS integration
+- [ ] Virtuals integration
 - [ ] AutoGPT integration
-- [ ] CrewAI integration
+- [x] CrewAI integration (MCP-backed example in `sdk/examples/crewai-agent.py`)
 
 ### Mainnet Launch (Phase 4) 🎯
 - [ ] Security audit
@@ -148,7 +159,7 @@
 ## 🔗 External Links
 
 ### Protocol Resources
-- **GitHub:** [aegis-protocol](https://github.com/usmi-labs/aegis-protocol) (private)
+- **GitHub:** [aegis-protocol](https://github.com/im-sham/aegis-protocol) (public)
 - **Contracts:** Base Sepolia deployment (see deployment logs)
 - **Standards:**
   - [ERC-8004 Specification](https://eips.ethereum.org/EIPS/eip-8004) (Trustless Agents)
@@ -220,5 +231,5 @@ MIT License — See LICENSE file for details
 
 ---
 
-**Last Updated:** February 27, 2026
+**Last Updated:** March 6, 2026
 **Version:** 0.1.1 (Pre-release)

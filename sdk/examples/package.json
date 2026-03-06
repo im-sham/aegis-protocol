@@ -6,7 +6,8 @@
   "scripts": {
     "lifecycle": "tsx lifecycle.ts",
     "read-only": "tsx read-only.ts",
-    "langchain-agent": "tsx langchain-agent.ts"
+    "langchain-agent": "tsx langchain-agent.ts",
+    "crewai-agent": "python3 crewai-agent.py"
   },
   "dependencies": {
     "@aegis-protocol/langchain": "workspace:*",

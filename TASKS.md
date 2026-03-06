@@ -16,9 +16,12 @@
 - [~] **Publish to Smithery** - namespace `aegis-protocol/mcp-server` created, server scans correctly, hosted deploy requires paid plan. Revisit when upgrading or when Smithery adds free stdio support
 - [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
 - [x] ~~**Host A2A Agent Card**~~ - hosted on Cloudflare at aegis-protocol.xyz (2026-02-21)
+- [ ] **Optimize MCP for external agent usage** - rewrite tool descriptions around decision triggers, improve advisory-tool funnel, and add usage instrumentation that cleanly separates external activity from demos/tests
+- [ ] **ElizaOS integration** - P0 framework integration for Web3-native agent workflows
+- [ ] **Virtuals integration discovery / plugin spike** - P0 strategic integration aligned to agent-commerce flows; validate best insertion point before full build
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
-- [ ] **AutoGPT integration** - P0 framework integration, plugin/tool
-- [ ] **CrewAI integration** - P0 framework integration
+- [ ] **AutoGPT integration** - P1 framework integration, explicitly deferred behind MCP optimization, ElizaOS, and Virtuals unless evidence changes
+- [x] ~~**CrewAI integration**~~ - shipped CrewAI MCP example (`sdk/examples/crewai-agent.py`) and examples script (`crewai-agent`) (2026-03-04)
 - [x] ~~**LangChain integration**~~ - shipped `@aegis-protocol/langchain` tools package + LangGraph example (`sdk/examples/langchain-agent.ts`) (2026-03-04)
 
 ### Pre-Public Repo ✅ COMPLETE
@@ -47,6 +50,7 @@
 
 ### Program Checkpoints
 - [x] ~~**State of Project #1 (Agent-First Foundation Checkpoint)**~~ - CI MCP E2E is green on protected `main`, dedicated RPC secrets are active, reliability docs are current, and next integration scope is frozen to `CrewAI` (2026-03-04)
+- [x] ~~**State of Project #2 (Agent-First Distribution Reset)**~~ - canonical strategy now optimizes for external agent usage; next priorities are MCP optimization, ElizaOS, and Virtuals; rationale captured in `docs/decisions/2026-03-06-agent-first-distribution.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded
@@ -59,6 +63,8 @@
 - [ ] **Post on Ethereum Magicians forum** - ERC-8004 discussion thread, announce AEGIS (draft ready in `content/`)
 - [ ] **DM Davide Crapis (EF dAI team lead)** - Twitter/Farcaster, link to deployed contracts + one-paragraph pitch
 - [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase) (draft ready in `content/`)
+- [ ] **Open ElizaOS maintainer conversations** - position AEGIS as a trust layer for external-agent work, aiming for plugin usage and default-placement paths
+- [ ] **Open Virtuals / ACP discovery conversations** - validate whether the strongest motion is plugin integration, workflow guidance, or partnership
 - [ ] **Join x402 Foundation developer community** - Discord/forum
 - [ ] **Write "Introducing AEGIS" blog post** - Mirror / blog (draft ready in `content/`)
 
@@ -82,8 +88,9 @@
 ### Content Calendar (First 12 Weeks Post-Launch)
 - [ ] **Week 1: "Introducing AEGIS: Trustless Escrow for the Agent Economy"** - Mirror / blog
 - [ ] **Week 2: "How AEGIS Composes ERC-8004 + x402"** - Mirror + Ethereum Magicians
-- [ ] **Week 3: "Add Escrow to Your Agent in 5 Minutes" (AutoGPT)** - Dev.to + AutoGPT Discord
-- [ ] **Week 4: "Add Escrow to Your Agent in 5 Minutes" (CrewAI)** - Dev.to + CrewAI Discord
+- [ ] **Week 3: "How Agents Decide to Use AEGIS"** - technical post about advisory tools, MCP reasoning, and trust thresholds
+- [ ] **Week 4: "Add Escrow to Your Agent in 5 Minutes" (ElizaOS)** - plugin-oriented integration walkthrough for Web3-native agents
+- [ ] **Week 5: "Escrow for High-Value ACP Workflows" (Virtuals)** - explain where AEGIS fits as a trust layer in agent-commerce flows
 - [ ] **Week 6: "Why x402 Needs Escrow for High-Value Transactions"** - x402 community + Mirror
 - [ ] **Week 8: "The Agent Escrow Design Space: A Survey"** - Mirror + Twitter thread
 - [ ] **Week 10: "AEGIS Month 2: What We've Learned"** - Mirror / blog
@@ -98,6 +105,8 @@
 ## Someday
 
 - [ ] **Python SDK** - for non-JS agent ecosystem
+- [ ] **Ambassador agent pilot (Eliza/OpenClaw/Farcaster)** - run only after usage instrumentation exists and attribution can tie the experiment to real external agent activity
+- [ ] **Mem0 or memory-layer discovery experiment** - only pursue if there is a concrete operator-controlled retrieval path; not a primary distribution channel by default
 - [ ] **Set up Safe multisig for protocol ownership** - 1-2 months post-mainnet
 - [ ] **Propose x402 AEGIS-ESCROW-RECOMMENDED header extension** - month 2-3 post-launch
 - [ ] **Apply: Optimism RetroPGF** - needs 2-3 months of mainnet metrics first
