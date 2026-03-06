@@ -58,7 +58,7 @@ Completed:
   - package: `sdk/packages/langchain` (`@aegis-protocol/langchain`)
   - example: `sdk/examples/langchain-agent.ts`
   - merged in PR `#7` with post-merge `main` CI run `22686298159` passing (including protected `MCP E2E`).
-- CrewAI integration slice is implemented locally:
+- CrewAI integration slice is complete:
   - example: `sdk/examples/crewai-agent.py`
   - examples script: `sdk/examples/package.json` (`crewai-agent`)
   - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-04-CREWAI.md`
@@ -79,10 +79,15 @@ Completed:
   - signer-mode `aegis_check_balance` can inspect the connected wallet without an explicit address
   - optional JSONL usage logging available via `AEGIS_USAGE_LOG_PATH` + `AEGIS_USAGE_CONTEXT`
   - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-MCP-OPTIMIZATION.md`
+- CrewAI/LangChain distribution polish is complete:
+  - LangChain package now exposes `aegis_should_i_escrow` and `aegis_settle_job`
+  - LangChain example prompt starts from the advisory decision point instead of jumping straight to balance checks
+  - CrewAI example passes default usage-source attribution into the MCP server when logging is enabled
+  - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-CREWAI-LANGCHAIN-POLISH.md`
 
 Pending / watch items:
-- Immediate distribution work is `CrewAI/LangChain` distribution polish.
-- Next framework priority after that is `AutoGPT` only if evidence changes.
+- Immediate framework expansion work is `AutoGPT` only if evidence changes.
+- Immediate non-framework work is operator/default-placement adoption for the shipped MCP, ElizaOS, Virtuals, CrewAI, and LangChain surfaces.
 - `AutoGPT` is explicitly deferred unless evidence changes.
 - OPS-002 mitigation is shipped: MCP E2E now enforces minimum USDC/allowance preflight guardrails before repeated live runs.
 - Add secondary reviewer for `testnet-e2e` environment for approval-path resilience.
@@ -101,7 +106,7 @@ Start with:
 1) Validate git/workspace status and confirm no path-related breakage.
 2) Run targeted tests listed in the handoff file and report failures with root-cause analysis.
 3) Continue agent-first distribution execution from `content/agent-promotion-playbook.md` and `docs/decisions/2026-03-06-agent-first-distribution.md`.
-4) Start the next engineering slice in this order: CrewAI/LangChain distribution polish, then AutoGPT only if evidence changes.
+4) Start the next engineering slice in this order: operator/default-placement adoption work for the shipped integrations, then AutoGPT only if evidence changes.
 5) Update docs/operations/ENGINEERING-RISK-TRACKER.md and docs/operations/RELIABILITY-RUNBOOK.md when new evidence or risks appear.
 6) Flag a "state of the project" milestone when one major implementation slice is completed and validated.
 ```

@@ -5,8 +5,8 @@ LangChain tool adapters for the AEGIS Protocol SDK.
 ## What It Provides
 
 - `createAegisLangChainTools(options)`
-  - Read tools: `aegis_check_balance`, `aegis_lookup_agent`, `aegis_check_job`
-  - Optional write tools: `aegis_approve_escrow`, `aegis_create_job`, `aegis_submit_deliverable`
+  - Advisory/read tools: `aegis_should_i_escrow`, `aegis_check_balance`, `aegis_lookup_agent`, `aegis_check_job`
+  - Optional write tools: `aegis_approve_escrow`, `aegis_create_job`, `aegis_submit_deliverable`, `aegis_settle_job`
 
 ## Quick Usage
 

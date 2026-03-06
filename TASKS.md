@@ -23,6 +23,7 @@
 - [ ] **AutoGPT integration** - P1 framework integration, explicitly deferred behind MCP optimization, ElizaOS, and Virtuals unless evidence changes
 - [x] ~~**CrewAI integration**~~ - shipped CrewAI MCP example (`sdk/examples/crewai-agent.py`) and examples script (`crewai-agent`) (2026-03-04)
 - [x] ~~**LangChain integration**~~ - shipped `@aegis-protocol/langchain` tools package + LangGraph example (`sdk/examples/langchain-agent.ts`) (2026-03-04)
+- [x] ~~**CrewAI/LangChain distribution polish**~~ - LangChain now exposes the advisory + settlement tool path, example prompts start from `aegis_should_i_escrow`, and CrewAI stamps MCP usage attribution defaults when logging is enabled (2026-03-06)
 
 ### Pre-Public Repo ✅ COMPLETE
 - [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
@@ -55,6 +56,7 @@
 - [x] ~~**State of Project #3 (MCP Optimization & Instrumentation)**~~ - advisory funnel improved, signer-mode balance checks simplified, and optional MCP usage logging shipped; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-MCP-OPTIMIZATION.md` (2026-03-06)
 - [x] ~~**State of Project #4 (ElizaOS Integration)**~~ - ElizaOS plugin package shipped with AEGIS advisory/read/write actions and example character config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ELIZAOS.md` (2026-03-06)
 - [x] ~~**State of Project #5 (Virtuals Integration)**~~ - Virtuals GAME/ACP adapter package shipped with AEGIS worker/functions, ACP schema/resource helpers, and example config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-VIRTUALS.md` (2026-03-06)
+- [x] ~~**State of Project #6 (CrewAI/LangChain Distribution Polish)**~~ - advisory funnel parity is now consistent across LangChain, CrewAI example prompts, and MCP usage attribution defaults; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-CREWAI-LANGCHAIN-POLISH.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded

@@ -14,6 +14,33 @@ import type { Hex } from "@aegis-protocol/sdk";
 const HEX_40_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const HEX_64_REGEX = /^0x[a-fA-F0-9]{64}$/;
 
+const HIGH_RISK_JOB_KEYWORDS = [
+  "code",
+  "audit",
+  "security",
+  "analysis",
+  "research",
+  "strategy",
+  "trading",
+  "deploy",
+  "integration",
+];
+
+const LOW_RISK_JOB_KEYWORDS = [
+  "swap",
+  "transfer",
+  "simple",
+  "ping",
+  "healthcheck",
+  "test",
+];
+
+type Recommendation =
+  | "STRONGLY_RECOMMENDED"
+  | "RECOMMENDED"
+  | "OPTIONAL"
+  | "NOT_NECESSARY";
+
 const JOB_STATE_LABELS: Record<number, string> = {
   [JobState.CREATED]: "Created",
   [JobState.FUNDED]: "Funded",
@@ -76,6 +103,68 @@ async function resolveAddress(client: AegisClient, address?: string): Promise<He
   }
 }
 
+function evaluateEscrowNeed(input: {
+  transactionValueUsd: number;
+  providerReputationScore?: number;
+  jobType: string;
+  previousInteractions?: number;
+  requiresObjectiveValidation?: boolean;
+}) {
+  const jobType = input.jobType.toLowerCase();
+  const rationale: string[] = [];
+  let score = 0;
+
+  if (input.transactionValueUsd >= 100) {
+    score += 3;
+    rationale.push("Value is at least $100.");
+  } else if (input.transactionValueUsd >= 50) {
+    score += 2;
+    rationale.push("Value is between $50 and $99.");
+  } else if (input.transactionValueUsd >= 20) {
+    score += 1;
+    rationale.push("Value is between $20 and $49.");
+  }
+
+  if (input.requiresObjectiveValidation) {
+    score += 3;
+    rationale.push("Deliverable needs objective validation before payment release.");
+  }
+
+  if (HIGH_RISK_JOB_KEYWORDS.some((keyword) => jobType.includes(keyword))) {
+    score += 2;
+    rationale.push("Job type matches high-risk work keywords.");
+  }
+
+  if (LOW_RISK_JOB_KEYWORDS.some((keyword) => jobType.includes(keyword))) {
+    score -= 1;
+    rationale.push("Job type looks low-risk or easy to verify manually.");
+  }
+
+  if ((input.providerReputationScore ?? 100) < 60) {
+    score += 2;
+    rationale.push("Provider reputation is below 60.");
+  }
+
+  if ((input.previousInteractions ?? 0) === 0) {
+    score += 1;
+    rationale.push("No prior interactions with this counterparty.");
+  }
+
+  let recommendation: Recommendation = "NOT_NECESSARY";
+  if (score >= 6) recommendation = "STRONGLY_RECOMMENDED";
+  else if (score >= 4) recommendation = "RECOMMENDED";
+  else if (score >= 2) recommendation = "OPTIONAL";
+
+  return {
+    recommendation,
+    rationale,
+    recommendedTools:
+      recommendation === "NOT_NECESSARY"
+        ? ["aegis_lookup_agent"]
+        : ["aegis_lookup_agent", "aegis_check_balance", "aegis_create_job"],
+  };
+}
+
 export function createAegisLangChainTools(options: CreateAegisLangChainToolsOptions) {
   const chain = options.chain ?? "base-sepolia";
   const escrowAddress = CHAIN_CONFIGS[chain].contracts.escrow;
@@ -84,6 +173,32 @@ export function createAegisLangChainTools(options: CreateAegisLangChainToolsOpti
   const client = options.client;
 
   const readTools = [
+    tool(
+      async (input) => {
+        return {
+          input,
+          ...evaluateEscrowNeed({
+            transactionValueUsd: input.transactionValueUsd,
+            providerReputationScore: input.providerReputationScore,
+            jobType: input.jobType,
+            previousInteractions: input.previousInteractions,
+            requiresObjectiveValidation: input.requiresObjectiveValidation,
+          }),
+        };
+      },
+      {
+        name: "aegis_should_i_escrow",
+        description:
+          "Advisory entry point for AEGIS. Use this first to decide whether a transaction should route through escrow before payment.",
+        schema: z.object({
+          transactionValueUsd: z.coerce.number().nonnegative(),
+          providerReputationScore: z.coerce.number().min(0).max(100).optional(),
+          jobType: z.string().min(2),
+          previousInteractions: z.coerce.number().int().min(0).optional(),
+          requiresObjectiveValidation: z.coerce.boolean().optional(),
+        }),
+      },
+    ),
     tool(
       async (input) => {
         const address = await resolveAddress(client, input.address);
@@ -271,6 +386,31 @@ export function createAegisLangChainTools(options: CreateAegisLangChainToolsOpti
           deliverableHash: z
             .string()
             .regex(HEX_64_REGEX, "Expected a 0x-prefixed 32-byte hash"),
+        }),
+      },
+    ),
+    tool(
+      async (input) => {
+        const txHash =
+          input.action === "confirm"
+            ? await client.escrow.confirmDelivery(input.jobId as Hex)
+            : await client.escrow.settleAfterDisputeWindow(input.jobId as Hex);
+
+        return {
+          txHash,
+          jobId: input.jobId,
+          action: input.action,
+        };
+      },
+      {
+        name: "aegis_settle_job",
+        description:
+          "Settle an AEGIS job after delivery. Use `confirm` for normal acceptance or `settle_after_window` after the dispute window expires.",
+        schema: z.object({
+          jobId: z
+            .string()
+            .regex(HEX_64_REGEX, "Expected a 0x-prefixed 32-byte job ID"),
+          action: z.enum(["confirm", "settle_after_window"]),
         }),
       },
     ),

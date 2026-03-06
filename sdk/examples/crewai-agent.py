@@ -10,6 +10,10 @@ Read-only mode (no signing):
 Read-write mode (enables escrow writes):
   OPENAI_API_KEY=... AEGIS_PRIVATE_KEY=0x... python3 crewai-agent.py \
     "Approve 5 USDC for escrow and create a job between agent 1 and 2."
+
+Usage attribution (optional, recommended when logging MCP usage):
+  OPENAI_API_KEY=... AEGIS_USAGE_LOG_PATH=/tmp/aegis-usage.jsonl python3 crewai-agent.py \
+    "Should I escrow a $75 code review from a new provider?"
 """
 
 from __future__ import annotations
@@ -22,9 +26,10 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
 DEFAULT_PROMPT = (
     "Run an AEGIS preflight on Base Sepolia: "
-    "1) check balance for my signer (or ask for address if read-only), "
+    "1) call aegis_should_i_escrow for a $75 code-review job from a new provider that requires objective validation, "
     "2) lookup agent 1 reputation, "
-    "3) summarize whether it is safe to create a new escrow job right now."
+    "3) check balance for my signer (or ask for address if read-only), "
+    "4) summarize whether it is safe to create a new escrow job right now."
 )
 
 
@@ -47,7 +52,10 @@ def load_crewai() -> tuple[Any, Any, Any, Any, Any]:
 
 
 def build_mcp_env() -> dict[str, str]:
-    env = {"AEGIS_CHAIN": os.getenv("AEGIS_CHAIN", "base-sepolia")}
+    env = {
+        "AEGIS_CHAIN": os.getenv("AEGIS_CHAIN", "base-sepolia"),
+        "AEGIS_USAGE_SOURCE": os.getenv("AEGIS_USAGE_SOURCE", "crewai-example"),
+    }
 
     passthrough = [
         "AEGIS_RPC_URL",
@@ -56,6 +64,9 @@ def build_mcp_env() -> dict[str, str]:
         "BASE_SEPOLIA_RPC_URL_SECONDARY",
         "AEGIS_API_URL",
         "AEGIS_PRIVATE_KEY",
+        "AEGIS_USAGE_LOG_PATH",
+        "AEGIS_USAGE_CONTEXT",
+        "AEGIS_USAGE_ACTOR",
     ]
 
     for key in passthrough:

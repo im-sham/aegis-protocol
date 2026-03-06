@@ -88,6 +88,16 @@ function createMockClient(): AegisClient {
         .mockResolvedValue(
           "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
         ),
+      confirmDelivery: vi
+        .fn()
+        .mockResolvedValue(
+          "0x1212121212121212121212121212121212121212121212121212121212121212",
+        ),
+      settleAfterDisputeWindow: vi
+        .fn()
+        .mockResolvedValue(
+          "0x3434343434343434343434343434343434343434343434343434343434343434",
+        ),
     },
   } as unknown as AegisClient;
 }
@@ -106,6 +116,26 @@ describe("@aegis-protocol/langchain", () => {
       "aegis_check_balance",
       "aegis_check_job",
       "aegis_lookup_agent",
+      "aegis_should_i_escrow",
+    ]);
+  });
+
+  it("aegis_should_i_escrow returns recommendation and next tools", async () => {
+    const tools = createAegisLangChainTools({ client });
+    const shouldEscrow = getTool(tools, "aegis_should_i_escrow");
+    const result = (await shouldEscrow.invoke({
+      transactionValueUsd: 75,
+      providerReputationScore: 45,
+      jobType: "code-review",
+      previousInteractions: 0,
+      requiresObjectiveValidation: true,
+    })) as Record<string, unknown>;
+
+    expect(result.recommendation).toBe("STRONGLY_RECOMMENDED");
+    expect(result.recommendedTools).toEqual([
+      "aegis_lookup_agent",
+      "aegis_check_balance",
+      "aegis_create_job",
     ]);
   });
 
@@ -160,6 +190,8 @@ describe("@aegis-protocol/langchain", () => {
       "aegis_check_job",
       "aegis_create_job",
       "aegis_lookup_agent",
+      "aegis_settle_job",
+      "aegis_should_i_escrow",
       "aegis_submit_deliverable",
     ]);
   });
@@ -169,6 +201,7 @@ describe("@aegis-protocol/langchain", () => {
 
     const approve = getTool(tools, "aegis_approve_escrow");
     const createJob = getTool(tools, "aegis_create_job");
+    const settle = getTool(tools, "aegis_settle_job");
     const submit = getTool(tools, "aegis_submit_deliverable");
 
     await approve.invoke({ amountUSDC: "5.50" });
@@ -188,6 +221,11 @@ describe("@aegis-protocol/langchain", () => {
       deliverableHash:
         "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     });
+    await settle.invoke({
+      jobId:
+        "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      action: "confirm",
+    });
 
     expect(client.usdc.approveEscrow).toHaveBeenCalledWith(5_500_000n);
     expect(client.escrow.createJob).toHaveBeenCalledWith(
@@ -203,6 +241,9 @@ describe("@aegis-protocol/langchain", () => {
       expect.objectContaining({
         deliverableURI: "https://example.com/deliverable",
       }),
+    );
+    expect(client.escrow.confirmDelivery).toHaveBeenCalledWith(
+      "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
     );
   });
 });

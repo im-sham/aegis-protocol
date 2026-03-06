@@ -31,9 +31,10 @@ function getPromptFromArgs(): string {
   if (prompt.length > 0) return prompt;
   return [
     "Run an AEGIS preflight on Base Sepolia:",
-    "1) check balance for my signer (or ask for address if read-only),",
+    "1) call aegis_should_i_escrow for a $75 code-review job from a new provider that requires objective validation,",
     "2) lookup agent 1 reputation,",
-    "3) summarize whether it's safe to create a new escrow job right now.",
+    "3) check balance for my signer (or ask for address if read-only),",
+    "4) summarize whether it's safe to create a new escrow job right now.",
   ].join(" ");
 }
 

@@ -183,9 +183,10 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] A2A Agent Card (`site/.well-known/agent-card.json`) — hosted on Cloudflare at aegis-protocol.xyz
 - [ ] ERC-8004 Identity Registration — register AEGIS as a service agent in the registry
 - [x] MCP optimization + external usage instrumentation
-- [ ] Agent framework integrations: CrewAI/LangChain distribution polish, AutoGPT (only if evidence changes), OpenClaw experiments (later)
+- [ ] Agent framework integrations: AutoGPT (only if evidence changes), OpenClaw experiments (later)
 - [x] CrewAI integration example is shipped (`sdk/examples/crewai-agent.py`)
 - [x] LangChain integration package is shipped (`sdk/packages/langchain`)
+- [x] CrewAI/LangChain distribution polish is shipped (LangChain advisory + settlement parity, CrewAI attribution defaults)
 - [x] ElizaOS integration package is shipped (`sdk/packages/elizaos`)
 - [x] Virtuals integration package is shipped (`sdk/packages/virtuals`)
 

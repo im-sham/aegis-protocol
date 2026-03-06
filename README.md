@@ -127,6 +127,8 @@ LangChain tool adapters are available in `sdk/packages/langchain` and can be imp
 import { createAegisLangChainTools } from "@aegis-protocol/langchain";
 ```
 
+The native LangChain adapter now includes the advisory entry point `aegis_should_i_escrow` plus settlement support, so the agent-first funnel matches MCP, ElizaOS, and Virtuals.
+
 ### For Developers (CrewAI)
 
 Install Python dependencies (one-time):
@@ -148,6 +150,7 @@ npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples crewai-agent -- "Che
 ```
 
 The example uses CrewAI's MCP integration (`MCPServerStdio`) to call the published `@aegis-protocol/mcp-server` tools directly.
+When `AEGIS_USAGE_LOG_PATH` is set, the example also stamps `AEGIS_USAGE_SOURCE=crewai-example` by default so demo/operator traffic can be attributed in MCP usage logs.
 
 ### For Developers (ElizaOS)
 
