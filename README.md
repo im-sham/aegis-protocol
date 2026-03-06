@@ -169,6 +169,32 @@ The example exports a minimal character/plugin config in `sdk/examples/eliza-cha
 - trust and funding checks: `AEGIS_LOOKUP_AGENT`, `AEGIS_CHECK_BALANCE`
 - write-path actions for signer-enabled runtimes: `AEGIS_APPROVE_ESCROW`, `AEGIS_CREATE_JOB`, `AEGIS_SUBMIT_DELIVERABLE`, `AEGIS_SETTLE_JOB`
 
+### For Developers (Virtuals GAME / ACP)
+
+Run the Virtuals config summary:
+
+```bash
+npx -y pnpm@9.15.4 -C sdk --filter @aegis-protocol/examples virtuals-agent
+```
+
+The Virtuals adapter package is available in `sdk/packages/virtuals` and can be imported as:
+
+```typescript
+import {
+  createAegisVirtualsWorker,
+  createAegisVirtualsPrompt,
+  createAegisAcpSchemas,
+  createAegisAcpResources,
+} from "@aegis-protocol/virtuals";
+```
+
+The example exports a minimal Virtuals-ready config in `sdk/examples/virtuals-agent.ts` and includes:
+
+- GAME worker functions for AEGIS advisory/read/write flows
+- ACP custom requirement/deliverable schemas aligned to AEGIS job creation
+- ACP resource entries that point operators back to AEGIS docs/MCP surfaces
+- explicit separation between agent runtime logic and the operator-owned ACP wallet/registry setup
+
 ### For Developers (REST API)
 
 ```bash
@@ -224,6 +250,8 @@ aegis-protocol/
 │   └── packages/
 │       ├── sdk/            # @aegis-protocol/sdk
 │       ├── langchain/      # @aegis-protocol/langchain
+│       ├── elizaos/        # @aegis-protocol/elizaos
+│       ├── virtuals/       # @aegis-protocol/virtuals
 │       ├── types/          # @aegis-protocol/types
 │       └── abis/           # @aegis-protocol/abis
 ├── mcp/                    # MCP Server for AI agents
@@ -255,6 +283,7 @@ AEGIS is on **Base Sepolia testnet**. Mainnet deployment is planned for Q2 2026,
 - TypeScript SDK published on npm
 - MCP Server published on npm and listed in the official MCP Registry
 - ElizaOS plugin package shipped (`sdk/packages/elizaos`)
+- Virtuals GAME/ACP adapter package shipped (`sdk/packages/virtuals`)
 - CrewAI integration example shipped via MCP (`sdk/examples/crewai-agent.py`)
 - REST API and subgraph operational
 - Security audit planned via Sherlock competitive contest

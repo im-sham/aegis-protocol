@@ -18,7 +18,7 @@
 - [x] ~~**Host A2A Agent Card**~~ - hosted on Cloudflare at aegis-protocol.xyz (2026-02-21)
 - [x] ~~**Optimize MCP for external agent usage**~~ - MCP tool descriptions now emphasize decision triggers, `aegis_should_i_escrow` returns structured next-tool guidance, signer-mode `aegis_check_balance` can inspect the connected wallet, and optional JSONL usage logging ships via `AEGIS_USAGE_*` env vars (2026-03-06)
 - [x] ~~**ElizaOS integration**~~ - shipped `@aegis-protocol/elizaos` plugin package with provider + 8 AEGIS actions, tests, and example character config (`sdk/examples/eliza-character.ts`) (2026-03-06)
-- [ ] **Virtuals integration discovery / plugin spike** - P0 strategic integration aligned to agent-commerce flows; validate best insertion point before full build
+- [x] ~~**Virtuals integration**~~ - shipped `@aegis-protocol/virtuals` with GAME worker/functions, ACP schema/resource helpers, tests, and example config (`sdk/examples/virtuals-agent.ts`) (2026-03-06)
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
 - [ ] **AutoGPT integration** - P1 framework integration, explicitly deferred behind MCP optimization, ElizaOS, and Virtuals unless evidence changes
 - [x] ~~**CrewAI integration**~~ - shipped CrewAI MCP example (`sdk/examples/crewai-agent.py`) and examples script (`crewai-agent`) (2026-03-04)
@@ -54,6 +54,7 @@
 - [x] ~~**State of Project #2 (Agent-First Distribution Reset)**~~ - canonical strategy now optimizes for external agent usage; next priorities are MCP optimization, ElizaOS, and Virtuals; rationale captured in `docs/decisions/2026-03-06-agent-first-distribution.md` (2026-03-06)
 - [x] ~~**State of Project #3 (MCP Optimization & Instrumentation)**~~ - advisory funnel improved, signer-mode balance checks simplified, and optional MCP usage logging shipped; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-MCP-OPTIMIZATION.md` (2026-03-06)
 - [x] ~~**State of Project #4 (ElizaOS Integration)**~~ - ElizaOS plugin package shipped with AEGIS advisory/read/write actions and example character config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ELIZAOS.md` (2026-03-06)
+- [x] ~~**State of Project #5 (Virtuals Integration)**~~ - Virtuals GAME/ACP adapter package shipped with AEGIS worker/functions, ACP schema/resource helpers, and example config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-VIRTUALS.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded
@@ -67,7 +68,7 @@
 - [ ] **DM Davide Crapis (EF dAI team lead)** - Twitter/Farcaster, link to deployed contracts + one-paragraph pitch
 - [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase) (draft ready in `content/`)
 - [ ] **Open ElizaOS maintainer conversations** - position AEGIS as a trust layer for external-agent work, aiming for plugin usage and default-placement paths
-- [ ] **Open Virtuals / ACP discovery conversations** - validate whether the strongest motion is plugin integration, workflow guidance, or partnership
+- [ ] **Open Virtuals / ACP operator conversations** - validate default-placement paths, partner distribution, or profile template adoption for the shipped Virtuals adapter
 - [ ] **Join x402 Foundation developer community** - Discord/forum
 - [ ] **Write "Introducing AEGIS" blog post** - Mirror / blog (draft ready in `content/`)
 

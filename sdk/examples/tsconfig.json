@@ -19,6 +19,9 @@
       ],
       "@aegis-protocol/elizaos": [
         "../packages/elizaos/src/index.ts"
+      ],
+      "@aegis-protocol/virtuals": [
+        "../packages/virtuals/src/index.ts"
       ]
     }
   },

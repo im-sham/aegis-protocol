@@ -168,7 +168,7 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] CrewAI integration example (MCP-backed)
 - [ ] Python SDK
 - [x] ElizaOS integration (`@aegis-protocol/elizaos`)
-- [ ] Virtuals integration
+- [x] Virtuals integration (`@aegis-protocol/virtuals`)
 - [ ] AutoGPT integration (deprioritized behind ElizaOS/Virtuals unless evidence changes)
 
 ### Phase 2.5: Agent-Native Distribution (Parallel with Phase 2)
@@ -182,11 +182,12 @@ forge script script/Deploy.s.sol:DeployAegis \
   - [~] Publish to Smithery — namespace created, hosted deploy pending paid plan
 - [x] A2A Agent Card (`site/.well-known/agent-card.json`) — hosted on Cloudflare at aegis-protocol.xyz
 - [ ] ERC-8004 Identity Registration — register AEGIS as a service agent in the registry
-- [ ] MCP optimization + external usage instrumentation
-- [ ] Agent framework integrations: Virtuals (P0), AutoGPT (P1), OpenClaw experiments (later)
-- [x] CrewAI integration example is implemented locally (`sdk/examples/crewai-agent.py`)
+- [x] MCP optimization + external usage instrumentation
+- [ ] Agent framework integrations: CrewAI/LangChain distribution polish, AutoGPT (only if evidence changes), OpenClaw experiments (later)
+- [x] CrewAI integration example is shipped (`sdk/examples/crewai-agent.py`)
 - [x] LangChain integration package is shipped (`sdk/packages/langchain`)
 - [x] ElizaOS integration package is shipped (`sdk/packages/elizaos`)
+- [x] Virtuals integration package is shipped (`sdk/packages/virtuals`)
 
 ### Phase 3: Mainnet Launch (Weeks 13-16)
 - [ ] Security audit (Sherlock competitive audit contest — public, ~1,500 nSLOC)
