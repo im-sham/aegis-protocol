@@ -26,6 +26,7 @@
 - [x] ~~**CrewAI/LangChain distribution polish**~~ - LangChain now exposes the advisory + settlement tool path, example prompts start from `aegis_should_i_escrow`, and CrewAI stamps MCP usage attribution defaults when logging is enabled (2026-03-06)
 - [x] ~~**Operator/default-placement adoption kit**~~ - shipped canonical operator kit and outreach snippets for MCP, LangChain, CrewAI, ElizaOS, and Virtuals in `docs/integrations/OPERATOR-ADOPTION-KIT.md` and `content/framework-outreach-snippets.md` (2026-03-06)
 - [x] ~~**First framework outreach batch prepared**~~ - shipped prioritized outreach batch + tracker for Virtuals, ElizaOS, CrewAI, and LangChain in `content/outreach-batch-2026-03-06-agent-frameworks.md` and `docs/operations/OUTREACH-TRACKER.md` (2026-03-06)
+- [x] ~~**Send-ready framework outreach copy**~~ - shipped final outbound messages with branch-specific links and a reusable outreach log template in `content/outreach-send-ready-2026-03-06.md` and `docs/operations/OUTREACH-LOG-TEMPLATE.md` (2026-03-06)
 
 ### Pre-Public Repo ✅ COMPLETE
 - [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
@@ -61,6 +62,7 @@
 - [x] ~~**State of Project #6 (CrewAI/LangChain Distribution Polish)**~~ - advisory funnel parity is now consistent across LangChain, CrewAI example prompts, and MCP usage attribution defaults; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-CREWAI-LANGCHAIN-POLISH.md` (2026-03-06)
 - [x] ~~**State of Project #7 (Operator Adoption Kit)**~~ - canonical default-placement guidance and outreach snippets now exist for the shipped integrations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ADOPTION-KIT.md` (2026-03-06)
 - [x] ~~**State of Project #8 (Framework Outreach Batch)**~~ - first outreach batch and living tracker now exist for prioritized operator/maintainer conversations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-BATCH.md` (2026-03-06)
+- [x] ~~**State of Project #9 (Send-Ready Outreach Copy)**~~ - final send-ready messages and a reusable outreach logging template now exist for the first contact batch; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-SEND-READY.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded

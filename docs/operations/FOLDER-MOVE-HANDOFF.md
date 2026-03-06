@@ -92,6 +92,10 @@ Completed:
   - prioritized batch: `content/outreach-batch-2026-03-06-agent-frameworks.md`
   - living tracker: `docs/operations/OUTREACH-TRACKER.md`
   - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-BATCH.md`
+- Send-ready outreach copy is prepared:
+  - outbound messages: `content/outreach-send-ready-2026-03-06.md`
+  - logging template: `docs/operations/OUTREACH-LOG-TEMPLATE.md`
+  - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-SEND-READY.md`
 
 Pending / watch items:
 - Immediate framework expansion work is `AutoGPT` only if evidence changes.

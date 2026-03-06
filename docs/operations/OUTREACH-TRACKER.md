@@ -37,6 +37,10 @@ For each outreach touch:
 - record whether the response changed the insertion-point thesis
 - if new distribution evidence appears, update `content/agent-promotion-playbook.md` and `docs/integrations/OPERATOR-ADOPTION-KIT.md`
 
+Execution assets:
+- send-ready messages: `content/outreach-send-ready-2026-03-06.md`
+- log block format: `docs/operations/OUTREACH-LOG-TEMPLATE.md`
+
 ## Source Notes
 
 Current official surfaces verified on 2026-03-06:

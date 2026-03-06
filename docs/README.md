@@ -49,6 +49,8 @@
 | [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md) | Short maintainer/operator outreach copy aligned to the shipped integration surfaces |
 | [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) | Living tracker for framework/operator outreach status, channels, asks, and feedback |
 | [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md) | First prioritized outreach batch for Virtuals, ElizaOS, CrewAI, and LangChain |
+| [../content/outreach-send-ready-2026-03-06.md](../content/outreach-send-ready-2026-03-06.md) | Final send-ready messages with branch-specific public links for the first framework outreach batch |
+| [operations/OUTREACH-LOG-TEMPLATE.md](./operations/OUTREACH-LOG-TEMPLATE.md) | Reusable log block format for recording sends, responses, and thesis changes |
 
 ---
 
@@ -82,6 +84,9 @@
 
 **"I need to execute or review the current outreach batch"**
 → Read [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) and [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md)
+
+**"I need final send-ready copy and a logging template"**
+→ Read [../content/outreach-send-ready-2026-03-06.md](../content/outreach-send-ready-2026-03-06.md) and [operations/OUTREACH-LOG-TEMPLATE.md](./operations/OUTREACH-LOG-TEMPLATE.md)
 
 ### For SDK Developers
 

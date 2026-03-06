@@ -191,6 +191,7 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] Virtuals integration package is shipped (`sdk/packages/virtuals`)
 - [x] Operator/default-placement adoption kit is shipped (`docs/integrations/OPERATOR-ADOPTION-KIT.md`, `content/framework-outreach-snippets.md`)
 - [x] First framework outreach batch is prepared (`content/outreach-batch-2026-03-06-agent-frameworks.md`, `docs/operations/OUTREACH-TRACKER.md`)
+- [x] Send-ready outreach copy is prepared (`content/outreach-send-ready-2026-03-06.md`, `docs/operations/OUTREACH-LOG-TEMPLATE.md`)
 
 ### Phase 3: Mainnet Launch (Weeks 13-16)
 - [ ] Security audit (Sherlock competitive audit contest — public, ~1,500 nSLOC)
