@@ -49,4 +49,29 @@ describe("handleCheckBalance", () => {
 
     expect(result.canCreateJob).toBe(false);
   });
+
+  it("uses connected wallet address when omitted in signing mode", async () => {
+    const client = {
+      getAddress: vi.fn().mockResolvedValue(
+        "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ),
+      usdc: {
+        balanceOf: vi.fn().mockResolvedValue(50_000_000n),
+        allowance: vi.fn().mockResolvedValue(50_000_000n),
+      },
+    } as any;
+
+    const result = await handleCheckBalance(
+      client,
+      {
+        ...makeConfig("base-sepolia"),
+        privateKey: "0x1234",
+      },
+      {},
+    );
+
+    expect(client.getAddress).toHaveBeenCalled();
+    expect(result.address).toBe("0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    expect(result.canCreateJob).toBe(true);
+  });
 });

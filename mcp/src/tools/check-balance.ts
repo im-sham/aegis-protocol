@@ -7,20 +7,35 @@ import type { McpConfig } from "../config.js";
 export const checkBalanceDef = {
   name: "aegis_check_balance",
   description:
-    "Check an address's USDC balance and current escrow approval amount. Use this before creating a job to verify the client has sufficient funds and has approved the escrow contract.",
+    "Decision-support tool for escrow funding. Call this immediately before `aegis_create_job` or any escrow write path to verify the payer still has enough USDC and has approved the escrow contract. In signing mode, `address` can be omitted to inspect the connected wallet.",
   inputSchema: {
     address: z
       .string()
+      .optional()
       .describe("Ethereum address to check (0x-prefixed)"),
   },
 };
 
+async function resolveAddress(
+  client: AegisClient,
+  args: { address?: string },
+): Promise<Hex> {
+  if (args.address) return args.address as Hex;
+  try {
+    return await client.getAddress();
+  } catch {
+    throw new Error(
+      "Address is required for read-only clients. Pass `address` explicitly.",
+    );
+  }
+}
+
 export async function handleCheckBalance(
   client: AegisClient,
   config: McpConfig,
-  args: { address: string },
+  args: { address?: string },
 ) {
-  const address = args.address as Hex;
+  const address = await resolveAddress(client, args);
   const escrowAddress = CHAIN_CONFIGS[config.chain].contracts.escrow;
 
   const [balance, allowance] = await Promise.all([
@@ -29,7 +44,7 @@ export async function handleCheckBalance(
   ]);
 
   return {
-    address: args.address,
+    address,
     usdcBalance: `${formatUSDC(balance)} USDC`,
     usdcBalanceRaw: balance.toString(),
     escrowAllowance: `${formatUSDC(allowance)} USDC`,

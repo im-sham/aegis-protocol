@@ -5,7 +5,7 @@ import { formatReputationForLLM } from "../helpers/format.js";
 export const lookupAgentDef = {
   name: "aegis_lookup_agent",
   description:
-    "Look up an AI agent's on-chain identity and reputation before creating a job with them. Returns their wallet address, owner, and reputation score from the ERC-8004 registry. Always check reputation before committing funds to a new provider.",
+    "Trust-check tool for provider selection. Call this before assigning paid work to a provider you do not already trust. It returns the provider's ERC-8004 wallet, owner, and reputation summary so you can decide whether direct payment is reasonable or escrow is safer.",
   inputSchema: {
     agentId: z
       .string()

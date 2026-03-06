@@ -14,6 +14,8 @@ describe("handleShouldIEscrow", () => {
     expect(result.recommendation).toBe("STRONGLY_RECOMMENDED");
     expect(result.riskScore).toBeGreaterThanOrEqual(70);
     expect(result.suggestedAction).toContain("aegis_create_job");
+    expect(result.recommendedTools).toContain("aegis_check_balance");
+    expect(result.recommendedTools).toContain("aegis_create_job");
   });
 
   it("marks escrow as optional or unnecessary for low-value, high-trust transactions", async () => {
@@ -44,5 +46,6 @@ describe("handleShouldIEscrow", () => {
 
     expect(unknown.riskScore).toBeGreaterThan(known.riskScore);
     expect(unknown.confidence).toBe("medium");
+    expect(unknown.recommendedTools).toContain("aegis_lookup_agent");
   });
 });

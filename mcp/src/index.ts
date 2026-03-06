@@ -2,6 +2,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { loadConfig } from "./config.js";
+import {
+  createUsageLogger,
+  type ToolCategory,
+} from "./helpers/usage-log.js";
 import { createSdkClient, isSigningClient } from "./sdk-client.js";
 
 // Read tools
@@ -48,10 +52,76 @@ function toolError(error: unknown) {
 
 type Config = ReturnType<typeof loadConfig>;
 
+interface ToolAnnotations {
+  title: string;
+  readOnlyHint: boolean;
+  destructiveHint: boolean;
+  openWorldHint: boolean;
+}
+
+interface ToolRegistration {
+  def: {
+    name: string;
+    description: string;
+    inputSchema: Record<string, z.ZodTypeAny>;
+  };
+  category: ToolCategory;
+  annotations?: ToolAnnotations;
+  handler(args: any): Promise<unknown>;
+}
+
+function registerToolWithTelemetry(
+  server: McpServer,
+  registration: ToolRegistration,
+  usageLogger: ReturnType<typeof createUsageLogger>,
+) {
+  const { def, category, annotations, handler } = registration;
+
+  server.registerTool(
+    def.name,
+    {
+      description: def.description,
+      inputSchema: def.inputSchema,
+      ...(annotations ? { annotations } : {}),
+    },
+    async (args) => {
+      const startedAt = Date.now();
+      try {
+        const result = await handler(args);
+        await usageLogger.logToolCall({
+          toolName: def.name,
+          category,
+          success: true,
+          durationMs: Date.now() - startedAt,
+        });
+        return toolResult(result);
+      } catch (error) {
+        await usageLogger.logToolCall({
+          toolName: def.name,
+          category,
+          success: false,
+          durationMs: Date.now() - startedAt,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return toolError(error);
+      }
+    },
+  );
+}
+
 function createServer(cfg?: Config) {
   const config = cfg ?? loadConfig();
   const client = createSdkClient(config);
   const signing = isSigningClient(config);
+  const mode = signing ? "signing" : "read-only";
+  const usageLogger = createUsageLogger({
+    logPath: config.usageLogPath,
+    context: config.usageContext ?? "local",
+    actor: config.usageActor,
+    source: config.usageSource,
+    chain: config.chain,
+    mode,
+  });
 
   const server = new McpServer({
     name: "aegis-protocol",
@@ -60,160 +130,105 @@ function createServer(cfg?: Config) {
 
   // --- Read tools ---
 
-  server.registerTool(checkJobDef.name, {
-    description: checkJobDef.description,
-    inputSchema: checkJobDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleCheckJob(client, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: checkJobDef,
+    category: "read",
+    handler: async (args) => handleCheckJob(client, args),
+  }, usageLogger);
 
-  server.registerTool(lookupAgentDef.name, {
-    description: lookupAgentDef.description,
-    inputSchema: lookupAgentDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleLookupAgent(client, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: lookupAgentDef,
+    category: "read",
+    handler: async (args) => handleLookupAgent(client, args),
+  }, usageLogger);
 
-  server.registerTool(listJobsDef.name, {
-    description: listJobsDef.description,
-    inputSchema: listJobsDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleListJobs(client, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: listJobsDef,
+    category: "read",
+    handler: async (args) => handleListJobs(client, args),
+  }, usageLogger);
 
-  server.registerTool(checkBalanceDef.name, {
-    description: checkBalanceDef.description,
-    inputSchema: checkBalanceDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleCheckBalance(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: checkBalanceDef,
+    category: "read",
+    handler: async (args) => handleCheckBalance(client, config, args),
+  }, usageLogger);
 
-  server.registerTool(getTemplateDef.name, {
-    description: getTemplateDef.description,
-    inputSchema: getTemplateDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleGetTemplate(client, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: getTemplateDef,
+    category: "read",
+    handler: async (args) => handleGetTemplate(client, args),
+  }, usageLogger);
 
-  server.registerTool(shouldIEscrowDef.name, {
-    description: shouldIEscrowDef.description,
-    inputSchema: shouldIEscrowDef.inputSchema,
-  }, async (args) => {
-    try {
-      return toolResult(await handleShouldIEscrow(args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+  registerToolWithTelemetry(server, {
+    def: shouldIEscrowDef,
+    category: "advisory",
+    handler: async (args) => handleShouldIEscrow(args),
+  }, usageLogger);
 
   // --- Write tools ---
 
-  server.registerTool(createJobDef.name, {
-    description: createJobDef.description,
-    inputSchema: createJobDef.inputSchema,
+  registerToolWithTelemetry(server, {
+    def: createJobDef,
+    category: "write",
     annotations: {
       title: "Create Escrow Job",
       readOnlyHint: false,
       destructiveHint: false,
       openWorldHint: true,
     },
-  }, async (args) => {
-    try {
-      return toolResult(await handleCreateJob(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+    handler: async (args) => handleCreateJob(client, config, args),
+  }, usageLogger);
 
-  server.registerTool(deliverWorkDef.name, {
-    description: deliverWorkDef.description,
-    inputSchema: deliverWorkDef.inputSchema,
+  registerToolWithTelemetry(server, {
+    def: deliverWorkDef,
+    category: "write",
     annotations: {
       title: "Deliver Work",
       readOnlyHint: false,
       destructiveHint: false,
       openWorldHint: true,
     },
-  }, async (args) => {
-    try {
-      return toolResult(await handleDeliverWork(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+    handler: async (args) => handleDeliverWork(client, config, args),
+  }, usageLogger);
 
-  server.registerTool(settleJobDef.name, {
-    description: settleJobDef.description,
-    inputSchema: settleJobDef.inputSchema,
+  registerToolWithTelemetry(server, {
+    def: settleJobDef,
+    category: "write",
     annotations: {
       title: "Settle Job",
       readOnlyHint: false,
       destructiveHint: false,
       openWorldHint: true,
     },
-  }, async (args) => {
-    try {
-      return toolResult(await handleSettleJob(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+    handler: async (args) => handleSettleJob(client, config, args),
+  }, usageLogger);
 
-  server.registerTool(openDisputeDef.name, {
-    description: openDisputeDef.description,
-    inputSchema: openDisputeDef.inputSchema,
+  registerToolWithTelemetry(server, {
+    def: openDisputeDef,
+    category: "write",
     annotations: {
       title: "Open Dispute",
       readOnlyHint: false,
       destructiveHint: false,
       openWorldHint: true,
     },
-  }, async (args) => {
-    try {
-      return toolResult(await handleOpenDispute(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+    handler: async (args) => handleOpenDispute(client, config, args),
+  }, usageLogger);
 
-  server.registerTool(claimRefundDef.name, {
-    description: claimRefundDef.description,
-    inputSchema: claimRefundDef.inputSchema,
+  registerToolWithTelemetry(server, {
+    def: claimRefundDef,
+    category: "write",
     annotations: {
       title: "Claim Refund",
       readOnlyHint: false,
       destructiveHint: false,
       openWorldHint: true,
     },
-  }, async (args) => {
-    try {
-      return toolResult(await handleClaimRefund(client, config, args));
-    } catch (e) {
-      return toolError(e);
-    }
-  });
+    handler: async (args) => handleClaimRefund(client, config, args),
+  }, usageLogger);
 
-  return { server, config, client, signing };
+  return { server, config, client, signing, usageLogger };
 }
 
 // ---------------------------------------------------------------------------
@@ -228,6 +243,7 @@ export function createSandboxServer() {
     rpcUrls: [rpcUrl],
     privateKey: undefined,
     apiUrl: undefined,
+    usageContext: "local" as const,
   };
   const { server: sandboxServer } = createServer(sandboxConfig);
   return sandboxServer;

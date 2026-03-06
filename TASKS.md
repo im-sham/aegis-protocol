@@ -16,7 +16,7 @@
 - [~] **Publish to Smithery** - namespace `aegis-protocol/mcp-server` created, server scans correctly, hosted deploy requires paid plan. Revisit when upgrading or when Smithery adds free stdio support
 - [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
 - [x] ~~**Host A2A Agent Card**~~ - hosted on Cloudflare at aegis-protocol.xyz (2026-02-21)
-- [ ] **Optimize MCP for external agent usage** - rewrite tool descriptions around decision triggers, improve advisory-tool funnel, and add usage instrumentation that cleanly separates external activity from demos/tests
+- [x] ~~**Optimize MCP for external agent usage**~~ - MCP tool descriptions now emphasize decision triggers, `aegis_should_i_escrow` returns structured next-tool guidance, signer-mode `aegis_check_balance` can inspect the connected wallet, and optional JSONL usage logging ships via `AEGIS_USAGE_*` env vars (2026-03-06)
 - [ ] **ElizaOS integration** - P0 framework integration for Web3-native agent workflows
 - [ ] **Virtuals integration discovery / plugin spike** - P0 strategic integration aligned to agent-commerce flows; validate best insertion point before full build
 - [ ] **Register AEGIS in ERC-8004 Identity Registry** - on Ethereum mainnet
@@ -52,6 +52,7 @@
 ### Program Checkpoints
 - [x] ~~**State of Project #1 (Agent-First Foundation Checkpoint)**~~ - CI MCP E2E is green on protected `main`, dedicated RPC secrets are active, reliability docs are current, and next integration scope is frozen to `CrewAI` (2026-03-04)
 - [x] ~~**State of Project #2 (Agent-First Distribution Reset)**~~ - canonical strategy now optimizes for external agent usage; next priorities are MCP optimization, ElizaOS, and Virtuals; rationale captured in `docs/decisions/2026-03-06-agent-first-distribution.md` (2026-03-06)
+- [x] ~~**State of Project #3 (MCP Optimization & Instrumentation)**~~ - advisory funnel improved, signer-mode balance checks simplified, and optional MCP usage logging shipped; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-MCP-OPTIMIZATION.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded

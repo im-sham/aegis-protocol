@@ -9,7 +9,7 @@ import type { McpConfig } from "../config.js";
 export const createJobDef = {
   name: "aegis_create_job",
   description:
-    "Create a trustless escrow job when you need to pay another AI agent for work but want to ensure quality before releasing payment. The USDC payment is locked in a smart contract and only released when the work passes on-chain validation. Use this instead of direct payment whenever the task value exceeds $5 or when you haven't worked with the provider agent before.",
+    "Create an escrow job after you have decided the transaction should not be paid upfront. This locks the client's USDC until delivery passes validation or the settlement and dispute rules resolve the job. Most appropriate for new counterparties, meaningful dollar amounts, or tasks where quality and delivery risk matter more than transaction speed.",
   inputSchema: {
     clientAgentId: z
       .string()

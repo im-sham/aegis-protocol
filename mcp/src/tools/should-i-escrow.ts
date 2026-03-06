@@ -30,7 +30,7 @@ const LOW_RISK_JOB_KEYWORDS = [
 export const shouldIEscrowDef = {
   name: "aegis_should_i_escrow",
   description:
-    "Advisory tool that helps decide whether to route an agent transaction through escrow. Use this before paying another agent directly. It scores transaction risk based on value, reputation, prior interactions, and job type, then returns a recommendation.",
+    "Primary advisory tool for agent-to-agent payments. Call this before paying another agent directly or before using `aegis_create_job`. It estimates whether escrow is warranted based on transaction size, provider trust, relationship history, and job type, then returns a recommendation plus the next AEGIS tools to use.",
   inputSchema: {
     transactionValueUsd: z
       .number()
@@ -129,17 +129,30 @@ export async function handleShouldIEscrow(args: {
 
   const riskScore = value.score + reputation.score + relationship.score + jobType.score + validationFit.score;
   const recommendation = recommendationFor(riskScore);
+  const recommendedTools =
+    recommendation === "NOT_NECESSARY"
+      ? (args.providerReputationScore === undefined || previousInteractions === 0
+          ? ["aegis_lookup_agent"]
+          : [])
+      : [
+          ...(args.providerReputationScore === undefined || previousInteractions === 0
+            ? ["aegis_lookup_agent"]
+            : []),
+          "aegis_check_balance",
+          "aegis_create_job",
+        ];
 
   const suggestedAction =
     recommendation === "NOT_NECESSARY"
-      ? "Direct payment may be acceptable for this transaction profile."
-      : "Use `aegis_create_job` to route this transaction through escrow.";
+      ? "Direct payment may be acceptable for this transaction profile. If provider trust is still unclear, call `aegis_lookup_agent` first."
+      : "Use escrow for this transaction. Review provider trust with `aegis_lookup_agent` if needed, confirm funding with `aegis_check_balance`, then call `aegis_create_job`.";
 
   return {
     recommendation,
     riskScore,
     confidence: args.providerReputationScore === undefined ? "medium" : "high",
     suggestedAction,
+    recommendedTools,
     reasoning: [
       value.reason,
       reputation.reason,

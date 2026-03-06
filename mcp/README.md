@@ -68,7 +68,7 @@ Add to your `claude_desktop_config.json` (`~/Library/Application Support/Claude/
 
 | Tool | Description |
 |------|-------------|
-| `aegis_create_job` | Create a trustless escrow job between two AI agents |
+| `aegis_create_job` | Lock client funds in escrow after deciding the transaction should not be paid upfront |
 | `aegis_deliver_work` | Submit completed work for on-chain validation |
 | `aegis_check_job` | Check the current state of an escrow job |
 | `aegis_settle_job` | Settle a job (confirm delivery or settle after window) |
@@ -79,16 +79,16 @@ Add to your `claude_desktop_config.json` (`~/Library/Application Support/Claude/
 
 | Tool | Description |
 |------|-------------|
-| `aegis_lookup_agent` | Look up an agent's identity, wallet, and ERC-8004 reputation |
+| `aegis_lookup_agent` | Trust-check a provider's identity, owner, and ERC-8004 reputation before assigning paid work |
 | `aegis_list_jobs` | List all escrow jobs for a specific agent |
 
 ### Utility
 
 | Tool | Description |
 |------|-------------|
-| `aegis_check_balance` | Check USDC balance and escrow approval |
+| `aegis_check_balance` | Verify USDC balance and escrow approval before funding a job; signer mode can inspect the connected wallet |
 | `aegis_get_template` | Get a job template's default parameters |
-| `aegis_should_i_escrow` | Score transaction risk and recommend whether escrow is appropriate |
+| `aegis_should_i_escrow` | Advisory entry point that scores payment risk and returns the next AEGIS tools to use |
 
 ## Operating Modes
 
@@ -109,6 +109,46 @@ When `AEGIS_PRIVATE_KEY` is set, write tools execute transactions directly on-ch
 | `AEGIS_RPC_URLS` | Comma-separated RPC failover list (ordered priority) | — |
 | `AEGIS_PRIVATE_KEY` | Private key for signing (optional) | — |
 | `AEGIS_API_URL` | REST API URL for relay (optional) | — |
+| `AEGIS_USAGE_LOG_PATH` | Optional JSONL file path for per-tool usage logging | — |
+| `AEGIS_USAGE_CONTEXT` | Usage label for clean attribution (`external`, `demo`, `test`, `ci`, `local`) | `local` |
+| `AEGIS_USAGE_ACTOR` | Optional integrator/operator label written into usage records | — |
+| `AEGIS_USAGE_SOURCE` | Optional framework/source label (for example `crewai`, `claude`, `custom-mcp`) | — |
+
+## Usage Instrumentation
+
+AEGIS can emit one JSONL record per tool call when `AEGIS_USAGE_LOG_PATH` is set.
+This is intended to separate real external usage from demos and tests without
+capturing full tool arguments.
+
+Example setup:
+
+```json
+{
+  "mcpServers": {
+    "aegis": {
+      "command": "npx",
+      "args": ["-y", "@aegis-protocol/mcp-server"],
+      "env": {
+        "AEGIS_CHAIN": "base-sepolia",
+        "AEGIS_USAGE_LOG_PATH": "/tmp/aegis-usage.jsonl",
+        "AEGIS_USAGE_CONTEXT": "external",
+        "AEGIS_USAGE_SOURCE": "crewai"
+      }
+    }
+  }
+}
+```
+
+Each record includes:
+
+- timestamp
+- session ID
+- tool name
+- tool category (`read`, `advisory`, `write`)
+- success/failure
+- latency
+- chain and mode
+- attribution fields (`context`, `actor`, `source`)
 
 ## Reliability Notes
 

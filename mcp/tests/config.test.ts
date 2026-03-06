@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { CHAIN_CONFIGS } from "@aegis-protocol/types";
-import { resolveRpcUrls } from "../src/config.js";
+import { resolveRpcUrls, resolveUsageContext } from "../src/config.js";
 
 describe("resolveRpcUrls", () => {
   it("prioritizes AEGIS_RPC_URL and preserves fallback order", () => {
@@ -34,5 +34,22 @@ describe("resolveRpcUrls", () => {
   it("falls back to chain default when no custom env is set", () => {
     const urls = resolveRpcUrls("base-sepolia", {});
     expect(urls).toEqual([CHAIN_CONFIGS["base-sepolia"].rpcUrl]);
+  });
+});
+
+describe("resolveUsageContext", () => {
+  it("defaults to local when unset", () => {
+    expect(resolveUsageContext(undefined)).toBe("local");
+  });
+
+  it("accepts supported usage contexts", () => {
+    expect(resolveUsageContext("external")).toBe("external");
+    expect(resolveUsageContext("demo")).toBe("demo");
+  });
+
+  it("rejects unsupported usage contexts", () => {
+    expect(() => resolveUsageContext("prod")).toThrow(
+      "Unsupported AEGIS_USAGE_CONTEXT",
+    );
   });
 });

@@ -1,11 +1,18 @@
 import { CHAIN_CONFIGS, type SupportedChain } from "@aegis-protocol/types";
 
+export const USAGE_CONTEXTS = ["external", "demo", "test", "ci", "local"] as const;
+export type UsageContext = (typeof USAGE_CONTEXTS)[number];
+
 export interface McpConfig {
   chain: SupportedChain;
   rpcUrl: string;
   rpcUrls: string[];
   privateKey: string | undefined;
   apiUrl: string | undefined;
+  usageLogPath?: string;
+  usageContext?: UsageContext;
+  usageActor?: string;
+  usageSource?: string;
 }
 
 function isValidRpcUrl(value: string): boolean {
@@ -36,6 +43,22 @@ function dedupePreserveOrder(values: string[]): string[] {
     }
   }
   return output;
+}
+
+function normalizeOptionalString(value: string | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized ? normalized : undefined;
+}
+
+export function resolveUsageContext(raw: string | undefined): UsageContext {
+  const normalized = normalizeOptionalString(raw);
+  if (!normalized) return "local";
+  if ((USAGE_CONTEXTS as readonly string[]).includes(normalized)) {
+    return normalized as UsageContext;
+  }
+  throw new Error(
+    `Unsupported AEGIS_USAGE_CONTEXT: ${normalized}. Valid: ${USAGE_CONTEXTS.join(", ")}`,
+  );
 }
 
 function chainSpecificRpcEnv(
@@ -86,5 +109,9 @@ export function loadConfig(): McpConfig {
     rpcUrls,
     privateKey: process.env.AEGIS_PRIVATE_KEY,
     apiUrl: process.env.AEGIS_API_URL,
+    usageLogPath: normalizeOptionalString(process.env.AEGIS_USAGE_LOG_PATH),
+    usageContext: resolveUsageContext(process.env.AEGIS_USAGE_CONTEXT),
+    usageActor: normalizeOptionalString(process.env.AEGIS_USAGE_ACTOR),
+    usageSource: normalizeOptionalString(process.env.AEGIS_USAGE_SOURCE),
   };
 }
