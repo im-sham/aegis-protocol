@@ -47,6 +47,8 @@
 | [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md) | Canonical rationale memo explaining why AEGIS now prioritizes agent choice architecture over awareness-first tactics |
 | [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) | Copy-paste default-placement guidance, attribution rules, and framework insertion points for shipped integrations |
 | [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md) | Short maintainer/operator outreach copy aligned to the shipped integration surfaces |
+| [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) | Living tracker for framework/operator outreach status, channels, asks, and feedback |
+| [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md) | First prioritized outreach batch for Virtuals, ElizaOS, CrewAI, and LangChain |
 
 ---
 
@@ -77,6 +79,9 @@
 
 **"I need default-placement guidance or outreach copy for shipped integrations"**
 → Read [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) and [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md)
+
+**"I need to execute or review the current outreach batch"**
+→ Read [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) and [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md)
 
 ### For SDK Developers
 

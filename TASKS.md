@@ -25,6 +25,7 @@
 - [x] ~~**LangChain integration**~~ - shipped `@aegis-protocol/langchain` tools package + LangGraph example (`sdk/examples/langchain-agent.ts`) (2026-03-04)
 - [x] ~~**CrewAI/LangChain distribution polish**~~ - LangChain now exposes the advisory + settlement tool path, example prompts start from `aegis_should_i_escrow`, and CrewAI stamps MCP usage attribution defaults when logging is enabled (2026-03-06)
 - [x] ~~**Operator/default-placement adoption kit**~~ - shipped canonical operator kit and outreach snippets for MCP, LangChain, CrewAI, ElizaOS, and Virtuals in `docs/integrations/OPERATOR-ADOPTION-KIT.md` and `content/framework-outreach-snippets.md` (2026-03-06)
+- [x] ~~**First framework outreach batch prepared**~~ - shipped prioritized outreach batch + tracker for Virtuals, ElizaOS, CrewAI, and LangChain in `content/outreach-batch-2026-03-06-agent-frameworks.md` and `docs/operations/OUTREACH-TRACKER.md` (2026-03-06)
 
 ### Pre-Public Repo ✅ COMPLETE
 - [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
@@ -59,6 +60,7 @@
 - [x] ~~**State of Project #5 (Virtuals Integration)**~~ - Virtuals GAME/ACP adapter package shipped with AEGIS worker/functions, ACP schema/resource helpers, and example config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-VIRTUALS.md` (2026-03-06)
 - [x] ~~**State of Project #6 (CrewAI/LangChain Distribution Polish)**~~ - advisory funnel parity is now consistent across LangChain, CrewAI example prompts, and MCP usage attribution defaults; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-CREWAI-LANGCHAIN-POLISH.md` (2026-03-06)
 - [x] ~~**State of Project #7 (Operator Adoption Kit)**~~ - canonical default-placement guidance and outreach snippets now exist for the shipped integrations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ADOPTION-KIT.md` (2026-03-06)
+- [x] ~~**State of Project #8 (Framework Outreach Batch)**~~ - first outreach batch and living tracker now exist for prioritized operator/maintainer conversations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-BATCH.md` (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded

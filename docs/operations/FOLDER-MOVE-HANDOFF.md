@@ -88,10 +88,14 @@ Completed:
   - canonical operator guidance: `docs/integrations/OPERATOR-ADOPTION-KIT.md`
   - outreach copy: `content/framework-outreach-snippets.md`
   - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-ADOPTION-KIT.md`
+- First framework outreach batch is prepared:
+  - prioritized batch: `content/outreach-batch-2026-03-06-agent-frameworks.md`
+  - living tracker: `docs/operations/OUTREACH-TRACKER.md`
+  - checkpoint: `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-BATCH.md`
 
 Pending / watch items:
 - Immediate framework expansion work is `AutoGPT` only if evidence changes.
-- Immediate non-framework work is real maintainer/operator outreach and adoption feedback using the shipped operator kit.
+- Immediate non-framework work is executing the shipped outreach batch and capturing feedback in the tracker.
 - `AutoGPT` is explicitly deferred unless evidence changes.
 - OPS-002 mitigation is shipped: MCP E2E now enforces minimum USDC/allowance preflight guardrails before repeated live runs.
 - Add secondary reviewer for `testnet-e2e` environment for approval-path resilience.
@@ -110,7 +114,7 @@ Start with:
 1) Validate git/workspace status and confirm no path-related breakage.
 2) Run targeted tests listed in the handoff file and report failures with root-cause analysis.
 3) Continue agent-first distribution execution from `content/agent-promotion-playbook.md` and `docs/decisions/2026-03-06-agent-first-distribution.md`.
-4) Start the next engineering slice in this order: maintainer/operator outreach execution using the shipped operator kit, then AutoGPT only if evidence changes.
+4) Start the next engineering slice in this order: execute the shipped outreach batch and capture maintainer/operator feedback, then AutoGPT only if evidence changes.
 5) Update docs/operations/ENGINEERING-RISK-TRACKER.md and docs/operations/RELIABILITY-RUNBOOK.md when new evidence or risks appear.
 6) Flag a "state of the project" milestone when one major implementation slice is completed and validated.
 ```
