@@ -45,6 +45,8 @@
 |----------|---------|
 | [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) | Current execution playbook for agent-native adoption, optimized for external agent usage |
 | [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md) | Canonical rationale memo explaining why AEGIS now prioritizes agent choice architecture over awareness-first tactics |
+| [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) | Copy-paste default-placement guidance, attribution rules, and framework insertion points for shipped integrations |
+| [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md) | Short maintainer/operator outreach copy aligned to the shipped integration surfaces |
 
 ---
 
@@ -72,6 +74,9 @@
 
 **"I need the current distribution strategy and why it changed"**
 → Read [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) and [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md)
+
+**"I need default-placement guidance or outreach copy for shipped integrations"**
+→ Read [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) and [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md)
 
 ### For SDK Developers
 

@@ -189,6 +189,7 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] CrewAI/LangChain distribution polish is shipped (LangChain advisory + settlement parity, CrewAI attribution defaults)
 - [x] ElizaOS integration package is shipped (`sdk/packages/elizaos`)
 - [x] Virtuals integration package is shipped (`sdk/packages/virtuals`)
+- [x] Operator/default-placement adoption kit is shipped (`docs/integrations/OPERATOR-ADOPTION-KIT.md`, `content/framework-outreach-snippets.md`)
 
 ### Phase 3: Mainnet Launch (Weeks 13-16)
 - [ ] Security audit (Sherlock competitive audit contest — public, ~1,500 nSLOC)

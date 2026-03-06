@@ -106,6 +106,10 @@ The highest-value human targets are:
 These are the people who decide whether AEGIS becomes part of the runtime default,
 the documented pattern, or the recommended payment-safety primitive.
 
+Execution assets for this channel now live in:
+- `docs/integrations/OPERATOR-ADOPTION-KIT.md`
+- `content/framework-outreach-snippets.md`
+
 ### Plausible experiments
 
 These may help distribution, but they are not primary pillars until proven by usage data.
