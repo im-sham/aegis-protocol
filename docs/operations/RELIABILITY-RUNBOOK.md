@@ -1,6 +1,6 @@
 # Aegis Protocol Reliability Runbook
 
-Last updated: 2026-03-04
+Last updated: 2026-03-06
 
 ## Purpose
 
@@ -19,6 +19,7 @@ Related:
 Notes:
 - CI uses `AEGIS_RPC_URL` + `AEGIS_RPC_URLS` (primary,secondary).
 - Runtime failover order: `AEGIS_RPC_URL` -> `AEGIS_RPC_URLS` -> chain-specific env -> chain default.
+- MCP E2E now enforces minimum signer balance and escrow allowance during `beforeAll`.
 
 ## Secret Handling Controls
 
@@ -77,6 +78,10 @@ After secret rotation and workflow updates are merged to `main`:
 
 - Minimum test wallet balance target: `>= 10 USDC`.
 - Minimum escrow allowance target: `>= 10 USDC`.
+- MCP E2E enforces these thresholds and will fail fast in preflight if they are not met.
+- Optional overrides for local experiments:
+  - `AEGIS_E2E_MIN_USDC_BALANCE`
+  - `AEGIS_E2E_MIN_ESCROW_ALLOWANCE`
 - If either drops below target, top up/approve before running repeated E2E cycles.
 
 ## Incident Response: RPC Instability

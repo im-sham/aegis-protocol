@@ -4,6 +4,8 @@ Date: 2026-03-04
 Branch: `codex/langchain-integration`  
 Baseline commit: `bcaa5f7` (`main` after reliability checkpoint merge)
 
+Follow-up note (2026-03-06): the `OPS-002` wallet balance/allowance guardrail work referenced below has since shipped and is now tracked as `MONITORING` in `docs/operations/ENGINEERING-RISK-TRACKER.md`.
+
 ## Purpose
 
 This checkpoint marks completion of the first AI-framework integration slice after reliability hardening: LangChain/LangGraph support for AEGIS via a dedicated SDK package and runnable example.
@@ -44,7 +46,9 @@ This checkpoint marks completion of the first AI-framework integration slice aft
 - Merge commit: `6973f51`.
 - `main` CI run `22686298159` -> PASS (Foundry/API/MCP/Subgraph + protected `MCP E2E`).
 
-## Next Slice
+## Next Slice (Historical at Checkpoint Time)
+
+Current sequencing lives in `docs/operations/FOLDER-MOVE-HANDOFF.md`, `TASKS.md`, and `docs/decisions/2026-03-06-agent-first-distribution.md`.
 
 1. Start `CrewAI` integration using LangChain package patterns.
 2. Address OPS-002 by adding explicit E2E wallet balance/allowance guardrails.

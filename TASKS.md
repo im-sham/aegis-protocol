@@ -46,6 +46,7 @@
 - [x] ~~**Provision dedicated RPC endpoints for CI/staging**~~ - dedicated primary/secondary Base Sepolia secrets are set and verified; protected `main` MCP E2E path validated (2026-03-04)
 - [x] ~~**Implement RPC failover strategy in MCP/SDK runtime**~~ - prioritized multi-endpoint transport (`AEGIS_RPC_URLS`) with fallback in MCP + SDK read-only paths (2026-02-27)
 - [x] ~~**Create reliability runbook**~~ - documented preflight, guardrails, fallback, incident steps in `docs/operations/RELIABILITY-RUNBOOK.md` (2026-03-02)
+- [x] ~~**Enforce MCP E2E wallet guardrails**~~ - live Base Sepolia E2E now hard-fails in preflight if signer balance or escrow allowance drops below default `10 USDC` thresholds (2026-03-06)
 - [ ] **Establish weekly risk review cadence** - keep `docs/operations/ENGINEERING-RISK-TRACKER.md` current with status and verification evidence
 
 ### Program Checkpoints

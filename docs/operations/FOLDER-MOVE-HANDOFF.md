@@ -71,7 +71,7 @@ Pending / watch items:
 - Immediate distribution work is `MCP` optimization and external-usage instrumentation.
 - Next framework priorities are `ElizaOS` and `Virtuals`.
 - `AutoGPT` is explicitly deferred unless evidence changes.
-- OPS-002 remains open: add minimum USDC/allowance guardrails before repeated live E2E runs.
+- OPS-002 mitigation is shipped: MCP E2E now enforces minimum USDC/allowance preflight guardrails before repeated live runs.
 - Add secondary reviewer for `testnet-e2e` environment for approval-path resilience.
 - Keep weekly engineering risk review cadence in `docs/operations/ENGINEERING-RISK-TRACKER.md`.
 

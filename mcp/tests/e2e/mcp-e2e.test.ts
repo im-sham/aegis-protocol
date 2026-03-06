@@ -16,6 +16,7 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { baseSepolia } from "viem/chains";
 import { aegisEscrowAbi } from "@aegis-protocol/abis";
+import { formatUSDC, parseUSDC } from "@aegis-protocol/sdk";
 
 // E2E tests hit real Base Sepolia — need longer timeouts
 vi.setConfig({ testTimeout: 120_000 });
@@ -42,6 +43,8 @@ import { handleClaimRefund } from "../../src/tools/claim-refund.js";
 const DEPLOYER = "0x31084ba014bC91D467D008e6fb21f827AC6f7eb0";
 const MOCK_VALIDATION_REGISTRY = CHAIN_CONFIGS["base-sepolia"].contracts.validationRegistry;
 const ESCROW_ADDRESS = CHAIN_CONFIGS["base-sepolia"].contracts.escrow;
+const MIN_E2E_USDC_BALANCE = parseUSDC(process.env.AEGIS_E2E_MIN_USDC_BALANCE ?? "10");
+const MIN_E2E_ESCROW_ALLOWANCE = parseUSDC(process.env.AEGIS_E2E_MIN_ESCROW_ALLOWANCE ?? "10");
 
 function getConfig(): McpConfig {
   const pk = process.env.AEGIS_PRIVATE_KEY;
@@ -67,6 +70,42 @@ function getConfig(): McpConfig {
 
 async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+async function assertE2EWalletGuardrails(client: ReturnType<typeof createSdkClient>) {
+  const address = await client.getAddress();
+  const [balance, allowance] = await Promise.all([
+    client.usdc.myBalance(),
+    client.usdc.escrowAllowance(),
+  ]);
+  const failures: string[] = [];
+
+  if (balance < MIN_E2E_USDC_BALANCE) {
+    failures.push(
+      `USDC balance ${formatUSDC(balance)} USDC is below required ${formatUSDC(MIN_E2E_USDC_BALANCE)} USDC`,
+    );
+  }
+
+  if (allowance < MIN_E2E_ESCROW_ALLOWANCE) {
+    failures.push(
+      `escrow allowance ${formatUSDC(allowance)} USDC is below required ${formatUSDC(MIN_E2E_ESCROW_ALLOWANCE)} USDC`,
+    );
+  }
+
+  if (failures.length > 0) {
+    throw new Error(
+      [
+        `E2E signer preflight failed for ${address}.`,
+        ...failures.map((failure) => `- ${failure}`),
+        "Top up the Base Sepolia test wallet and/or re-approve escrow before rerunning the suite.",
+        "See docs/operations/RELIABILITY-RUNBOOK.md for the required guardrails.",
+      ].join("\n"),
+    );
+  }
+
+  console.log(
+    `E2E signer preflight OK for ${address}: balance=${formatUSDC(balance)} USDC, allowance=${formatUSDC(allowance)} USDC`,
+  );
 }
 
 function isTransientRpcError(error: unknown): boolean {
@@ -246,9 +285,10 @@ describe("MCP E2E — Base Sepolia", () => {
   let config: McpConfig;
   let client: ReturnType<typeof createSdkClient>;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     config = getConfig();
     client = createSdkClient(config);
+    await withRetry("e2eWalletGuardrails", async () => assertE2EWalletGuardrails(client));
   });
 
   // =========================================================================

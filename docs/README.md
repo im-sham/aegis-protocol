@@ -145,7 +145,7 @@
 - [x] LangChain agent
 - [ ] ElizaOS integration
 - [ ] Virtuals integration
-- [ ] AutoGPT integration
+- [ ] AutoGPT integration (explicitly deferred behind MCP optimization, ElizaOS, and Virtuals unless evidence changes)
 - [x] CrewAI integration (MCP-backed example in `sdk/examples/crewai-agent.py`)
 
 ### Mainnet Launch (Phase 4) 🎯

@@ -1,6 +1,6 @@
 # Aegis Protocol Engineering Risk Tracker
 
-Last updated: 2026-03-04
+Last updated: 2026-03-06
 
 ## Purpose
 
@@ -21,8 +21,8 @@ This tracker is the canonical running log for non-security engineering and opera
 
 - Open P0: 0
 - Open P1: 0
-- Open P2+: 1
-- Monitoring: 2
+- Open P2+: 0
+- Monitoring: 3
 - Mitigated: 0
 - Accepted risk: 0
 
@@ -31,7 +31,7 @@ This tracker is the canonical running log for non-security engineering and opera
 | ID | Severity | Area | Summary | Detected | Status | Owner | Mitigation in place | Monitoring signal | Next action | Last reviewed |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | OPS-001 | P1 | MCP / External RPC | Public Base Sepolia RPC endpoints intermittently timeout (`ETIMEDOUT`, `EHOSTUNREACH`) causing false-negative MCP E2E failures and occasional write failures. | 2026-02-27 | MONITORING | Unassigned | E2E retries + nested error-cause transient detection are in place, runtime failover is implemented via prioritized RPC lists (`AEGIS_RPC_URLS`) in MCP/SDK transport setup, CI workflow is wired for primary/secondary RPC secrets with trusted-event + protected-environment gating, and reliability runbook is documented. Dedicated Alchemy primary/secondary endpoints are active in GitHub secrets, endpoint health checks passed, and protected `main` MCP E2E completed successfully. Evidence: `mcp/tests/e2e/mcp-e2e.test.ts`, `mcp/src/sdk-client.ts`, `sdk/packages/sdk/src/client.ts`, `.github/workflows/test.yml`, `docs/operations/RELIABILITY-RUNBOOK.md`, `gh secret list` output, endpoint `eth_blockNumber` responses, run `22681335573`. | Any transport-related retry/failure in MCP E2E runs. | Keep weekly protected E2E verification cadence and rotate RPC secrets on schedule or provider incident. | 2026-03-04 |
-| OPS-002 | P2 | Test Infra / Funding | Repeated live E2E runs consume gas and escrowed USDC on the signer wallet, which can eventually block tests or produce misleading failures. | 2026-02-27 | OPEN | Unassigned | `aegis_check_balance` assertions provide visibility into spend trend each run. | USDC balance/allowance below required thresholds for test flow. | Define minimum balance guardrails and add top-up/approval runbook step before CI-like E2E runs. | 2026-02-27 |
+| OPS-002 | P2 | Test Infra / Funding | Repeated live E2E runs consume gas and escrowed USDC on the signer wallet, which can eventually block tests or produce misleading failures. | 2026-02-27 | MONITORING | Unassigned | MCP E2E now enforces minimum signer preflight thresholds for USDC balance and escrow allowance (default `>= 10 USDC`) before any live lifecycle test runs, and the runbook documents the remediation path. Evidence: `mcp/tests/e2e/mcp-e2e.test.ts`, `docs/operations/RELIABILITY-RUNBOOK.md`. | Guardrail preflight failure or repeated wallet top-up/approval events. | Keep thresholds calibrated to the live test flow and top up/re-approve the E2E wallet whenever preflight fails. | 2026-03-06 |
 | OPS-003 | P1 | CI Governance | Protected environment approval flow can deadlock if the only reviewer is also prevented from self-review. | 2026-03-04 | MONITORING | Unassigned | `testnet-e2e` was updated to `prevent_self_review=false` while retaining required reviewer + `main` branch policy; one protected `main` E2E run was approved and completed successfully end-to-end. | `mcp-e2e` approval stalls or unexpected bypass behavior. | Add a secondary reviewer to improve approval-path resilience for maintainer unavailability. | 2026-03-04 |
 
 ## Verification log
@@ -56,6 +56,7 @@ This tracker is the canonical running log for non-security engineering and opera
 | 2026-03-04 | Endpoint health checks (`curl` + `eth_blockNumber`) | PASS | Primary and secondary dedicated endpoints both returned current block numbers. |
 | 2026-03-04 | `gh workflow run test.yml --ref codex/aegis-reliability-checkpoint-20260304` | PARTIAL | `mcp-e2e` was rejected by environment branch policy (`main`-only), confirming secrets are configured but protected E2E must run from `main`. |
 | 2026-03-04 | `main` CI run `22681335573` (merge of PR #6) with protected `testnet-e2e` approval | PASS | Full CI succeeded; `MCP E2E (Base Sepolia)` executed on `main` and passed (10/10). |
+| 2026-03-06 | `cd mcp && npm run typecheck` | PASS | MCP test suite type-check passes after adding enforced E2E balance/allowance preflight guardrails. |
 
 ## Update process (for all agents)
 
@@ -70,3 +71,4 @@ This tracker is the canonical running log for non-security engineering and opera
 - 2026-02-27: Initialized tracker with OPS-001 (external RPC transport instability) and OPS-002 (live E2E funding drift).
 - 2026-03-04: Refreshed verification evidence, added OPS-003 (protected environment reviewer deadlock risk), and updated OPS-001 next actions.
 - 2026-03-04: Updated `testnet-e2e` reviewer policy (`prevent_self_review=false`) and moved OPS-003 to MONITORING.
+- 2026-03-06: Enforced MCP E2E wallet balance/allowance preflight guardrails and moved OPS-002 to MONITORING.
