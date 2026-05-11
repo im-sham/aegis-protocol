@@ -11,7 +11,7 @@
 ### Development (Phase 2.5 — Agent-Native Distribution)
 - [x] ~~**Build AEGIS MCP Server**~~ - 10 tools, dual-mode (read-only/signing), stdio transport, 17 tests passing (2026-02-18)
 - [x] ~~**Test MCP Server with Claude Desktop**~~ - all 10 tools E2E tested against Base Sepolia, 10/10 passing (2026-02-21)
-- [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server v0.1.2 (2026-02-18, updated 2026-02-21)
+- [x] ~~**Publish MCP Server to npm**~~ - @aegis-protocol/mcp-server current v0.1.3 (2026-02-18, updated 2026-05-11)
 - [x] ~~**Publish to official MCP Registry**~~ - io.github.im-sham/aegis-protocol live at registry.modelcontextprotocol.io (2026-02-21)
 - [~] **Publish to Smithery** - namespace `aegis-protocol/mcp-server` created, server scans correctly, hosted deploy requires paid plan. Revisit when upgrading or when Smithery adds free stdio support
 - [x] ~~**Create A2A Agent Card**~~ - `site/.well-known/agent-card.json` (2026-02-18)
