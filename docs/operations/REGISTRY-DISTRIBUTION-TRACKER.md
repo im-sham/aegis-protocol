@@ -52,7 +52,7 @@ Escalate to Sham for any of the above.
 | P1 | mcpservers.com | `https://mcpservers.com` | No Pallas account yet; Google sign-in required | Search returned no Aegis listing; submit page displays Authentication Required and only offers Google sign-in | Complete interactive Google auth and submit | Stop on CAPTCHA/phone/broad OAuth/payment |
 | P1 | MCP Market | `https://mcpmarket.com/server/aegis-protocol` | No separate account required for current state | Listed; submission form reported Aegis already exists | Monitor listing freshness and update only if metadata drifts | Stop on CAPTCHA/phone/broad OAuth/payment |
 | P1 | ACI.dev | `https://aci.dev` | Not created | Appears to be consulting/automation platform, not a public MCP registry | Deprioritize unless a concrete integration path appears | Stop on payment/legal/broad OAuth |
-| P1 | Composio | `https://composio.dev` | Agent identity created via `agents.composio.dev` and stored locally under `~/.hermes/secrets/` | Not yet confirmed as registry/integration channel | Configure CLI from saved agent identity, then determine if AEGIS can be added as toolkit/app | Stop on payment/legal/broad OAuth |
+| P2 | Composio | `https://composio.dev` | Agent identity created via `agents.composio.dev`; CLI installed at `~/.composio/composio` and logged in as agent `vast-ledge-mink@agent.composio.ai` | Not a public MCP registry. Composio primarily exposes Composio-managed toolkits/apps as tools or single-toolkit MCP servers; custom tools/toolkits are local/experimental, not a self-serve public listing path for AEGIS | Treat as integration/outreach target, not registry submission. Revisit only if Composio opens public toolkit submission or partner onboarding | Stop on payment/legal/broad OAuth |
 | P2 | mcp.run | `https://mcp.run` | Pending | Pending | Determine submission/account model | Stop on payment/legal/broad OAuth |
 
 ## Current verification notes
@@ -65,6 +65,7 @@ Escalate to Sham for any of the above.
 - Official MCP Registry publish succeeded on 2026-05-11 via `mcp-publisher publish server.json`; `0.1.3` is active and latest, while `0.1.1` remains as historical non-latest metadata.
 - Smithery public page resolves and exposes install instructions, but sign-up via email/password was blocked before account creation.
 - MCP Market public listing exists at `https://mcpmarket.com/server/aegis-protocol`.
+- Composio CLI is configured for the anonymous agent identity; current evidence classifies Composio as integration/outreach rather than a registry listing channel.
 
 ## Account credential handling
 
