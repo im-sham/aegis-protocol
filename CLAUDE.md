@@ -177,7 +177,7 @@ forge script script/Deploy.s.sol:DeployAegis \
   - LLM-optimized tool descriptions (explain *when* to use escrow, not just *how*)
   - Dual mode: read-only (unsigned tx) or signing (direct execution)
   - [x] Test with Claude Desktop — 10 core transactional tools E2E tested against Base Sepolia (2026-02-21)
-  - [x] Published to npm — @aegis-protocol/mcp-server v0.1.2
+  - [x] Published to npm — @aegis-protocol/mcp-server current v0.1.3
   - [x] Publish to official MCP Registry — io.github.im-sham/aegis-protocol live
   - [~] Publish to Smithery — namespace created, hosted deploy pending paid plan
 - [x] A2A Agent Card (`site/.well-known/agent-card.json`) — hosted on Cloudflare at aegis-protocol.xyz

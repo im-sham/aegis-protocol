@@ -87,7 +87,7 @@ AEGIS is the trust layer between commerce protocols (how agents find and negotia
 
 #### 1C. MCP Server Optimization — ALREADY SHIPPED, NOW OPTIMIZE
 
-Our MCP server is live (`@aegis-protocol/mcp-server` v0.1.2, 10 tools, E2E tested). The next step isn't building — it's optimizing for agent discovery and reasoning.
+Our MCP server is live (`@aegis-protocol/mcp-server` v0.1.3, 11 tools, E2E tested). The next step isn't building — it's optimizing for agent discovery and reasoning.
 
 **Actions:**
 - Audit tool descriptions against the latest research on how LLMs select tools. Focus on the "when to use" framing, not just "what it does"

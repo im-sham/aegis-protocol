@@ -125,7 +125,7 @@ function createServer(cfg?: Config) {
 
   const server = new McpServer({
     name: "aegis-protocol",
-    version: "0.1.2",
+    version: "0.1.3",
   });
 
   // --- Read tools ---
