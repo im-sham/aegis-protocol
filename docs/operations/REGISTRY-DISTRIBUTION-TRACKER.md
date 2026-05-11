@@ -46,7 +46,7 @@ Escalate to Sham for any of the above.
 
 | Priority | Surface | URL | Account/status | Listing status | Next action | Blocker/escalation |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | Official MCP Registry | `https://registry.modelcontextprotocol.io` | No separate Pallas account verified | Live listing found via `/v0/servers?search=im-sham`, but registry copy is stale at `0.1.1` while npm is `0.1.3` | Submit/trigger registry metadata refresh using updated `mcp/server.json` | Escalate if GitHub-owner verification or repo OAuth write permission is required |
+| P0 | Official MCP Registry | `https://registry.modelcontextprotocol.io` | Authenticated via `mcp-publisher login github` using GitHub device flow | Refreshed on 2026-05-11; `0.1.3` is active and `isLatest: true` in both `/v0` and `/v0.1`; older `0.1.1` remains as historical non-latest version | Monitor after future MCP package releases and republish `mcp/server.json` when version changes | Escalate if GitHub-owner verification or repo OAuth write permission is required |
 | P0 | Smithery | `https://smithery.ai/servers/@aegis-protocol/mcp-server` | Email signup attempted with `pallas@aegis-protocol.xyz`; WorkOS returned `Access blocked, please contact support`; no account created | Public listing exists; page says no deployments found / hosted deployment pending paid plan | Use existing public listing; contact Smithery support only if hosted deployment becomes necessary | Paid plan/support gate |
 | P0 | MCP.so | `https://mcp.so` | No Pallas account yet; Google/GitHub sign-in required | Submission form attempted, but no visible completion/success message | Complete interactive OAuth session and retry submission | Stop on CAPTCHA/phone/broad OAuth/payment |
 | P1 | mcpservers.com | `https://mcpservers.com` | No Pallas account yet; Google sign-in required | Search returned no Aegis listing | Complete interactive Google auth and submit | Stop on CAPTCHA/phone/broad OAuth/payment |
@@ -57,12 +57,12 @@ Escalate to Sham for any of the above.
 
 ## Current verification notes
 
-- `npm whoami` reports `srehman`; package and scope access are read-write for `@aegis-protocol/mcp-server`, `types`, `abis`, and `sdk`.
+- `npm whoami` reports `pallas-aegis`; Pallas has direct read-write collaborator access to `@aegis-protocol/mcp-server` only. Other Aegis packages still list only `srehman` as collaborator.
 - Pallas npm account `pallas-aegis` is an `@aegis-protocol` developer and a member of least-privilege team `@aegis-protocol:mcp-maintainers`, which has read-write access only to `@aegis-protocol/mcp-server`.
 - `npm view @aegis-protocol/mcp-server` reports version `0.1.3` and `latest` dist-tag `0.1.3`.
 - `mcp/README.md` already contains registry references for npm, Smithery, and official MCP Registry.
 - `mcp/server.json` and MCP runtime server metadata were updated on 2026-05-11 from stale versions to `0.1.3` so repo metadata matches the published npm package.
-- Official MCP Registry still serves stale `0.1.1` metadata as of 2026-05-11; follow-up is a registry refresh/submission, not another npm publish.
+- Official MCP Registry publish succeeded on 2026-05-11 via `mcp-publisher publish server.json`; `0.1.3` is active and latest, while `0.1.1` remains as historical non-latest metadata.
 - Smithery public page resolves and exposes install instructions, but sign-up via email/password was blocked before account creation.
 - MCP Market public listing exists at `https://mcpmarket.com/server/aegis-protocol`.
 
