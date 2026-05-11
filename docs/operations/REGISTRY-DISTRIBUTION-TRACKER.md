@@ -53,7 +53,7 @@ Escalate to Sham for any of the above.
 | P1 | MCP Market | `https://mcpmarket.com/server/aegis-protocol` | No separate account required for current state | Listed; submission form reported Aegis already exists | Monitor listing freshness and update only if metadata drifts | Stop on CAPTCHA/phone/broad OAuth/payment |
 | P1 | ACI.dev | `https://aci.dev` | Not created | Appears to be consulting/automation platform, not a public MCP registry | Deprioritize unless a concrete integration path appears | Stop on payment/legal/broad OAuth |
 | P2 | Composio | `https://composio.dev` | Agent identity created via `agents.composio.dev`; CLI installed at `~/.composio/composio` and logged in as agent `vast-ledge-mink@agent.composio.ai` | Not a public MCP registry. Composio primarily exposes Composio-managed toolkits/apps as tools or single-toolkit MCP servers; custom tools/toolkits are local/experimental, not a self-serve public listing path for AEGIS | Treat as integration/outreach target, not registry submission. Revisit only if Composio opens public toolkit submission or partner onboarding | Stop on payment/legal/broad OAuth |
-| P2 | mcp.run | `https://mcp.run` | Pending | Pending | Determine submission/account model | Stop on payment/legal/broad OAuth |
+| P2 | mcp.run / Turbo MCP | `https://mcp.run` redirects to `https://turbomcp.ai/` | No account created | Not a public registry submission path. Current site is an enterprise MCP gateway/product with demo/contact CTAs and an internal catalog concept | Treat as potential partner/customer-discovery target only; no registry submission action | Stop on payment/legal/broad OAuth/external contact |
 
 ## Current verification notes
 
@@ -66,6 +66,8 @@ Escalate to Sham for any of the above.
 - Smithery public page resolves and exposes install instructions, but sign-up via email/password was blocked before account creation.
 - MCP Market public listing exists at `https://mcpmarket.com/server/aegis-protocol`.
 - Composio CLI is configured for the anonymous agent identity; current evidence classifies Composio as integration/outreach rather than a registry listing channel.
+- `mcp.run` now redirects to Turbo MCP; current site does not expose a self-serve public server submission flow.
+- MCP.so and mcpservers.com remain the only identified registry submission surfaces blocked by interactive OAuth rather than content/readiness.
 
 ## Account credential handling
 
