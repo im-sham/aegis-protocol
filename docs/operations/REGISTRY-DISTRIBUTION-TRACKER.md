@@ -58,7 +58,7 @@ Escalate to Sham for any of the above.
 ## Current verification notes
 
 - `npm whoami` reports `srehman`; package and scope access are read-write for `@aegis-protocol/mcp-server`, `types`, `abis`, and `sdk`.
-- Least-privilege npm team `@aegis-protocol:mcp-maintainers` exists with read-write access only to `@aegis-protocol/mcp-server`; it has no members yet pending Pallas npm account creation.
+- Pallas npm account `pallas-aegis` is an `@aegis-protocol` developer and a member of least-privilege team `@aegis-protocol:mcp-maintainers`, which has read-write access only to `@aegis-protocol/mcp-server`.
 - `npm view @aegis-protocol/mcp-server` reports version `0.1.3` and `latest` dist-tag `0.1.3`.
 - `mcp/README.md` already contains registry references for npm, Smithery, and official MCP Registry.
 - `mcp/server.json` and MCP runtime server metadata were updated on 2026-05-11 from stale versions to `0.1.3` so repo metadata matches the published npm package.
