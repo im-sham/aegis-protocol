@@ -22,10 +22,10 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 ///     --private-key $PRIVATE_KEY \
 ///     --broadcast
 contract E2EDemo is Script {
-    // Deployed contract addresses (Base Sepolia - Block 37617228)
-    address constant IDENTITY = 0xc67ed2b93a4B05c35872fBB15c199Ee30ce4300D;
-    address constant ESCROW = 0xe988128467299fD856Bb45D2241811837BF35E77;
-    address constant TREASURY = 0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5;
+    // Deployed contract addresses (Base Sepolia - Block 37961418)
+    address constant IDENTITY = 0x587Fc182dB14b059c30f8B2b553edce62D81182d;
+    address constant ESCROW = 0x8e013cf23f11168B62bA2600d99166507Cbb4aAC;
+    address constant TREASURY = 0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA;
     address constant USDC_ADDR = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     function run() external {
@@ -166,7 +166,7 @@ contract E2EDemo is Script {
         console.log("========================================");
         console.log("");
         console.log("View on Basescan:");
-        console.log("  Escrow:   https://sepolia.basescan.org/address/0xe988128467299fD856Bb45D2241811837BF35E77");
-        console.log("  Treasury: https://sepolia.basescan.org/address/0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5");
+        console.log("  Escrow:   https://sepolia.basescan.org/address/0x8e013cf23f11168B62bA2600d99166507Cbb4aAC");
+        console.log("  Treasury: https://sepolia.basescan.org/address/0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA");
     }
 }

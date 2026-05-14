@@ -14,8 +14,8 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 ///   forge script script/E2E_Step1_Setup.s.sol:E2EStep1 --rpc-url https://sepolia.base.org --private-key $PRIVATE_KEY
 /// --broadcast
 contract E2EStep1 is Script {
-    address constant IDENTITY = 0xc67ed2b93a4B05c35872fBB15c199Ee30ce4300D;
-    address constant ESCROW = 0xe988128467299fD856Bb45D2241811837BF35E77;
+    address constant IDENTITY = 0x587Fc182dB14b059c30f8B2b553edce62D81182d;
+    address constant ESCROW = 0x8e013cf23f11168B62bA2600d99166507Cbb4aAC;
     address constant USDC_ADDR = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     function run() external {

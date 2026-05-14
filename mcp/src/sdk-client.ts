@@ -32,9 +32,9 @@ export function createSdkClient(config: McpConfig): AegisClient {
       chain: viemChain,
       transport: buildTransport(rpcUrls),
     });
-    // Cast needed: viem chain-specific PublicClient types diverge across packages
+    // Cast needed: viem chain-specific client types diverge across packages.
     return AegisClient.fromViem({
-      walletClient,
+      walletClient: walletClient as any,
       publicClient: publicClient as any,
       chain: config.chain,
     });

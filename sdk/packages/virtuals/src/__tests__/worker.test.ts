@@ -238,7 +238,7 @@ describe("@aegis-protocol/virtuals", () => {
       thresholdUsd: 75,
       repoUrl: "https://github.com/im-sham/aegis-protocol",
       docsUrl:
-        "https://github.com/im-sham/aegis-protocol/blob/main/content/agent-promotion-playbook.md",
+        "https://github.com/im-sham/aegis-protocol/blob/main/docs/integrations/OPERATOR-ADOPTION-KIT.md",
       mcpUrl: "https://www.npmjs.com/package/@aegis-protocol/mcp-server",
     });
     const schemas = createAegisAcpSchemas();

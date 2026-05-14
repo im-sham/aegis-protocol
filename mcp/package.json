@@ -8,30 +8,33 @@
   "bin": {
     "aegis-mcp": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsup",
     "start": "node dist/index.js",
-    "test": "vitest run",
+    "test": "vitest run tests/config.test.ts tests/helpers/*.test.ts tests/tools/*.test.ts",
+    "test:e2e": "vitest run tests/e2e/mcp-e2e.test.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@aegis-protocol/abis": "workspace:*",
     "@aegis-protocol/sdk": "workspace:*",
     "@aegis-protocol/types": "workspace:*",
-    "@aegis-protocol/abis": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "viem": "^2.0.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
-    "tsx": "^4.0.0",
+    "@types/node": "^20.0.0",
     "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.5.0",
-    "vitest": "^2.0.0",
-    "@types/node": "^20.0.0"
+    "vitest": "^2.0.0"
   },
   "keywords": [
     "mcp",

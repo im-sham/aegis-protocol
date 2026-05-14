@@ -69,10 +69,10 @@ To add a new network, create a JSON config in `config/` following the same shape
 
 | Contract | Address | Start Block |
 |----------|---------|-------------|
-| AegisEscrow | `0xe988128467299fD856Bb45D2241811837BF35E77` | 37617228 |
-| AegisDispute | `0x2c831D663B87194Fa6444df17A9A7d135186Cb41` | 37617228 |
-| AegisTreasury | `0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5` | 37617228 |
-| AegisJobFactory | `0xFD451BEfa1eE3EB4dBCA4E9EA539B4bf432866dA` | 37617228 |
+| AegisEscrow | `0x8e013cf23f11168B62bA2600d99166507Cbb4aAC` | 37961418 |
+| AegisDispute | `0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2` | 37961418 |
+| AegisTreasury | `0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA` | 37961418 |
+| AegisJobFactory | `0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF` | 37961418 |
 
 ## Example Queries
 

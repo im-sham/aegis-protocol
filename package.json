@@ -1,0 +1,17 @@
+{
+  "name": "aegis-protocol-workspace",
+  "private": true,
+  "pnpm": {
+    "overrides": {
+      "axios": "1.16.1",
+      "express-rate-limit": "8.2.2",
+      "fast-uri": "3.1.2",
+      "handlebars": "4.7.9",
+      "ip-address": "10.1.1",
+      "langsmith": "0.7.1",
+      "path-to-regexp": "8.4.2",
+      "uuid": "13.0.1",
+      "yaml": "2.8.3"
+    }
+  }
+}

@@ -74,17 +74,17 @@ forge test --gas-report
 Deployed mock ERC-8004 registries since real registries don't exist on Base Sepolia yet. Deploy script auto-detects chain and deploys mocks on testnet.
 
 ### 10. Deploy full AEGIS stack to Base Sepolia ✅
-**Deployed & Verified — Block 37617228 — Total cost: 0.000028832538 ETH**
+**Redeployed & Verified — Start block 37961418 — 2026-02-21**
 
 | Contract | Address |
 |----------|---------|
-| MockIdentityRegistry | `0xc67ed2b93a4B05c35872fBB15c199Ee30ce4300D` |
-| MockReputationRegistry | `0x760b4605371faE6097AcD2dcd8ca93dd5FfF9c84` |
-| MockValidationRegistry | `0xB9D5B30a207429E95ea7E055fbA6D9d6b7Ba632b` |
-| AegisTreasury | `0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5` |
-| AegisEscrow | `0xe988128467299fD856Bb45D2241811837BF35E77` |
-| AegisDispute | `0x2c831D663B87194Fa6444df17A9A7d135186Cb41` |
-| AegisJobFactory | `0xFD451BEfa1eE3EB4dBCA4E9EA539B4bf432866dA` |
+| MockIdentityRegistry | `0x587Fc182dB14b059c30f8B2b553edce62D81182d` |
+| MockReputationRegistry | `0x2f738B69484de79828C83e292F13Ad6EF523848a` |
+| MockValidationRegistry | `0x4F15a4ce7db076F1A0159ce457AbB7D3a75BC0CD` |
+| AegisTreasury | `0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA` |
+| AegisEscrow | `0x8e013cf23f11168B62bA2600d99166507Cbb4aAC` |
+| AegisDispute | `0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2` |
+| AegisJobFactory | `0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF` |
 
 **Owner/Admin:** `0x31084ba014bC91D467D008e6fb21f827AC6f7eb0`
 **USDC:** `0x036CbD53842c5426634e7929541eC2318f3dCF7e` (Base Sepolia)

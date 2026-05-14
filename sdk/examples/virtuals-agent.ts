@@ -96,7 +96,7 @@ const chain = (process.env.AEGIS_CHAIN as SupportedChain | undefined) ?? "base-s
 const thresholdUsd = Number(process.env.AEGIS_VIRTUALS_THRESHOLD_USD ?? 50);
 const docsUrl =
   process.env.AEGIS_DOCS_URL ??
-  "https://github.com/im-sham/aegis-protocol/blob/main/content/agent-promotion-playbook.md";
+  "https://github.com/im-sham/aegis-protocol/blob/main/docs/integrations/OPERATOR-ADOPTION-KIT.md";
 const repoUrl =
   process.env.AEGIS_REPO_URL ?? "https://github.com/im-sham/aegis-protocol";
 const mcpUrl =

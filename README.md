@@ -295,7 +295,7 @@ AEGIS is on **Base Sepolia testnet**. Mainnet deployment is planned for Q2 2026,
 
 ## Contributing
 
-AEGIS is open source under the MIT License. Contributions welcome — see the [open issues](https://github.com/im-sham/aegis-protocol/issues) or reach out.
+AEGIS is open source under the MIT License. Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), or the [open issues](https://github.com/im-sham/aegis-protocol/issues).
 
 ## License
 

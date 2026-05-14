@@ -16,7 +16,7 @@ const JOB_CREATED_RECEIPT: TransactionReceipt = {
   status: "success",
   logs: [
     {
-      address: "0xe988128467299fD856Bb45D2241811837BF35E77" as Hex,
+      address: "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC" as Hex,
       topics: [
         "0xc3beba38db0ec2a3c21e693c2ec7e73f6a0a903f3a1753de2484c1bf7d1b2e63" as Hex,
         "0x0000000000000000000000000000000000000000000000000000000000000042" as Hex,
@@ -39,7 +39,7 @@ const JOB_SETTLED_RECEIPT: TransactionReceipt = {
   status: "success",
   logs: [
     {
-      address: "0xe988128467299fD856Bb45D2241811837BF35E77" as Hex,
+      address: "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC" as Hex,
       topics: [
         "0x9d5a3e8b68bbe9a6a4a86dddf20c6e5be64b2e47b0453a2baec4fa7ff98c8b93" as Hex,
         "0x0000000000000000000000000000000000000000000000000000000000000042" as Hex,
@@ -60,7 +60,7 @@ const DISPUTE_INITIATED_RECEIPT: TransactionReceipt = {
   status: "success",
   logs: [
     {
-      address: "0x2c831D663B87194Fa6444df17A9A7d135186Cb41" as Hex,
+      address: "0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2" as Hex,
       topics: [
         "0x0000000000000000000000000000000000000000000000000000000000000000" as Hex,
         "0x00000000000000000000000000000000000000000000000000000000000000aa" as Hex,
@@ -79,7 +79,7 @@ const DISPUTE_RESOLVED_RECEIPT: TransactionReceipt = {
   status: "success",
   logs: [
     {
-      address: "0x2c831D663B87194Fa6444df17A9A7d135186Cb41" as Hex,
+      address: "0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2" as Hex,
       topics: [
         "0x0000000000000000000000000000000000000000000000000000000000000000" as Hex,
         "0x00000000000000000000000000000000000000000000000000000000000000aa" as Hex,

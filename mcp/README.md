@@ -156,7 +156,7 @@ Each record includes:
 - For CI and production-like test runs, set `AEGIS_RPC_URLS` (or at least `AEGIS_RPC_URL`) to dedicated provider endpoints instead of relying on shared public RPC.
 - Resolution priority is: `AEGIS_RPC_URL` -> `AEGIS_RPC_URLS` entries -> chain-specific env (`BASE_SEPOLIA_RPC_URL` or `BASE_RPC_URL`/`BASE_MAINNET_RPC_URL`) -> chain default.
 - MCP E2E tests include bounded retries for transient transport failures (`fetch failed`, timeouts, temporary unreachable hosts) in `tests/e2e/mcp-e2e.test.ts`.
-- CI secreted E2E runs are gated behind a protected `testnet-e2e` environment and trusted events.
+- CI secreted E2E runs are manual-only (`workflow_dispatch`) and gated behind the protected `testnet-e2e` environment.
 - Canonical risk log and mitigation status live in [`docs/operations/ENGINEERING-RISK-TRACKER.md`](../docs/operations/ENGINEERING-RISK-TRACKER.md).
 - Operational preflight and incident procedure lives in [`docs/operations/RELIABILITY-RUNBOOK.md`](../docs/operations/RELIABILITY-RUNBOOK.md).
 

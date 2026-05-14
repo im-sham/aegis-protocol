@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@aegis-protocol/sdk": "workspace:*",
-    "@langchain/core": "^1.1.30",
+    "@langchain/core": "^1.1.46",
     "zod": "^4.3.6"
   },
   "devDependencies": {
