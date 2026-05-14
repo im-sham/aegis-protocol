@@ -22,7 +22,7 @@
     "graphql-request": "^7.0.0",
     "hono": "^4.12.18",
     "viem": "^2.0.0",
-    "zod": "^3.23.0"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
