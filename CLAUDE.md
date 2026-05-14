@@ -189,9 +189,7 @@ forge script script/Deploy.s.sol:DeployAegis \
 - [x] CrewAI/LangChain distribution polish is shipped (LangChain advisory + settlement parity, CrewAI attribution defaults)
 - [x] ElizaOS integration package is shipped (`sdk/packages/elizaos`)
 - [x] Virtuals integration package is shipped (`sdk/packages/virtuals`)
-- [x] Operator/default-placement adoption kit is shipped (`docs/integrations/OPERATOR-ADOPTION-KIT.md`, `content/framework-outreach-snippets.md`)
-- [x] First framework outreach batch is prepared (`content/outreach-batch-2026-03-06-agent-frameworks.md`, `docs/operations/OUTREACH-TRACKER.md`)
-- [x] Send-ready outreach copy is prepared (`content/outreach-send-ready-2026-03-06.md`, `docs/operations/OUTREACH-LOG-TEMPLATE.md`)
+- [x] Operator/default-placement adoption kit is shipped (`docs/integrations/OPERATOR-ADOPTION-KIT.md`)
 
 ### Phase 3: Mainnet Launch (Weeks 13-16)
 - [ ] Security audit (Sherlock competitive audit contest — public, ~1,500 nSLOC)
@@ -224,29 +222,23 @@ Worktrees at `.worktrees/<branch-name>` (gitignored). Always verify `.worktrees/
 
 ## Strategic Context
 
-- **GTM Strategy**: Agent-native distribution optimized for external agent usage. Default assumption: distribution through agent choice architecture, not awareness-first marketing.
-- **North star for the next 30-45 days**: external agent usage (`aegis_should_i_escrow`, write-path calls, non-demo jobs, repeat usage)
-- **Primary distribution channels**: MCP optimization, framework defaults/integrations, on-chain discoverability, direct framework/operator adoption
-- **Experiments, not pillars**: ambassador agents, memory-layer syndication, follower-growth tactics
+- **Integration strategy**: Agent-native distribution through MCP, framework adapters, on-chain discoverability, and operator-owned tool catalogs.
+- **Public positioning**: Lead with when agents should use escrow, not generic awareness claims.
+- **Usage evidence discipline**: Keep demo, staging, and production contexts separable when `AEGIS_USAGE_*` attribution is enabled.
 - **Licensing**: MIT License for all code (contracts, SDK, API, subgraph). Revenue is from protocol fees, not software licensing.
 - **Audit plan**: Sherlock competitive audit contest (public). Start Sherlock AI GitHub integration during development.
-- **Grant targets**: Base Builder Grants (apply at testnet deploy), Base Batches 2026, Ethereum Foundation ESP, x402 Foundation, Optimism RetroPGF
 - **Go-public timing**: Repo is public at github.com/im-sham/aegis-protocol (history scrubbed 2026-02-18)
-- **Not competitors**: Fomolt (vertical trading app), OpenX402 (complementary payment facilitator). OpenX402 is a potential integration partner.
 
 ## Key Reference Docs
 
-- `docs/ERC-8004-SPEC.md` — Complete ERC-8004 specification notes
-- `docs/ARCHITECTURE.md` — Full architecture decisions and rationale
-- `docs/COMPETITIVE-ANALYSIS.md` — Detailed competitor breakdown
+- `ERC-8004-SPEC.md` — Complete ERC-8004 specification notes
+- `ARCHITECTURE.md` — Full architecture decisions and rationale
+- `COMPETITIVE-ANALYSIS.md` — Detailed competitor breakdown
 - `docs/plans/2026-02-17-rest-api-design.md` — REST API architecture
 - `docs/plans/2026-02-17-rest-api-plan.md` — REST API 12-task implementation plan
 - `docs/plans/2026-02-17-subgraph-design.md` — Subgraph design document
 - `docs/plans/2026-02-17-subgraph-plan.md` — Subgraph implementation plan (10 tasks)
-- `AEGIS_Strategic_Research_Brief.md` — Living strategic research document (competitive landscape, GTM, grants, costs)
-- `content/agent-native-distribution-v2.md` — Higher-level agent-native distribution thesis and priority ranking
-- `content/agent-promotion-playbook.md` — Current execution playbook for agent-native adoption
-- `docs/decisions/2026-03-06-agent-first-distribution.md` — Canonical rationale memo for the current strategy reset
+- `docs/integrations/OPERATOR-ADOPTION-KIT.md` — Public default-placement guidance for shipped integrations
 - `docs/plans/2026-02-18-python-sdk-design-wip.md` — Python SDK design (paused, resume after MCP Server)
 - `docs/security/SECURITY-TRACKER.md` — Security findings register and hardening backlog
 - `docs/security/security_best_practices_report.md` — Detailed security audit narrative

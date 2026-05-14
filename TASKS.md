@@ -24,9 +24,7 @@
 - [x] ~~**CrewAI integration**~~ - shipped CrewAI MCP example (`sdk/examples/crewai-agent.py`) and examples script (`crewai-agent`) (2026-03-04)
 - [x] ~~**LangChain integration**~~ - shipped `@aegis-protocol/langchain` tools package + LangGraph example (`sdk/examples/langchain-agent.ts`) (2026-03-04)
 - [x] ~~**CrewAI/LangChain distribution polish**~~ - LangChain now exposes the advisory + settlement tool path, example prompts start from `aegis_should_i_escrow`, and CrewAI stamps MCP usage attribution defaults when logging is enabled (2026-03-06)
-- [x] ~~**Operator/default-placement adoption kit**~~ - shipped canonical operator kit and outreach snippets for MCP, LangChain, CrewAI, ElizaOS, and Virtuals in `docs/integrations/OPERATOR-ADOPTION-KIT.md` and `content/framework-outreach-snippets.md` (2026-03-06)
-- [x] ~~**First framework outreach batch prepared**~~ - shipped prioritized outreach batch + tracker for Virtuals, ElizaOS, CrewAI, and LangChain in `content/outreach-batch-2026-03-06-agent-frameworks.md` and `docs/operations/OUTREACH-TRACKER.md` (2026-03-06)
-- [x] ~~**Send-ready framework outreach copy**~~ - shipped final outbound messages with branch-specific links and a reusable outreach log template in `content/outreach-send-ready-2026-03-06.md` and `docs/operations/OUTREACH-LOG-TEMPLATE.md` (2026-03-06)
+- [x] ~~**Operator/default-placement adoption kit**~~ - shipped canonical public operator kit for MCP, LangChain, CrewAI, ElizaOS, and Virtuals in `docs/integrations/OPERATOR-ADOPTION-KIT.md` (2026-03-06)
 
 ### Pre-Public Repo ✅ COMPLETE
 - [x] ~~**Scrub git history for secrets**~~ - clean 5-commit linear history (2026-02-18)
@@ -55,14 +53,12 @@
 
 ### Program Checkpoints
 - [x] ~~**State of Project #1 (Agent-First Foundation Checkpoint)**~~ - CI MCP E2E is green on protected `main`, dedicated RPC secrets are active, reliability docs are current, and next integration scope is frozen to `CrewAI` (2026-03-04)
-- [x] ~~**State of Project #2 (Agent-First Distribution Reset)**~~ - canonical strategy now optimizes for external agent usage; next priorities are MCP optimization, ElizaOS, and Virtuals; rationale captured in `docs/decisions/2026-03-06-agent-first-distribution.md` (2026-03-06)
-- [x] ~~**State of Project #3 (MCP Optimization & Instrumentation)**~~ - advisory funnel improved, signer-mode balance checks simplified, and optional MCP usage logging shipped; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-MCP-OPTIMIZATION.md` (2026-03-06)
-- [x] ~~**State of Project #4 (ElizaOS Integration)**~~ - ElizaOS plugin package shipped with AEGIS advisory/read/write actions and example character config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ELIZAOS.md` (2026-03-06)
-- [x] ~~**State of Project #5 (Virtuals Integration)**~~ - Virtuals GAME/ACP adapter package shipped with AEGIS worker/functions, ACP schema/resource helpers, and example config; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-VIRTUALS.md` (2026-03-06)
-- [x] ~~**State of Project #6 (CrewAI/LangChain Distribution Polish)**~~ - advisory funnel parity is now consistent across LangChain, CrewAI example prompts, and MCP usage attribution defaults; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-CREWAI-LANGCHAIN-POLISH.md` (2026-03-06)
-- [x] ~~**State of Project #7 (Operator Adoption Kit)**~~ - canonical default-placement guidance and outreach snippets now exist for the shipped integrations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-ADOPTION-KIT.md` (2026-03-06)
-- [x] ~~**State of Project #8 (Framework Outreach Batch)**~~ - first outreach batch and living tracker now exist for prioritized operator/maintainer conversations; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-BATCH.md` (2026-03-06)
-- [x] ~~**State of Project #9 (Send-Ready Outreach Copy)**~~ - final send-ready messages and a reusable outreach logging template now exist for the first contact batch; checkpoint in `docs/operations/WIP-CHECKPOINT-2026-03-06-OUTREACH-SEND-READY.md` (2026-03-06)
+- [x] ~~**State of Project #2 (Agent-First Distribution Reset)**~~ - canonical strategy now optimizes for external agent usage; next priorities are MCP optimization, ElizaOS, and Virtuals (2026-03-06)
+- [x] ~~**State of Project #3 (MCP Optimization & Instrumentation)**~~ - advisory funnel improved, signer-mode balance checks simplified, and optional MCP usage logging shipped (2026-03-06)
+- [x] ~~**State of Project #4 (ElizaOS Integration)**~~ - ElizaOS plugin package shipped with AEGIS advisory/read/write actions and example character config (2026-03-06)
+- [x] ~~**State of Project #5 (Virtuals Integration)**~~ - Virtuals GAME/ACP adapter package shipped with AEGIS worker/functions, ACP schema/resource helpers, and example config (2026-03-06)
+- [x] ~~**State of Project #6 (CrewAI/LangChain Distribution Polish)**~~ - advisory funnel parity is now consistent across LangChain, CrewAI example prompts, and MCP usage attribution defaults (2026-03-06)
+- [x] ~~**State of Project #7 (Operator Adoption Kit)**~~ - canonical default-placement guidance now exists for the shipped integrations (2026-03-06)
 
 ### Grants (Sequenced by Timing)
 - [ ] **Apply: Base Builder Grants** - timing: immediately after testnet deploy. Self-nominate at docs.base.org/get-started/get-funded
@@ -72,9 +68,9 @@
 - [ ] **Apply: x402 Foundation Developer Grant** - timing: after shipping escrow header extension proposal (month 2-3)
 
 ### Community & GTM
-- [ ] **Post on Ethereum Magicians forum** - ERC-8004 discussion thread, announce AEGIS (draft ready in `content/`)
+- [ ] **Post on Ethereum Magicians forum** - ERC-8004 discussion thread, announce AEGIS
 - [ ] **DM Davide Crapis (EF dAI team lead)** - Twitter/Farcaster, link to deployed contracts + one-paragraph pitch
-- [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase) (draft ready in `content/`)
+- [ ] **DM ERC-8004 co-authors** - Marco De Rossi (MetaMask), Jordan Ellis (Google), Erik Reppel (Coinbase)
 - [ ] **Open ElizaOS maintainer conversations** - position AEGIS as a trust layer for external-agent work, aiming for plugin usage and default-placement paths
 - [ ] **Open Virtuals / ACP operator conversations** - validate default-placement paths, partner distribution, or profile template adoption for the shipped Virtuals adapter
 - [ ] **Open CrewAI / LangChain operator conversations** - use the operator kit to validate advisory-first placement in real external-specialist workflows
@@ -141,9 +137,6 @@
 - [x] ~~SDK DX enhancements~~ (2026-02)
 - [x] ~~Subgraph (The Graph) for full event indexing~~ (2026-02)
 - [x] ~~REST API relay server~~ (2026-02)
-- [x] ~~Investor one-pager PDF (2 pages)~~ (2026-02-18)
-- [x] ~~Strategic Research Brief v1.0~~ (2026-02-18)
-- [x] ~~Strategic Research Brief v2.0 — expanded GTM, agent distribution, Sherlock, grants, open source strategy~~ (2026-02-18)
 - [x] ~~Updated CLAUDE.md with strategic context~~ (2026-02-18)
 - [x] ~~AEGIS MCP Server — 10 tools, dual-mode, 17 tests~~ (2026-02-18)
 - [x] ~~Contracts compile clean — zero errors, forge build~~ (2026-02-18)
@@ -160,7 +153,7 @@
 - [x] ~~Custom error migration — all string reverts → typed errors across 4 contracts~~ (2026-02-20)
 - [x] ~~Invariant test suite — 5 tests, 640k handler calls, CI profile added~~ (2026-02-20)
 - [x] ~~Security tracker + best practices report — docs/security/~~ (2026-02-20)
-- [x] ~~Content assets drafted — blog post, grant app, forum post, cold DMs in content/~~ (2026-02-18)
+- [x] ~~Public content assets drafted — blog post, forum post, and launch collateral~~ (2026-02-18)
 - [x] ~~MCP Server published to official MCP Registry — io.github.im-sham/aegis-protocol~~ (2026-02-21)
 - [x] ~~MCP Server v0.1.2 — createSandboxServer export for registry scanners, server.json manifest~~ (2026-02-21)
 - [x] ~~Smithery namespace created — aegis-protocol/mcp-server (hosted deploy pending paid plan)~~ (2026-02-21)

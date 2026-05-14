@@ -7,10 +7,6 @@ Last reviewed: 2026-03-06
 This document is the practical adoption kit for maintainers, workflow builders, and
 operators who want to place AEGIS into a default or recommended path for external-agent work.
 
-Use this alongside:
-- `content/agent-promotion-playbook.md` for distribution strategy
-- `docs/decisions/2026-03-06-agent-first-distribution.md` for rationale
-
 This document is execution-facing. It is designed to reduce friction for:
 - framework maintainers evaluating whether AEGIS belongs in their recommended patterns
 - operators wiring external-specialist workflows into live agent systems
@@ -194,4 +190,4 @@ Primary sources checked on 2026-03-06:
 - ElizaOS plugin docs: `eliza.how`
 - Virtuals GAME + ACP docs: `docs.game.virtuals.io`, `whitepaper.virtuals.io`
 
-If framework guidance changes materially, update this kit before revising examples or outreach copy.
+If framework guidance changes materially, update this kit before revising examples or public integration docs.

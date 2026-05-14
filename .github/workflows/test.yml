@@ -75,7 +75,7 @@ jobs:
         run: pnpm typecheck
 
       - name: Run MCP unit tests
-        run: pnpm exec vitest run tests/config.test.ts tests/tools/*.test.ts
+        run: pnpm test
 
   mcp-e2e:
     name: MCP E2E (Base Sepolia)
@@ -83,10 +83,7 @@ jobs:
     permissions:
       contents: read
     needs: mcp
-    if: >-
-      ${{
-        github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-      }}
+    if: github.event_name == 'workflow_dispatch'
     environment:
       name: testnet-e2e
     timeout-minutes: 20
@@ -139,7 +136,7 @@ jobs:
 
       - name: Run MCP E2E tests
         if: steps.preflight.outputs.skip != 'true'
-        run: pnpm exec vitest run tests/e2e/mcp-e2e.test.ts
+        run: pnpm run test:e2e
 
       - name: Skip MCP E2E (missing secrets)
         if: steps.preflight.outputs.skip == 'true'

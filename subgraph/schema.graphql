@@ -7,7 +7,7 @@ AEGIS Protocol Subgraph Schema
 # MUTABLE AGGREGATION ENTITIES
 # =============================================================================
 
-type Job @entity {
+type Job @entity(immutable: false) {
   id: Bytes! # jobId (bytes32)
   clientAgentId: BigInt!
   providerAgentId: BigInt!
@@ -42,7 +42,7 @@ type Job @entity {
   events: [JobCreatedEvent!]! @derivedFrom(field: "job")
 }
 
-type Dispute @entity {
+type Dispute @entity(immutable: false) {
   id: Bytes!
   job: Job!
   jobId: Bytes!
@@ -59,7 +59,7 @@ type Dispute @entity {
   evidence: [EvidenceSubmittedEvent!]! @derivedFrom(field: "dispute")
 }
 
-type Arbitrator @entity {
+type Arbitrator @entity(immutable: false) {
   id: Bytes!
   totalStaked: BigInt!
   totalSlashed: BigInt!
@@ -69,7 +69,7 @@ type Arbitrator @entity {
   lastActivityAt: BigInt!
 }
 
-type JobTemplate @entity {
+type JobTemplate @entity(immutable: false) {
   id: String!
   templateId: BigInt!
   name: String!
@@ -84,7 +84,7 @@ type JobTemplate @entity {
   jobs: [Job!]! @derivedFrom(field: "template")
 }
 
-type ProtocolStats @entity {
+type ProtocolStats @entity(immutable: false) {
   id: String! # singleton "protocol"
   totalJobs: BigInt!
   totalSettled: BigInt!
@@ -97,7 +97,7 @@ type ProtocolStats @entity {
   activeArbitrators: BigInt!
 }
 
-type DailyStats @entity {
+type DailyStats @entity(immutable: false) {
   id: String! # "YYYY-MM-DD"
   date: Int!
   jobsCreated: BigInt!

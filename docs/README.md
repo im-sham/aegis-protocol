@@ -10,9 +10,9 @@
 
 | Document | Size | Purpose |
 |----------|------|---------|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | TBD | Full protocol architecture and design decisions |
-| [COMPETITIVE-ANALYSIS.md](./COMPETITIVE-ANALYSIS.md) | TBD | Detailed competitor breakdown |
-| [ERC-8004-SPEC.md](./ERC-8004-SPEC.md) | TBD | Complete ERC-8004 specification notes |
+| [ARCHITECTURE.md](../ARCHITECTURE.md) | TBD | Full protocol architecture and design decisions |
+| [COMPETITIVE-ANALYSIS.md](../COMPETITIVE-ANALYSIS.md) | TBD | Detailed competitor breakdown |
+| [ERC-8004-SPEC.md](../ERC-8004-SPEC.md) | TBD | Complete ERC-8004 specification notes |
 
 ### SDK Research (February 2026)
 
@@ -39,18 +39,11 @@
 | [operations/ENGINEERING-RISK-TRACKER.md](./operations/ENGINEERING-RISK-TRACKER.md) | Living tracker for non-security engineering risks (external dependencies, reliability, and mitigation status) |
 | [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md) | Preflight, fallback, and incident-response procedure for RPC and E2E reliability |
 
-### Strategy & Decisions
+### Integration Guidance
 
 | Document | Purpose |
 |----------|---------|
-| [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) | Current execution playbook for agent-native adoption, optimized for external agent usage |
-| [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md) | Canonical rationale memo explaining why AEGIS now prioritizes agent choice architecture over awareness-first tactics |
-| [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) | Copy-paste default-placement guidance, attribution rules, and framework insertion points for shipped integrations |
-| [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md) | Short maintainer/operator outreach copy aligned to the shipped integration surfaces |
-| [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) | Living tracker for framework/operator outreach status, channels, asks, and feedback |
-| [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md) | First prioritized outreach batch for Virtuals, ElizaOS, CrewAI, and LangChain |
-| [../content/outreach-send-ready-2026-03-06.md](../content/outreach-send-ready-2026-03-06.md) | Final send-ready messages with branch-specific public links for the first framework outreach batch |
-| [operations/OUTREACH-LOG-TEMPLATE.md](./operations/OUTREACH-LOG-TEMPLATE.md) | Reusable log block format for recording sends, responses, and thesis changes |
+| [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) | Public default-placement guidance, attribution rules, and framework insertion points for shipped integrations |
 
 ---
 
@@ -59,16 +52,16 @@
 ### For Developers Building on AEGIS
 
 **"I want to understand the protocol"**
-→ Start with [ARCHITECTURE.md](./ARCHITECTURE.md)
+→ Start with [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 **"I want to use the TypeScript SDK"**
 → Start with [SDK-RESEARCH-SUMMARY.md](./SDK-RESEARCH-SUMMARY.md) then see [SDK-CODE-EXAMPLES.md](./SDK-CODE-EXAMPLES.md)
 
 **"I want to compare AEGIS to alternatives"**
-→ Read [COMPETITIVE-ANALYSIS.md](./COMPETITIVE-ANALYSIS.md)
+→ Read [COMPETITIVE-ANALYSIS.md](../COMPETITIVE-ANALYSIS.md)
 
 **"I want to understand ERC-8004 integration"**
-→ Read [ERC-8004-SPEC.md](./ERC-8004-SPEC.md)
+→ Read [ERC-8004-SPEC.md](../ERC-8004-SPEC.md)
 
 **"I need current engineering/reliability risks and mitigations"**
 → Read [operations/ENGINEERING-RISK-TRACKER.md](./operations/ENGINEERING-RISK-TRACKER.md)
@@ -76,17 +69,8 @@
 **"I need the operational procedure for reliability incidents"**
 → Read [operations/RELIABILITY-RUNBOOK.md](./operations/RELIABILITY-RUNBOOK.md)
 
-**"I need the current distribution strategy and why it changed"**
-→ Read [../content/agent-promotion-playbook.md](../content/agent-promotion-playbook.md) and [decisions/2026-03-06-agent-first-distribution.md](./decisions/2026-03-06-agent-first-distribution.md)
-
-**"I need default-placement guidance or outreach copy for shipped integrations"**
-→ Read [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md) and [../content/framework-outreach-snippets.md](../content/framework-outreach-snippets.md)
-
-**"I need to execute or review the current outreach batch"**
-→ Read [operations/OUTREACH-TRACKER.md](./operations/OUTREACH-TRACKER.md) and [../content/outreach-batch-2026-03-06-agent-frameworks.md](../content/outreach-batch-2026-03-06-agent-frameworks.md)
-
-**"I need final send-ready copy and a logging template"**
-→ Read [../content/outreach-send-ready-2026-03-06.md](../content/outreach-send-ready-2026-03-06.md) and [operations/OUTREACH-LOG-TEMPLATE.md](./operations/OUTREACH-LOG-TEMPLATE.md)
+**"I need default-placement guidance for shipped integrations"**
+→ Read [integrations/OPERATOR-ADOPTION-KIT.md](./integrations/OPERATOR-ADOPTION-KIT.md)
 
 ### For SDK Developers
 
@@ -175,7 +159,7 @@
 
 ### Protocol Resources
 - **GitHub:** [aegis-protocol](https://github.com/im-sham/aegis-protocol) (public)
-- **Contracts:** Base Sepolia deployment (see deployment logs)
+- **Contracts:** Base Sepolia deployment (see the root README)
 - **Standards:**
   - [ERC-8004 Specification](https://eips.ethereum.org/EIPS/eip-8004) (Trustless Agents)
   - [x402 Documentation](https://docs.cdp.coinbase.com/x402/docs) (Coinbase Payments)
@@ -246,5 +230,5 @@ MIT License — See LICENSE file for details
 
 ---
 
-**Last Updated:** March 6, 2026
-**Version:** 0.1.1 (Pre-release)
+**Last Updated:** May 14, 2026
+**Version:** Public docs index for AEGIS testnet packages

@@ -19,7 +19,7 @@ The core question we're solving: x402 handles payments, ERC-8004 handles identit
 
 **What's deployed (Base Sepolia testnet):**
 - 4 contracts: AegisEscrow, AegisDispute, AegisTreasury, AegisJobFactory
-- [AegisEscrow on BaseScan](https://sepolia.basescan.org/address/0xD5140b684Ea05a9e5fB6090cb89ED53eeE22A42a)
+- [AegisEscrow on BaseScan](https://sepolia.basescan.org/address/0x8e013cf23f11168B62bA2600d99166507Cbb4aAC)
 - TypeScript SDK: `@aegis-protocol/sdk` on npm
 - MCP Server: `@aegis-protocol/mcp-server` on npm (10 tools for AI agent integration)
 - REST API + The Graph subgraph

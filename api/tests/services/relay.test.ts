@@ -2,10 +2,10 @@ import { describe, it, expect } from "vitest";
 import { validateSignedTransaction } from "../../src/services/relay.js";
 
 const WHITELIST = new Set([
-  "0xe988128467299fd856bb45d2241811837bf35e77",
-  "0x2c831d663b87194fa6444df17a9a7d135186cb41",
-  "0xe64d271a863aa1438fbb36bd1f280fa1f499c3f5",
-  "0xfd451befa1ee3eb4dbca4e9ea539b4bf432866da",
+  "0x8e013cf23f11168b62ba2600d99166507cbb4aac",
+  "0x9cbe0bf5080568f56d61f4f3ef0f64909898dcb2",
+  "0xcd2a996edd6be2992063fd2a41c0240d77c9e0aa",
+  "0xd6a9fafa4d1d233075d6c5de2a407942bdc29dbf",
 ]);
 
 describe("relay service", () => {
@@ -25,7 +25,7 @@ describe("relay service", () => {
   it("rejects tx with wrong chain ID", () => {
     const result = validateSignedTransaction(
       {
-        to: "0xe988128467299fD856Bb45D2241811837BF35E77",
+        to: "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC",
         chainId: 1,
       },
       WHITELIST,
@@ -51,7 +51,7 @@ describe("relay service", () => {
   it("accepts valid tx to whitelisted contract", () => {
     const result = validateSignedTransaction(
       {
-        to: "0xe988128467299fD856Bb45D2241811837BF35E77",
+        to: "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC",
         chainId: 84532,
       },
       WHITELIST,
@@ -64,7 +64,7 @@ describe("relay service", () => {
   it("accepts valid tx case-insensitive", () => {
     const result = validateSignedTransaction(
       {
-        to: "0xE988128467299FD856BB45D2241811837BF35E77",
+        to: "0x8E013CF23F11168B62BA2600D99166507CBB4AAC",
         chainId: 84532,
       },
       WHITELIST,

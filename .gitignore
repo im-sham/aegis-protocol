@@ -2,16 +2,25 @@
 cache/
 out/
 
-# Ignores development broadcast logs
-!/broadcast
-/broadcast/*/31337/
-/broadcast/**/dry-run/
+# Foundry generated deployment and broadcast logs
+broadcast/
 
 # Forge auto-generated docs (not our design docs)
 docs/book/
 
-# Dotenv file
+# Dotenv files
 .env
+.env.*
+!.env.example
+!**/.env.example
+*.local
+
+# Local agent/editor state
+.claude/
+.codex/
+.cursor/
+.vscode/
+.idea/
 
 # OS files
 .DS_Store

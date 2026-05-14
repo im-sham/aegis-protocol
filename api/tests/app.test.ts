@@ -20,10 +20,10 @@ vi.mock("@aegis-protocol/types", () => ({
     "base-sepolia": {
       chainId: 84532,
       contracts: {
-        escrow: "0xe988128467299fD856Bb45D2241811837BF35E77",
-        dispute: "0x2c831D663B87194Fa6444df17A9A7d135186Cb41",
-        treasury: "0xE64D271a863aa1438FBb36Bd1F280FA1F499c3f5",
-        factory: "0xFD451BEfa1eE3EB4dBCA4E9EA539B4bf432866dA",
+        escrow: "0x8e013cf23f11168B62bA2600d99166507Cbb4aAC",
+        dispute: "0x9Cbe0bf5080568F56d61F4F3ef0f64909898DcB2",
+        treasury: "0xCd2a996Edd6Be2992063fD2A41c0240D77c9e0AA",
+        factory: "0xD6a9fafA4d1d233075D6c5de2a407942bdc29dbF",
       },
     },
   },
