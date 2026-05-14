@@ -11,7 +11,7 @@
     "generate:abis": "pnpm --filter @aegis-protocol/abis generate"
   },
   "devDependencies": {
-    "turbo": "^2.0.0",
+    "turbo": "^2.9.14",
     "typescript": "^5.5.0"
   },
   "engines": {
