@@ -1,0 +1,163 @@
+name: Publish MCP package
+
+permissions: {}
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish to npm after verification. Leave false for a dry run."
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-mcp-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish-mcp:
+    name: Publish @aegis-protocol/mcp-server
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-publish
+      url: https://www.npmjs.com/package/@aegis-protocol/mcp-server
+    permissions:
+      contents: read
+      id-token: write # Required for npm trusted publishing/OIDC.
+    defaults:
+      run:
+        shell: bash
+    env:
+      PACKAGE_NAME: "@aegis-protocol/mcp-server"
+      PACKAGE_DIR: mcp
+      PACK_DIR: .npm-pack
+      SHOULD_PUBLISH: ${{ github.event_name == 'release' || inputs.publish == true }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js for npm trusted publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org/
+
+      - name: Ensure trusted-publishing-capable npm
+        run: |
+          npm install -g npm@latest
+          node --version
+          npm --version
+          node -e '
+            const minNode = [22, 14, 0];
+            const node = process.versions.node.split(".").map(Number);
+            const okNode = node[0] > minNode[0] || (node[0] === minNode[0] && (node[1] > minNode[1] || (node[1] === minNode[1] && node[2] >= minNode[2])));
+            if (!okNode) {
+              throw new Error(`npm trusted publishing requires Node >= ${minNode.join(".")}; got ${process.versions.node}`);
+            }
+          '
+          npm --version | node -e '
+            const fs = require("node:fs");
+            const version = fs.readFileSync(0, "utf8").trim().split(".").map(Number);
+            const min = [11, 5, 1];
+            const ok = version[0] > min[0] || (version[0] === min[0] && (version[1] > min[1] || (version[1] === min[1] && version[2] >= min[2])));
+            if (!ok) {
+              throw new Error(`npm trusted publishing requires npm >= ${min.join(".")}; got ${version.join(".")}`);
+            }
+          '
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK dependencies
+        run: pnpm -C sdk build
+
+      - name: Typecheck MCP package
+        run: pnpm -C "$PACKAGE_DIR" typecheck
+
+      - name: Run MCP unit tests
+        run: pnpm -C "$PACKAGE_DIR" test
+
+      - name: Build MCP package
+        run: pnpm -C "$PACKAGE_DIR" build
+
+      - name: Resolve package version
+        id: package
+        run: |
+          version=$(node -p "require('./${PACKAGE_DIR}/package.json').version")
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Package: ${PACKAGE_NAME}@${version}"
+
+      - name: Validate release tag matches package version
+        if: github.event_name == 'release'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$tag" != "${{ steps.package.outputs.version }}" ]; then
+            echo "Release tag ${GITHUB_REF_NAME} does not match ${PACKAGE_NAME}@${{ steps.package.outputs.version }}" >&2
+            exit 1
+          fi
+
+      - name: Require main branch for manual publish
+        if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "Manual npm publish is only allowed from main; current ref is ${GITHUB_REF}." >&2
+            exit 1
+          fi
+
+      - name: Check package version is unpublished before live publish
+        if: env.SHOULD_PUBLISH == 'true'
+        run: |
+          if npm view "${PACKAGE_NAME}@${{ steps.package.outputs.version }}" version >/dev/null 2>&1; then
+            echo "${PACKAGE_NAME}@${{ steps.package.outputs.version }} is already published; refusing to publish over it." >&2
+            exit 1
+          fi
+
+      - name: Pack MCP package
+        id: pack
+        run: |
+          rm -rf "$PACK_DIR"
+          mkdir -p "$PACK_DIR"
+          (cd "$PACKAGE_DIR" && pnpm pack --pack-destination "$GITHUB_WORKSPACE/$PACK_DIR")
+          tarball=$(find "$PACK_DIR" -maxdepth 1 -name '*.tgz' -print -quit)
+          if [ -z "$tarball" ]; then
+            echo "No package tarball was produced." >&2
+            exit 1
+          fi
+          echo "tarball=${tarball}" >> "$GITHUB_OUTPUT"
+          tar -tzf "$tarball"
+
+      - name: Validate packed package metadata
+        run: |
+          tar -xOf "${{ steps.pack.outputs.tarball }}" package/package.json | node -e '
+            const fs = require("node:fs");
+            const pkg = JSON.parse(fs.readFileSync(0, "utf8"));
+            if (pkg.name !== process.env.PACKAGE_NAME) {
+              throw new Error(`Packed package name mismatch: ${pkg.name}`);
+            }
+            const deps = { ...pkg.dependencies, ...pkg.devDependencies, ...pkg.peerDependencies, ...pkg.optionalDependencies };
+            const bad = Object.entries(deps).filter(([, value]) => String(value).startsWith("workspace:"));
+            if (bad.length) {
+              throw new Error(`Packed package still contains workspace protocol dependencies: ${bad.map(([name, value]) => `${name}@${value}`).join(", ")}`);
+            }
+            console.log(`${pkg.name}@${pkg.version} metadata OK`);
+          '
+
+      - name: npm publish dry run
+        if: env.SHOULD_PUBLISH != 'true'
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --access public --dry-run
+
+      - name: npm publish via trusted publishing
+        if: env.SHOULD_PUBLISH == 'true'
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --access public
