@@ -32,20 +32,21 @@ The workflow runs on:
 - `release.published`
 - manual `workflow_dispatch`
 
-Manual runs default to dry-run mode. To publish manually, run the workflow from `main` with `publish=true`.
+Manual runs default to dry-run mode. Dry-run verification does not require the `npm-publish` environment approval. To publish manually, run the workflow from `main` with `publish=true`; the live publish job waits for the `npm-publish` environment approval gate.
 
-The workflow:
+The verification job:
 
 1. Uses GitHub-hosted `ubuntu-latest`.
-2. Grants only `contents: read` and `id-token: write`.
+2. Grants only `contents: read`.
 3. Installs Node 24 and verifies npm is new enough for trusted publishing.
 4. Installs dependencies with `pnpm install --frozen-lockfile`.
 5. Builds the SDK packages.
 6. Typechecks, tests, and builds the MCP package.
 7. Packs the MCP package with `pnpm pack` so `workspace:*` dependencies are rewritten.
 8. Validates the packed package metadata has no `workspace:*` dependencies.
-9. Runs `npm publish --dry-run` unless this is a release or manual `publish=true` run.
-10. Publishes with `npm publish` when live publishing is enabled.
+9. Runs `npm publish --dry-run`.
+
+The live publish job repeats the same build/test/pack validation after the environment approval, then publishes with `npm publish` using GitHub Actions OIDC.
 
 ## Release process
 
