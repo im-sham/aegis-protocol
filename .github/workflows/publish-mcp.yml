@@ -134,7 +134,19 @@ jobs:
             console.log(`${pkg.name}@${pkg.version} metadata OK`);
           '
 
+      - name: Check package version publication state
+        id: registry
+        run: |
+          if npm view "${PACKAGE_NAME}@${{ steps.package.outputs.version }}" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "${PACKAGE_NAME}@${{ steps.package.outputs.version }} is already published; skipping npm publish dry run."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "${PACKAGE_NAME}@${{ steps.package.outputs.version }} is not published; npm publish dry run will execute."
+          fi
+
       - name: npm publish dry run
+        if: steps.registry.outputs.published != 'true'
         run: npm publish "${{ steps.pack.outputs.tarball }}" --access public --dry-run
 
   publish-mcp:

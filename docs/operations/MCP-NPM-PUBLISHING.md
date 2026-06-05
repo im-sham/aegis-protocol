@@ -44,7 +44,8 @@ The verification job:
 6. Typechecks, tests, and builds the MCP package.
 7. Packs the MCP package with `pnpm pack` so `workspace:*` dependencies are rewritten.
 8. Validates the packed package metadata has no `workspace:*` dependencies.
-9. Runs `npm publish --dry-run`.
+9. Checks whether the exact package version is already published.
+10. Runs `npm publish --dry-run` only when the version is not already on npm. Existing-version dry runs are skipped because current npm correctly refuses to dry-run publish over an existing version.
 
 The live publish job repeats the same build/test/pack validation after the environment approval, then publishes with `npm publish` using GitHub Actions OIDC.
 
