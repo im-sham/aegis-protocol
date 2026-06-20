@@ -17,7 +17,7 @@
     "@aegis-protocol/sdk": "workspace:*",
     "@aegis-protocol/types": "workspace:*",
     "@hono/node-server": "^1.19.14",
-    "@hono/zod-openapi": "^0.16.0",
+    "@hono/zod-openapi": "^1.4.0",
     "graphql": "^16.0.0",
     "graphql-request": "^7.0.0",
     "hono": "^4.12.18",
